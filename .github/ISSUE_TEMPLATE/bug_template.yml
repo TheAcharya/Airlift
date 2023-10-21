@@ -1,12 +1,12 @@
 name: Bug Report
-description: Report a Bug for CSV2Notion Neo
+description: Report a Bug for Airlift
 title: "[Bug]: "
 labels: "bug"
 body:
 - type: input
   attributes:
-    label: CSV2Notion Neo Version?
-    description: Which version of CSV2Notion Neo are you using? If unsure, run `csv2notion_neo --version`
+    label: Airlife Version?
+    description: Which version of Airlift are you using? If unsure, run `airlift --version`
   validations:
     required: true
 - type: dropdown
