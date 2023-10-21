@@ -19,7 +19,7 @@
 <img src="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml/badge.svg" alt="release_github"/>
 </a>
 <p>
-<p>An advance method to upload & merge *.csv files to <a href="https://notion.so/" target="_blank">Airtable</a>. Airlift uses <a href="https://github.com/gtalarico/pyairtable" target="_blank">pyAirtable</a> API Library.</p>
+<p>An express method to upload & merge *.csv or *.json files to <a href="https://notion.so/" target="_blank">Airtable</a>. Airlift uses <a href="https://github.com/gtalarico/pyairtable" target="_blank">pyAirtable</a> API Library.</p>
 
 <br>
 </div>
