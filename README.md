@@ -15,8 +15,8 @@
 <img src="https://github.com/TheAcharya/csv2notion-neo/actions/workflows/test.yml/badge.svg" alt="tests"/>
 </a>
 <!-- release_github -->
-<a href="https://github.com/TheAcharya/csv2notion-neo/actions/workflows/release_github.yml">
-<img src="https://github.com/TheAcharya/csv2notion-neo/actions/workflows/release_github.yml/badge.svg" alt="release_github"/>
+<a href="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml">
+<img src="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml/badge.svg" alt="release_github"/>
 </a>
 <p>
 <p>An advance method to upload & merge *.csv files to <a href="https://notion.so/" target="_blank">Airtable</a>. Airlift uses <a href="https://github.com/gtalarico/pyairtable" target="_blank">pyAirtable</a> API Library.</p>
