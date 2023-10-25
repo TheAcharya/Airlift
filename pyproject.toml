@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "airlift"
+version = "0.1.0"
+description = "Upload CSV data to airlift"
+authors = ["Arjun <arjunprakash027@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+airlift = "airlift.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyairtable = "^2.1.0.post1"
+
+[tool.poetry.group.dev.dependencies]
+pyairtable = "^2.1.0.post1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
