@@ -67,7 +67,7 @@ $ poetry run airlift
 
 ```plain
 $ airlift --help
-usage: airlift [-h] --token TOKEN --base BASEID --table TABLEID [OPTION]... FILE
+usage: airlift [-h] --token TOKEN --base BASE --table TABLE [OPTION]... FILE
 
 https://github.com/TheAcharya/airlift
 
