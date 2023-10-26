@@ -78,8 +78,8 @@ positional arguments:
 
 general options:
   --token TOKEN                      your Airtable personal access token
-  --base BASEID                      your Airtable Base ID
-  --table TABLEID                    your Airtable Table ID
+  --base BASE                        your Airtable Base ID
+  --table TABLE                      your Airtable Table ID
   --log FILE                         file to store program log
   --verbose                          output debug information
   --version                          show program's version number and exit
