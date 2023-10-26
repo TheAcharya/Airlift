@@ -19,10 +19,14 @@ def abort(*_: Any) -> None:  # pragma: no cover
 
 def cli(*argv: str) -> None:
     args = parse_args(argv)
-    setup_logging()
+    setup_logging(is_verbose=args.verbose,log_file=args.log)
     logger.info("validating CSV file and Airtable Schema")
 
     data = csv_read(args.csv_file)
+
+    if not data:
+        raise CriticalError("CSV file is empty")
+    
     airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
     logger.info("Uploading {} ...".format(args.csv_file.name))
@@ -31,18 +35,19 @@ def cli(*argv: str) -> None:
 
     logger.info("Done!")
 
-def setup_logging() -> None:
+def setup_logging(is_verbose: bool=False, log_file: Optional[Path]=None) -> None:
     logging.basicConfig(format="%(levelname)s: %(message)s")
 
     logging.getLogger("airlift").setLevel(
-        logging.DEBUG
+        logging.DEBUG if is_verbose else logging.INFO
     )
 
-    file_handler = logging.FileHandler("airlift.log")
-    file_handler.setFormatter(
-        logging.Formatter("%(asctime)s [%(levelname)-8.8s] %(message)s")
-    )
-    logging.getLogger("airlift").addHandler(file_handler)
+    if log_file:
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setFormatter(
+            logging.Formatter("%(asctime)s [%(levelname)-8.8s] %(message)s")
+        )
+        logging.getLogger("airlift").addHandler(file_handler)
 
     logging.getLogger("airtable").setLevel(logging.WARNING)
 

@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple, Union
+from airlift.version import __version__
 
 ArgToken = Union[str, Tuple[str, str]]
 ArgOption = Dict[str, Any]
@@ -38,6 +39,23 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             "--table":{
                 "help":"your table name",
                 "required":True,
+            },
+            "--log":{
+                "type":Path,
+                "metavar":"FILE",
+                "help":"file to store program log",
+            },
+            "--verbose":{
+                "action":"store_true",
+                "help":"output debug information",
+            },
+            "--version": {
+                "action": "version",
+                "version": f"%(prog)s {__version__}",
+            },
+            ("-h", "--help"): {
+                "action": "help",
+                "help": "show this help message and exit",
             },
         },
 
