@@ -12,7 +12,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="airlift",
         description="https://github.com/TheAcharya/Airlift \n\nUpload & Merge Data to Airtable",
-        usage="%(prog)s [-h] --token TOKEN --base BASEID --table TABLEID [OPTION]... FILE",
+        usage="%(prog)s [-h] --token TOKEN --base BASE --table TABLE [OPTION]... FILE",
         add_help=False,
         formatter_class=lambda prog: argparse.RawTextHelpFormatter(
             prog, max_help_position=HELP_ARGS_WIDTH
