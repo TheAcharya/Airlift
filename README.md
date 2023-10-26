@@ -67,7 +67,7 @@ $ poetry run airlift
 
 ```plain
 $ airlift --help
-usage: airlift [-h] --token TOKEN [--url URL] [OPTION]... FILE
+usage: airlift [-h] --token TOKEN --base BASEID --table TABLEID [OPTION]... FILE
 
 https://github.com/TheAcharya/airlift
 
@@ -77,8 +77,9 @@ positional arguments:
   FILE                               CSV file to upload
 
 general options:
-  --token TOKEN                      Notion token, stored in token_v2 cookie for notion.so
-  --url URL                          Notion database URL; if none is provided, will create a new database
+  --token TOKEN                      your Airtable personal access token
+  --base BASEID                      your Airtable Base ID
+  --table TABLEID                    your Airtable Table ID
   --log FILE                         file to store program log
   --verbose                          output debug information
   --version                          show program's version number and exit
