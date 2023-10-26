@@ -89,7 +89,7 @@ general options:
 
 After trying to run `airlift` for the first time, the process will be blocked by macOS's Gatekeeper, and a system dialog will appear which includes
 
-> "csv2notion_neo" can't be opened because the developer cannot be verified...
+> "airlift" can't be opened because the developer cannot be verified...
 
 - To approve the process and allow `airlift` to run, go to System Preferences, Security & Privacy, General, and look in the bottom right corner for a button to click.
 - After approving `airlift`, it should run successfully. 
