@@ -11,7 +11,7 @@ HELP_ARGS_WIDTH = 50
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="airlift",
-        description="https://github.com/TheAcharya/csv2notion-neo \n\nUpload csv files to Airtable",
+        description="https://github.com/TheAcharya/Airlift \n\nUpload & Merge Data to Airtable",
         usage="%(prog)s [-h] --token TOKEN [--url URL] [OPTION]... FILE",
         add_help=False,
         formatter_class=lambda prog: argparse.RawTextHelpFormatter(
@@ -29,15 +29,15 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         },
         "general_options":{
             "--token":{
-                "help":"You airtable token",
+                "help":"your Airtable personal access token",
                 "required":True,
             },
             "--base":{
-                "help":"you base ID",
+                "help":"your Airtable Base ID",
                 "required":True,
             },
             "--table":{
-                "help":"your table name",
+                "help":"your Airtable Table ID",
                 "required":True,
             },
             "--log":{
