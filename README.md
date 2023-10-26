@@ -38,6 +38,53 @@
 
 ## Background
 
+## Installation
+
+### Pre-compiled Binary (Recommended)
+
+Download the latest release of the latest binary release [here](https://github.com/TheAcharya/airlift/releases).
+
+### With PIP
+
+```bash
+$ pip install --user airlift
+```
+
+**Python 3.7 or later required.**
+
+### From source
+
+This project uses [poetry](https://python-poetry.org/) for dependency management and packaging. You will have to install it first. See [poetry official documentation](https://python-poetry.org/docs/) for instructions.
+
+```shell
+$ git clone https://github.com/TheAcharya/airlift.git
+$ cd airlift/
+$ poetry install --no-dev
+$ poetry run airlift
+```
+
+## Guide
+
+```plain
+$ airlift --help
+usage: airlift [-h] --token TOKEN [--url URL] [OPTION]... FILE
+
+https://github.com/TheAcharya/airlift
+
+Upload & Merge Data to Airtable
+
+positional arguments:
+  FILE                               CSV file to upload
+
+general options:
+  --token TOKEN                      Notion token, stored in token_v2 cookie for notion.so
+  --url URL                          Notion database URL; if none is provided, will create a new database
+  --log FILE                         file to store program log
+  --verbose                          output debug information
+  --version                          show program's version number and exit
+  -h, --help                         show this help message and exit
+```
+
 ### macOS Gatekeeper & Notarization
 
 After trying to run `airlift` for the first time, the process will be blocked by macOS's Gatekeeper, and a system dialog will appear which includes
