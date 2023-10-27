@@ -1,4 +1,7 @@
 playground.ipynb
 new_data.csv
 upload_test.sh
+test.log
 
+# Mac/OSX
+.DS_Store
