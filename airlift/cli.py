@@ -20,16 +20,18 @@ def abort(*_: Any) -> None:  # pragma: no cover
 def cli(*argv: str) -> None:
     args = parse_args(argv)
     setup_logging(is_verbose=args.verbose,log_file=args.log)
-    logger.info("validating CSV file and Airtable Schema")
+
+    airtable_client = new_client(token=args.token,base=args.base,table=args.table)
+
+    logger.info(f"validating {args.csv_file.name} and Airtable Schema")
 
     data = csv_read(args.csv_file)
 
+    logger.info("Validation done!")
+
     if not data:
         raise CriticalError("CSV file is empty")
-    
-    airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
-    logger.info("Uploading {} ...".format(args.csv_file.name))
 
     upload_data(client=airtable_client, new_data=data)
 

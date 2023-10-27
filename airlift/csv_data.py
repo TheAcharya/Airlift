@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 import datetime
 import email
+from alive_progress import alive_bar
 
 from airlift.utils_exceptions import CriticalError
 from airlift.airlift_data_guesser import guess_data_type
@@ -33,19 +34,26 @@ def _csv_read_rows(csv_file:Iterable[str]) -> List[CSVRowType]:
     
     rows = list(reader)
     
-    for row in rows:
-        for key, value in row.items():
-            data_type = guess_data_type(value)
+    converted_data = _convert_datatypes(rows)
 
-            if data_type == "number":
-                row[key] = float(value)
-            elif data_type == "date":
-                row[key] = datetime.datetime.strptime(value, "%Y-%m-%d")
-            elif data_type == "email":
-                row[key] = email.utils.parseaddr(value)[1]
-            
+    return converted_data
+
+def _convert_datatypes(rows:list) -> List[CSVRowType]:
+    with alive_bar(len(rows)) as bar:
+        for row in rows:
+            for key, value in row.items():
+                data_type = guess_data_type(value)
+                if data_type == "number":
+                    row[key] = float(value)
+                elif data_type == "date":
+                    row[key] = datetime.datetime.strptime(value, "%Y-%m-%d")
+                elif data_type == "email":
+                    row[key] = email.utils.parseaddr(value)[1]
+                elif data_type == "bool":
+                    row[key] = False if value.lower() == "false" else True
+            bar()
+
     return list(rows)
 
-    
 def _list_duplicates(lst: List[str]) -> List[str]:
     return [lst_item for lst_item, count in Counter(lst).items() if count > 1]

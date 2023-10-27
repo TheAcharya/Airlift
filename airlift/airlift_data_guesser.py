@@ -13,6 +13,9 @@ def guess_data_type(string):
   # Match the string against a regular expression for an email address.
   if re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", string):
     return "email"
-
+  
+  if re.match(r"^(true|false|True|False)$",string):
+    return "bool"
+  
   # Otherwise, return "unknown".
   return "unknown"

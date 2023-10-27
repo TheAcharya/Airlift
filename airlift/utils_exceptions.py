@@ -3,7 +3,7 @@ class CriticalError(Exception):
 
 
 class AirtableError(Exception):
-    """Exception raised when a Notion related critical error occurs."""
+    """Exception raised when a airtable related critical error occurs."""
 
 
 class TypeConversionError(Exception):
