@@ -12,6 +12,7 @@ airlift = "airlift.cli:main"
 python = "^3.8"
 pyairtable = "^2.1.0.post1"
 requests = "^2.31.0"
+alive-progress = "^3.1.4"
 
 [tool.poetry.group.dev.dependencies]
 pyairtable = "^2.1.0.post1"
