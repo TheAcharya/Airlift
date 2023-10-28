@@ -39,6 +39,12 @@
 
 ## Background
 
+**Airlift** draws inspiration from our very own [CSV2Notion Neo](https://github.com/TheAcharya/csv2notion-neo), which was inspired by Airtable’s [CSV import extension](https://support.airtable.com/docs/csv-import-extension). And with **Airlift**, we have come full circle.
+
+To send data to Airtable, users or applications need to write custom code using libraries that connect with Airtable's API. For normal end-users who aren’t developers, this can be an extremely challenging endeavor. For most users, Airtable’s [CSV import extension](https://support.airtable.com/docs/csv-import-extension) could be sufficient. 
+
+However, there are plenty of advance Airtable users who would like to send and sync data to Airtable in express and transparent fashion. This is where **Airlift**  comes into play.
+
 ## Installation
 
 ### Pre-compiled Binary (Recommended)
