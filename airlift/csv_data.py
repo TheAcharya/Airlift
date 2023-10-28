@@ -5,10 +5,10 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 import datetime
 import email
-from alive_progress import alive_bar
 
 from airlift.utils_exceptions import CriticalError
 from airlift.airlift_data_guesser import guess_data_type
+from tqdm import tqdm
 
 CSVRowType = Dict[str, Any]
 
@@ -20,6 +20,7 @@ def csv_read(file_path: Path) -> List[CSVRowType]:
         with open(file_path,"r",encoding="utf-8-sig") as csv_file:
             return _csv_read_rows(csv_file)
     except FileNotFoundError as e:
+        logger.debug(f"error : {e}")
         raise CriticalError(f"File {file_path} not found") from e
 
 def _csv_read_rows(csv_file:Iterable[str]) -> List[CSVRowType]:
@@ -39,19 +40,19 @@ def _csv_read_rows(csv_file:Iterable[str]) -> List[CSVRowType]:
     return converted_data
 
 def _convert_datatypes(rows:list) -> List[CSVRowType]:
-    with alive_bar(len(rows)) as bar:
-        for row in rows:
-            for key, value in row.items():
-                data_type = guess_data_type(value)
-                if data_type == "number":
-                    row[key] = float(value)
-                elif data_type == "date":
-                    row[key] = datetime.datetime.strptime(value, "%Y-%m-%d")
-                elif data_type == "email":
-                    row[key] = email.utils.parseaddr(value)[1]
-                elif data_type == "bool":
-                    row[key] = False if value.lower() == "false" else True
-            bar()
+
+    for row in tqdm(rows):
+        for key, value in row.items():
+            data_type = guess_data_type(value)
+            if data_type == "number":
+                row[key] = float(value)
+            elif data_type == "date":
+                row[key] = datetime.datetime.strptime(value, "%Y-%m-%d")
+            elif data_type == "email":
+                row[key] = email.utils.parseaddr(value)[1]
+            elif data_type == "bool":
+                row[key] = False if value.lower() == "false" else True
+            
 
     return list(rows)
 
