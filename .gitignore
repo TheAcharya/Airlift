@@ -2,6 +2,7 @@ playground.ipynb
 new_data.csv
 upload_test.sh
 test.log
+upload_test_vig.sh
 
 # Mac/OSX
 .DS_Store
