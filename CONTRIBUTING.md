@@ -1,4 +1,4 @@
-# Contributing to CSV2Notion Neo
+# Contributing to Airlift
 We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
 
 - Reporting a bug
@@ -27,7 +27,7 @@ If this project is in the area of your interest and you would like to join the t
 When you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
 
 ## Report Bugs
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/TheAcharya/csv2notion-neo/issues); it's that easy!
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/TheAcharya/Airlift/issues); it's that easy!
 
 ## License
 By contributing, you agree that your contributions will be licensed under its MIT License.
