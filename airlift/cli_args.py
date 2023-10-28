@@ -53,6 +53,10 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "action": "version",
                 "version": f"%(prog)s {__version__}",
             },
+            "--workers":{
+                "type":int,
+                "help":"total number of worker threads to upload your data"
+            },
             ("-h", "--help"): {
                 "action": "help",
                 "help": "show this help message and exit",

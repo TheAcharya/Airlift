@@ -8,7 +8,6 @@ import email
 
 from airlift.utils_exceptions import CriticalError
 from airlift.airlift_data_guesser import guess_data_type
-from tqdm import tqdm
 
 CSVRowType = Dict[str, Any]
 
@@ -37,11 +36,16 @@ def _csv_read_rows(csv_file:Iterable[str]) -> List[CSVRowType]:
     
     converted_data = _convert_datatypes(rows)
 
-    return converted_data
+    records = []
+
+    for x in converted_data:
+        records.append({"fields":x})
+    
+    return records
 
 def _convert_datatypes(rows:list) -> List[CSVRowType]:
 
-    for row in tqdm(rows):
+    for row in rows:
         for key, value in row.items():
             data_type = guess_data_type(value)
             if data_type == "number":

@@ -21,19 +21,21 @@ def cli(*argv: str) -> None:
     args = parse_args(argv)
     setup_logging(is_verbose=args.verbose,log_file=args.log)
 
+    workers = args.workers if args.workers else 1
+
     airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
     logger.info(f"validating {args.csv_file.name} and Airtable Schema")
 
     data = csv_read(args.csv_file)
+    #print(data)
 
     logger.info("Validation done!")
 
     if not data:
         raise CriticalError("CSV file is empty")
 
-
-    upload_data(client=airtable_client, new_data=data)
+    upload_data(client=airtable_client, new_data=data, workers = workers)
 
     logger.info("Done!")
 
