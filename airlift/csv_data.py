@@ -20,6 +20,7 @@ def csv_read(file_path: Path) -> List[CSVRowType]:
         with open(file_path,"r",encoding="utf-8-sig") as csv_file:
             return _csv_read_rows(csv_file)
     except FileNotFoundError as e:
+        logger.debug(f"error : {e}")
         raise CriticalError(f"File {file_path} not found") from e
 
 def _csv_read_rows(csv_file:Iterable[str]) -> List[CSVRowType]:
