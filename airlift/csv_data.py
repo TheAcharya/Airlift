@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 import datetime
 import email
-from alive_progress import alive_bar
 
 from airlift.utils_exceptions import CriticalError
 from airlift.airlift_data_guesser import guess_data_type
