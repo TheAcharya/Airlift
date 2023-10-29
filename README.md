@@ -43,7 +43,9 @@
 
 To send data to Airtable, users or applications need to write custom code using libraries that connect with Airtable's API. For normal end-users who aren’t developers, this can be an extremely challenging endeavor. For most users, Airtable’s [CSV import extension](https://support.airtable.com/docs/csv-import-extension) could be sufficient. 
 
-However, there are plenty of advance Airtable users who would like to send and sync data to Airtable in automated and transparent fashion. This is where **Airlift**  comes into play.
+However, many experienced Airtable users want to send and transfer data automatically without using [Make](https://www.make.com) or [Zapier](https://zapier.com). This is where **Airlift** comes into play.
+
+**Airlift** is free and open-source software. But you can [sponsor](https://github.com/sponsors/TheAcharya) us if you find it useful.
 
 ## Installation
 
