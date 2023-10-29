@@ -62,6 +62,15 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "help": "show this help message and exit",
             },
         },
+        "validation options":{
+            "--fail-on-duplicate-csv-columns":{
+                "action":"store_true",
+                "help": (
+                    "fail if CSV has duplicate columns;"
+                    "\notherwise first column will be used"
+                ),
+            },
+        }
 
     }
 

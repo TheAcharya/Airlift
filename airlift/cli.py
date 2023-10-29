@@ -27,7 +27,7 @@ def cli(*argv: str) -> None:
 
     logger.info(f"validating {args.csv_file.name} and Airtable Schema")
 
-    data = csv_read(args.csv_file)
+    data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
     #print(data)
 
     logger.info("Validation done!")
