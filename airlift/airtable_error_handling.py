@@ -1,3 +1,6 @@
+# Using Airtable's Error Codes as reference:
+# https://support.airtable.com/docs/airtable-api-common-troubleshooting
+# https://airtable.com/developers/web/api/errors
 import requests
 from requests.exceptions import HTTPError
 from airlift.utils_exceptions import CriticalError, AirtableError
@@ -5,11 +8,11 @@ from airlift.utils_exceptions import CriticalError, AirtableError
 def ClientError(error:HTTPError) -> None:
 
     if error.response.status_code == 403:
-        raise AirtableError("The Provided Table or Base is not found!")
+        raise AirtableError("Accessing a protected resource with API credentials that don't have access to that resource!")
     
     elif error.response.status_code == 401:
-        raise AirtableError("Your Token ID is wrong!")
+        raise AirtableError("Accessing a protected resource without authorization or with invalid credentials!")
     
     elif error.response.status_code == 422:
         print(error.response.text)
-        raise CriticalError("One or more than one of the data is not of valid data type")
+        raise CriticalError("The request data is invalid!")
