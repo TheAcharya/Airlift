@@ -15,7 +15,7 @@
 <img src="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml/badge.svg" alt="release_github"/>
 </a>
 <p>
-<p>An express method to upload & merge *.csv or *.json files to <a href="https://notion.so/" target="_blank">Airtable</a>. Airlift uses <a href="https://github.com/gtalarico/pyairtable" target="_blank">pyAirtable</a> API Library.</p>
+<p>An automated method to upload & merge *.csv or *.json files to <a href="https://notion.so/" target="_blank">Airtable</a>. Airlift uses <a href="https://github.com/gtalarico/pyairtable" target="_blank">pyAirtable</a> API Library.</p>
 
 <br>
 <br>
@@ -43,7 +43,7 @@
 
 To send data to Airtable, users or applications need to write custom code using libraries that connect with Airtable's API. For normal end-users who aren’t developers, this can be an extremely challenging endeavor. For most users, Airtable’s [CSV import extension](https://support.airtable.com/docs/csv-import-extension) could be sufficient. 
 
-However, there are plenty of advance Airtable users who would like to send and sync data to Airtable in express and transparent fashion. This is where **Airlift**  comes into play.
+However, there are plenty of advance Airtable users who would like to send and sync data to Airtable in automated and transparent fashion. This is where **Airlift**  comes into play.
 
 ## Installation
 
