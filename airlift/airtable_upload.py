@@ -13,7 +13,7 @@ ATDATA = List[Dict[str,Dict[str,str]]]
 
 
 def upload_data(client: new_client, new_data:ATDATA, workers:int) -> None:
-    logger.info("uploding data now!")
+    logger.info("Uploding data now!")
     with tqdm(total = len(new_data)) as progress_bar:
         data_queue = Queue()
         for data in new_data:
@@ -23,7 +23,7 @@ def upload_data(client: new_client, new_data:ATDATA, workers:int) -> None:
             futures = [executor.submit(_worker,client,data_queue,progress_bar) for _ in range(workers)]
             concurrent.futures.wait(futures,timeout=None)
 
-    logger.info("Upload done!!!")
+    logger.info("Upload completed!")
 
 def _worker(client:new_client,data_queue:Queue,progress_bar) -> None:            
     while True:
@@ -36,6 +36,6 @@ def _worker(client:new_client,data_queue:Queue,progress_bar) -> None:
                 ClientError(e)
             except Exception as e:
                 print(e)
-                raise CriticalError("An unexpected error occured! please contact the developers")
+                raise CriticalError("An unexpected error occured! Please contact the developers.")
         except Empty:
             break
