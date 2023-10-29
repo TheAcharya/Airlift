@@ -1,5 +1,4 @@
-import pyairtable.api.table as ATtable
-from airlift.csv_data import CSVRowType
+from airlift.airtable_client import new_client
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 from airlift.utils_exceptions import CriticalError
 from tqdm import tqdm
@@ -13,7 +12,7 @@ logger = logging.getLogger(__name__)
 ATDATA = List[Dict[str,Dict[str,str]]]
 
 
-def upload_data(client: ATtable, new_data:ATDATA, workers:int) -> None:
+def upload_data(client: new_client, new_data:ATDATA, workers:int) -> None:
     logger.info("uploding data now!")
     with tqdm(total = len(new_data)) as progress_bar:
         data_queue = Queue()
@@ -26,7 +25,7 @@ def upload_data(client: ATtable, new_data:ATDATA, workers:int) -> None:
 
     logger.info("Upload done!!!")
 
-def _worker(client,data_queue,progress_bar) -> None:            
+def _worker(client:new_client,data_queue:Queue,progress_bar) -> None:            
     while True:
         try:
             data = data_queue.get_nowait()
