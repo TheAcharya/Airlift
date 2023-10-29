@@ -34,8 +34,8 @@ class new_client:
 
         if response.status_code == 200:
             pass
-            #logger.debug("Record created successfully!")
+            #logger.debug("Request completed successfully!")
         else:
             logger.warning(f"Error creating records: {response}")
-            raise AirtableError("Unable to upload data!!!")
+            raise AirtableError("Unable to upload data!")
             
