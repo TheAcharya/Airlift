@@ -92,7 +92,12 @@ general options:
   --log FILE                         file to store program log
   --verbose                          output debug information
   --version                          show program's version number and exit
+  --workers                          total number of worker threads to upload your data
   -h, --help                         show this help message and exit
+
+validation options:
+  --fail-on-duplicate-csv-columns    fail if CSV has duplicate columns;
+                                     otherwise last column will be used
 ```
 
 ### macOS Gatekeeper & Notarization
