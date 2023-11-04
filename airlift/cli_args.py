@@ -70,14 +70,16 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                     "\notherwise first column will be used"
                 ),
             },
+            
+        },
+        "column options":{
             "--disable-bypass-column-creation":{
                 "action":"store_true",
                 "help":(
                     "Creates new columns that are not present in airtable table"
                 ),
             },
-        }
-
+        },
     }
 
     _parse_schema(parser, schema)
