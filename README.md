@@ -98,6 +98,9 @@ general options:
   --workers                          total number of worker threads to upload your data (default: 10)
   -h, --help                         show this help message and exit
 
+column options:
+  --disable-bypass-column-creation   Creates new columns that are not present in Airtable's table
+
 validation options:
   --fail-on-duplicate-csv-columns    fail if CSV has duplicate columns;
                                      otherwise last column will be used
