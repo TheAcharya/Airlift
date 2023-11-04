@@ -29,6 +29,7 @@ def _csv_read_rows(csv_file:Iterable[str],fail_on_dup:bool) -> List[CSVRowType]:
         raise CriticalError("CSV file has no columns")
     
     rows = list(reader)
+    #print(list(reader.fieldnames))
     duplicate_columns = _list_duplicates(list(reader.fieldnames))
 
     if duplicate_columns:
@@ -36,6 +37,7 @@ def _csv_read_rows(csv_file:Iterable[str],fail_on_dup:bool) -> List[CSVRowType]:
             raise CriticalError(f"Duplicate columns found in csv :{duplicate_columns}")
         else:
             rows = _remove_duplicates(rows)
+
     converted_data = _convert_datatypes(rows)
 
     records = []
@@ -71,7 +73,7 @@ def _remove_duplicates(rows:List[Dict]) -> List[Dict]:
     for row in rows:
         new_dict = {}
         for key,value in row.items():
-            if value:
+            if key:
                 new_dict[key] = value
         final_list.append(new_dict)
     return final_list

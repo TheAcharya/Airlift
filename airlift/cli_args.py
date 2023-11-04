@@ -66,8 +66,14 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             "--fail-on-duplicate-csv-columns":{
                 "action":"store_true",
                 "help": (
-                    "fail if CSV has duplicate columns;"
+                    "fail if CSV has duplicate columns"
                     "\notherwise first column will be used"
+                ),
+            },
+            "--disable-bypass-column-creation":{
+                "action":"store_true",
+                "help":(
+                    "Creates new columns that are not present in airtable table"
                 ),
             },
         }

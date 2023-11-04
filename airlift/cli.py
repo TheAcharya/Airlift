@@ -35,6 +35,8 @@ def cli(*argv: str) -> None:
     if not data:
         raise CriticalError("CSV file is empty")
 
+    data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation)
+
     upload_data(client=airtable_client, new_data=data, workers = workers)
 
     logger.info("Done!")

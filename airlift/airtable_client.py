@@ -38,4 +38,58 @@ class new_client:
         else:
             logger.warning(f"Error creating records: {response}")
             raise AirtableError("Unable to upload data!")
+    
+    def missing_fields_check(self,data:ATDATATYPE,disable_bypass:bool):
+        
+        airtable_table_fields = []
+        user_csv_fields = []
+
+        url = f"https://api.airtable.com/v0/meta/bases/{self.base}/tables"
+        response = requests.get(url,headers=self.headers)
+        tables = json.loads(response.text)
+
+        for x in tables['tables']:
+            if x['id'] == self.table or x['name'] == self.table:
+
+                for fields in x['fields']:
+                    airtable_table_fields.append(fields['name'])
+
+        
+        for csv_key,csv_value in data[0]['fields'].items():
+            user_csv_fields.append(csv_key)
+
+        missing_columns = list(set(user_csv_fields) - set(airtable_table_fields))
+
+        if missing_columns:
+            for column in missing_columns:
+                if disable_bypass:
+                    self._create_new_field(column)
+                else:
+                    logger.warning(f"Column {column} would be skipped!")
+                    for datas in data:
+                        try:
+                            del datas['fields'][column]
+                        except:
+                            print(f"{column} not present in this row")
+
+        else:
+            logger.info("All the columns are verified and present in both csv and airtable!")
+
+        return data
+    
+    def _create_new_field(self,field_name:str) -> None:
+        URL = f"https://api.airtable.com/v0/meta/bases/{self.base}/tables/{self.table}/fields"
+        new_field = {"name":field_name,"description":"This is a field created by airtable","type":"multilineText"}
+
+        response = requests.post(URL,headers=self.headers,data=json.dumps(new_field))
+
+        if response.status_code == 200:
+            logger.info(f"Created new column {field_name} in airtable")
+        elif response.status_code == 422:
+            logger.warning("Encountered an 422 error in creating a new column in airtable!")
+        
+        else:
+            logger.warning(f"unknown error : {response.text}")
+        
+ 
             
