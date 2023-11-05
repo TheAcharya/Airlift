@@ -25,6 +25,7 @@
 
 - Automated uploading of `.csv` or `.json` data to Airtable
 - Ability to update and auto-create new entries for [single select field](https://support.airtable.com/docs/single-select-field) and [multiple select field](https://support.airtable.com/docs/multiple-select-field)
+- No subscription of third party platform required
 
 ## Table of contents
 
