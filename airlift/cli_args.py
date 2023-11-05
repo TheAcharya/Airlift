@@ -55,7 +55,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             },
             "--workers":{
                 "type":int,
-                "help":"total number of worker threads to upload your data (default: 10)"
+                "help":"total number of worker threads to upload your data (default: 1)"
             },
             ("-h", "--help"): {
                 "action": "help",
@@ -76,7 +76,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             "--disable-bypass-column-creation":{
                 "action":"store_true",
                 "help":(
-                    "Creates new columns that are not present in airtable table"
+                    "creates new columns that are not present in Airtable's table"
                 ),
             },
         },
