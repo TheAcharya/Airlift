@@ -73,7 +73,7 @@ class new_client:
                             print(f"{column} not present in this row")
 
         else:
-            logger.info("All the columns are verified and present in both csv and airtable!")
+            logger.info("All the columns are verified and present in both the file and airtable!")
 
         return data
     

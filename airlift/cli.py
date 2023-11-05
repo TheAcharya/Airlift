@@ -4,11 +4,13 @@ import signal
 import sys
 from pathlib import Path
 from typing import Any, Optional
+import pathlib
 
 from airlift.utils_exceptions import CriticalError,AirtableError 
 from airlift.cli_args import parse_args
 from airlift.csv_data import csv_read
 from airlift.airtable_upload import upload_data
+from airlift.json_data import json_read
 from airlift.airtable_client import new_client
 
 logger = logging.getLogger(__name__)
@@ -27,13 +29,20 @@ def cli(*argv: str) -> None:
 
     logger.info(f"validating {args.csv_file.name} and Airtable Schema")
 
-    data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+    suffix = pathlib.Path(args.csv_file.name).suffix
+
+    if "csv" in suffix:
+        data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+    elif "json" in suffix:
+        data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+    else:
+        raise CriticalError("File type not supported!")
     #print(data)
 
     logger.info("Validation done!")
 
     if not data:
-        raise CriticalError("CSV file is empty")
+        raise CriticalError("file is empty")
 
     data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation)
 
