@@ -23,7 +23,7 @@ def cli(*argv: str) -> None:
     args = parse_args(argv)
     setup_logging(is_verbose=args.verbose,log_file=args.log)
 
-    workers = args.workers if args.workers else 1
+    workers = args.workers if args.workers else 5
 
     airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
