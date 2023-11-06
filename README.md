@@ -96,7 +96,7 @@ general options:
   --log FILE                         file to store program log
   --verbose                          output debug information
   --version                          show program's version number and exit
-  --workers                          total number of worker threads to upload your data (default: 10)
+  --workers                          total number of worker threads to upload your data (default: 5)
   -h, --help                         show this help message and exit
 
 column options:
