@@ -23,7 +23,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         "POSITIONAL":{
             "csv_file":{
                 "type":Path,
-                "help":"CSV file to upload",
+                "help":"CSV or JSON file to upload",
                 "metavar":"FILE",
             }
         },
