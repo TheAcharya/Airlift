@@ -15,7 +15,7 @@
 <img src="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml/badge.svg" alt="release_github"/>
 </a>
 <p>
-<p>An automated method to upload & merge *.csv or *.json data files to <a href="https://notion.so/" target="_blank">Airtable</a> database.</p>
+<p>An automated method to upload & merge *.csv or *.json data files to <a href="https://www.airtable.com" target="_blank">Airtable</a> database.</p>
 
 <br>
 <br>
