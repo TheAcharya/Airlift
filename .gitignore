@@ -9,3 +9,7 @@ IMG_3046.jpg
 airlift_linux
 # Mac/OSX
 .DS_Store
+client_secrets.json
+settings.yml
+marker_data_demo
+upload_test_copy.sh

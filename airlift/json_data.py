@@ -34,4 +34,4 @@ def _json_read_rows(json_file:Iterable[str],fail_on_dup:bool) -> List[CSVRowType
         records.append({"fields":each_data})
     
     return records
-        
+    

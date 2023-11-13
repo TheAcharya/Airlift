@@ -32,7 +32,7 @@ def cli(*argv: str) -> None:
     suffix = pathlib.Path(args.csv_file.name).suffix
 
     if "csv" in suffix:
-        data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+        data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns,args.attachment_columns,args.dropbox_token)
     elif "json" in suffix:
         data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
     else:

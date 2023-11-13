@@ -20,60 +20,67 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     )
 
     schema: ArgSchema = {
-        "POSITIONAL":{
-            "csv_file":{
-                "type":Path,
-                "help":"CSV or JSON file to upload",
-                "metavar":"FILE",
+        "POSITIONAL": {
+            "csv_file": {
+                "type": Path,
+                "help": "CSV or JSON file to upload",
+                "metavar": "FILE",
             }
         },
-        "general_options":{
-            "--token":{
-                "help":"your Airtable personal access token",
-                "required":True,
+        "general_options": {
+            "--token": {
+                "help": "your Airtable personal access token",
+                "required": True,
             },
-            "--base":{
-                "help":"your Airtable Base ID",
-                "required":True,
+            "--base": {
+                "help": "your Airtable Base ID",
+                "required": True,
             },
-            "--table":{
-                "help":"your Airtable Table ID",
-                "required":True,
+            "--table": {
+                "help": "your Airtable Table ID",
+                "required": True,
             },
-            "--log":{
-                "type":Path,
-                "metavar":"FILE",
-                "help":"file to store program log",
+            "--log": {
+                "type": Path,
+                "metavar": "FILE",
+                "help": "file to store program log",
             },
-            "--verbose":{
-                "action":"store_true",
-                "help":"output debug information",
+            "--verbose": {
+                "action": "store_true",
+                "help": "output debug information",
             },
             "--version": {
                 "action": "version",
                 "version": f"%(prog)s {__version__}",
             },
-            "--workers":{
-                "type":int,
-                "help":"total number of worker threads to upload your data (default: 1)"
+            "--workers": {
+                "type": int,
+                "help": "total number of worker threads to upload your data (default: 1)"
             },
             ("-h", "--help"): {
                 "action": "help",
                 "help": "show this help message and exit",
             },
+            "--dropbox-token":{
+                "help":"enter your dropbox token here",
+            },
+
         },
-        "column options":{
-            "--disable-bypass-column-creation":{
-                "action":"store_true",
+        "column_options": {
+            "--disable-bypass-column-creation": {
+                "action": "store_true",
+                "help": "creates new columns that are not present in Airtable's table",
+            },
+            "--attachment-columns": {
+                "nargs": "+",
+                "help": "specify one or more arguments",
+                "metavar": "ATTTACHMENT_COLUMNS",
+            },
+        },
+        "validation_options": {
+            "--fail-on-duplicate-csv-columns": {
+                "action": "store_true",
                 "help": (
-                    "creates new columns that are not present in Airtable's table"
-                ),
-            },        
-        },
-        "validation options":{
-            "--fail-on-duplicate-csv-columns":{
-                "action":"store_true",
-                "help":(
                     "fail if CSV has duplicate columns"
                     "\notherwise first column will be used"
                 ),
