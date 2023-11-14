@@ -100,7 +100,7 @@ general options:
   -h, --help                         show this help message and exit
 
 dropbox options:
-  --dropbox-token                    your Dropbox OAuth 2 token here
+  --dropbox-token                    your Dropbox OAuth 2 token
   --attachment-columns               specify one or more attachment columns
 
 column options:
