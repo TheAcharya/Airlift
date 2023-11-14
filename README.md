@@ -166,7 +166,7 @@ We only require _Base ID_ and _Table ID_ for **Airlift**
 
 Airtable's API does not allow direct uploading of attachments. In order to upload an attachment via Airtable's API, the attachment must first exist at a publicly accessible url. To mitigate this problem, Airlift will utilise [Dropbox](https://www.dropbox.com) as a temporary storage provider. [Dropbox’s basic account](https://www.dropbox.com/basic) offers 2GB of free storage. We believe it would be adequate for most operations.
 
-<details><summary>Obtain your Dropbox Access Token:</summary>
+<details><summary>Obtain your Dropbox OAuth 2 Access Token:</summary>
 <p>
 
 1. Login to your [Dropbox's App Console](https://www.dropbox.com/developers/apps/create) account via a web browser.
