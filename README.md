@@ -209,6 +209,12 @@ For ease of use, usage and creation of `.sh` files is **recommended**.
 5. Create a file using any text editor. Name the script file with extension `.sh`
 6. Copy and paste this syntax into the file, where **xxx** is the name of of your user directory and **zzz** is the name of your `.csv` or `.json` file.
 7. **REPLACE** the test with your relevent tokens and IDs.
+8. Save the script file as `myscript.sh` within your **Airlift** folder.
+9. To give execute permission to your script, open Terminal, `chmod +x /Users/xxx/Desktop/Airlift/myscript.sh`
+10. To execute your script, open Terminal, `sh /Users/xxx/Desktop/Airlift/myscript.sh`
+11. You can create and save multiple `.sh` files for different modes and configurations.
+
+**Uploading Data with no Attachments**
 
 ```bash
 #!/bin/sh
@@ -217,7 +223,6 @@ TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
 AIRTABLE_TOKEN="REPLACE"
 AIRTABLE_BASE="REPLACE"
 AIRTABLE_TABLE="REPLACE"
-DROPBOX_TOKEN="REPLACE"
 UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
