@@ -64,7 +64,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         },
         "dropbox options": {
             "--dropbox-token": {
-                "help": "your Dropbox OAuth 2 token here",
+                "help": "your Dropbox OAuth 2 token",
             },
             "--attachment-columns": {
                 "nargs": "+",
