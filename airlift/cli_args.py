@@ -62,7 +62,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "help": "show this help message and exit",
             },
             "--dropbox-token":{
-                "help":"enter your dropbox token here",
+                "help":"your Dropbox OAuth 2 token here",
             },
 
         },
@@ -73,7 +73,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             },
             "--attachment-columns": {
                 "nargs": "+",
-                "help": "specify one or more arguments",
+                "help": "specify one or more attachment columns",
                 "metavar": "ATTTACHMENT_COLUMNS",
             },
         },
