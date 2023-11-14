@@ -86,7 +86,7 @@ def _worker(dirname:str,attachment_columns:List[str],dbx:dropbox_client,data_que
             row = data_queue.get_nowait()
             try:
                 for key, value in row.items():
-
+                    
                     data_type = guess_data_type(value)
                     if attachment_columns:
                         if dbx:
@@ -94,7 +94,7 @@ def _worker(dirname:str,attachment_columns:List[str],dbx:dropbox_client,data_que
                                 if dirname:
                                     row[key] = [{"url":dbx.upload_to_dropbox(f"{dirname}/{value}")}]
                                 else:
-                                    row[key] = [{"url":dbx.upload_to_dropbox(f"{dirname}/{value}")}]
+                                    row[key] = [{"url":dbx.upload_to_dropbox(f"{value}")}]
                         else:
                             raise CriticalError("dropbox token not provided! aborting the upload")
                     if data_type == "number":
