@@ -32,7 +32,7 @@ def cli(*argv: str) -> None:
     suffix = pathlib.Path(args.csv_file.name).suffix
 
     if "csv" in suffix:
-        data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns,args.attachment_columns,args.dropbox_token)
+        data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
     elif "json" in suffix:
         data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
     else:
@@ -46,7 +46,8 @@ def cli(*argv: str) -> None:
 
     data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation)
 
-    upload_data(client=airtable_client, new_data=data, workers = workers)
+    dirname = os.path.dirname(args.csv_file)
+    upload_data(client=airtable_client, new_data=data, workers = workers,dropbox_token = args.dropbox_token,dirname=dirname,attachment_columns=args.attachment_columns,md=args.md)
 
     logger.info("Done!")
 

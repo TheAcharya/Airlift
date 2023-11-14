@@ -78,6 +78,12 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "help": "creates new columns that are not present in Airtable's table",
             },
         },
+        "Marker Specific Options": {
+            "--md": {
+                "action": "store_true",
+                "help": "creates folder named marker data in dropbox",
+            },
+        },
         "validation_options": {
             "--fail-on-duplicate-csv-columns": {
                 "action": "store_true",
