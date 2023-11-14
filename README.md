@@ -99,6 +99,10 @@ general options:
   --workers                          total number of worker threads to upload your data (default: 5)
   -h, --help                         show this help message and exit
 
+dropbox options:
+  --dropbox-token                    your Dropbox token here
+  --attachment-columns               specify one or more attachment columns
+
 column options:
   --disable-bypass-column-creation   creates new columns that are not present in Airtable's table
 
