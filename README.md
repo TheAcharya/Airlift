@@ -123,7 +123,7 @@ After trying to run `airlift` for the first time, the process will be blocked by
 
 ### Prerequisite
 
-You must pass a single `*.csv` file for upload. The CSV file must contain at least 2 rows. The first row will be used as a header.
+You must pass a single `*.csv` or `*.json` file for upload. The CSV file must contain at least 2 rows. The first row will be used as a header.
 
 <details><summary>Obtain your Airtable's Personal Access Token:</summary>
 <p>
