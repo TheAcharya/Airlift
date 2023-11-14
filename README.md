@@ -87,7 +87,7 @@ https://github.com/TheAcharya/airlift
 Upload & Merge Data to Airtable
 
 positional arguments:
-  FILE                               CSV file to upload
+  FILE                               CSV or JSON file to upload
 
 general options:
   --token TOKEN                      your Airtable personal access token
