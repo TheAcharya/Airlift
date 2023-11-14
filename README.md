@@ -84,7 +84,7 @@ usage: airlift [-h] --token TOKEN --base BASE --table TABLE [OPTION]... FILE
 
 https://github.com/TheAcharya/airlift
 
-Upload & Merge Data to Airtable
+Upload & Merge Data with Attachments to Airtable
 
 positional arguments:
   FILE                               CSV or JSON file to upload
