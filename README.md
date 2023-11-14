@@ -169,19 +169,7 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 <details><summary>Obtain your Dropbox Access Token:</summary>
 <p>
 
-1. When you have a base open in a compatible web browser, you should see a URL in the address bar that looks similar to the example below:
-
-<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/airtable_url.jpg?raw=true"> </p>
-
-In between each backslash, you will find a string that identifies the base, table, and view IDs.
-
-- Base IDs begin with "app"
-- Table IDs begin with "tbl"
-- View IDs begin with "viw"
-
-<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/airtable_url_reference.png?raw=true"> </p>
-
-We only require _Base ID_ and _Table ID_ for **Airlift**
+1. Login to your [Dropbox's App Console](https://www.dropbox.com/developers/apps/create) account via a web browser.
 
 </p>
 </details>
