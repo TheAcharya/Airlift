@@ -100,7 +100,7 @@ general options:
   -h, --help                         show this help message and exit
 
 dropbox options:
-  --dropbox-token                    your Dropbox token here
+  --dropbox-token                    your Dropbox OAuth 2 token here
   --attachment-columns               specify one or more attachment columns
 
 column options:
@@ -189,7 +189,11 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_03.png?raw=true"> </p>
 
-12. Go to the Settings tab.
+12. After the token is generated you’ll see a string of letters and numbers, which looks something like this:
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_04.png?raw=true"> </p>
+
+_Do not share your access token with anyone._
 
 </p>
 </details>
