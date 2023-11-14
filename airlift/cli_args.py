@@ -55,7 +55,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             },
             "--workers": {
                 "type": int,
-                "help": "total number of worker threads to upload your data (default: 1)"
+                "help": "total number of worker threads to upload your data (default: 5)"
             },
             ("-h", "--help"): {
                 "action": "help",
