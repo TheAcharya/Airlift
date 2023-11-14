@@ -170,6 +170,26 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 <p>
 
 1. Login to your [Dropbox's App Console](https://www.dropbox.com/developers/apps/create) account via a web browser.
+2. Choose Scoped access.
+3. Choose Full Dropbox access.
+4. Give your App a name. _The name of the App can be unique and personal to you._
+5. Click on ‘Create app’ button.
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_01.png?raw=true"> </p>
+
+6. Go to the Permissions tab.
+7. Set the permissions as shown on the screenshot.
+8. Click on 'Submit' at the bottom.
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_02.png?raw=true"> </p>
+
+9. Go to the Settings tab.
+10. Scroll down to ‘OAuth 2’ block.
+11. Click ‘Generate’ button near ‘Generated access token’ text.
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_03.png?raw=true"> </p>
+
+12. Go to the Settings tab.
 
 </p>
 </details>
