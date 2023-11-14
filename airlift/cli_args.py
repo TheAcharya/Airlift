@@ -11,7 +11,7 @@ HELP_ARGS_WIDTH = 50
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="airlift",
-        description="https://github.com/TheAcharya/Airlift \n\nUpload & Merge Data to Airtable",
+        description="https://github.com/TheAcharya/Airlift \n\nUpload & Merge Data with Attachments to Airtable",
         usage="%(prog)s [-h] --token TOKEN --base BASE --table TABLE [OPTION]... FILE",
         add_help=False,
         formatter_class=lambda prog: argparse.RawTextHelpFormatter(
