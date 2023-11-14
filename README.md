@@ -214,7 +214,8 @@ For ease of use, usage and creation of `.sh` files is **recommended**.
 10. To execute your script, open Terminal, `sh /Users/xxx/Desktop/Airlift/myscript.sh`
 11. You can create and save multiple `.sh` files for different modes and configurations.
 
-**Uploading Data with no Attachments**
+<details><summary>Uploading Data with no Attachments</summary>
+<p>
 
 ```bash
 #!/bin/sh
@@ -228,6 +229,29 @@ UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
 $TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
 ```
+
+</p>
+</details>
+
+<details><summary>Uploading Data with Attachments</summary>
+<p>
+
+```bash
+#!/bin/sh
+
+TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
+AIRTABLE_TOKEN="REPLACE"
+AIRTABLE_BASE="REPLACE"
+AIRTABLE_TABLE="REPLACE"
+DROPBOX_TOKEN="REPLACE"
+UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
+UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
+
+$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Image Filename" --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
+```
+
+</p>
+</details>
 
 ## Credits
 
