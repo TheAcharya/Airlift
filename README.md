@@ -198,6 +198,17 @@ _Do not share your access token with anyone._
 </p>
 </details>
 
+## Examples
+
+For ease of use, usage and creation of `.sh` files is **recommended**. 
+
+1. Create a folder called **Airlift** on your Desktop.
+2. Place the latest pre-compiled binary with the folder. 
+3. Within that folder, create a folder, **Data**.
+4. **Data** is where you place your `.csv` or `.json` and attachments files.
+5. Create a file using any text editor. Name the script file with extension `.sh`
+6. Copy and paste this syntax into the file, where **xxx** is the name of of your user directory and **zzz** is the name of your `.csv` or `.json` file.
+
 ## Credits
 
 Original Idea and Workflow Architecture by [Vigneswaran Rajkumar](https://twitter.com/IAmVigneswaran)
