@@ -61,20 +61,21 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "action": "help",
                 "help": "show this help message and exit",
             },
-            "--dropbox-token":{
-                "help":"your Dropbox OAuth 2 token here",
-            },
-
         },
-        "column_options": {
-            "--disable-bypass-column-creation": {
-                "action": "store_true",
-                "help": "creates new columns that are not present in Airtable's table",
+        "dropbox options": {
+            "--dropbox-token": {
+                "help": "your Dropbox OAuth 2 token here",
             },
             "--attachment-columns": {
                 "nargs": "+",
                 "help": "specify one or more attachment columns",
                 "metavar": "ATTTACHMENT_COLUMNS",
+            },
+        },
+        "column_options": {
+            "--disable-bypass-column-creation": {
+                "action": "store_true",
+                "help": "creates new columns that are not present in Airtable's table",
             },
         },
         "validation_options": {
