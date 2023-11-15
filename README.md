@@ -218,7 +218,7 @@ Some column types do not support assigning value to them because the database ge
 | Attachment              | string           | ❌                                     |
 | Autonumber              | numerical        | ❌                                     |
 | Barcode                 | string           | ❌                                     |
-| Button                  | `---`            | ❌                                     |
+| Button                  | `---`            | `---`                                  |
 | Checkbox                | `true`, `false`  | ❌                                     |
 | Count                   | numerical        | ❌                                     |
 | Created time            | `---`		         | `---`                                  |
