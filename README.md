@@ -220,16 +220,16 @@ Some column types do not support assigning value to them because the database ge
 | Barcode                 | string           | ❌                                     |
 | Button                  | `---`            | ❌                                     |
 | Checkbox                | `true`, `false`  | ❌                                     |
-| Count                   | string, numerical| ❌                                     |
-| Created time            | string		       | ❌                                     |
-| Created by              | string  		     | ❌                                     |
+| Count                   | numerical        | ❌                                     |
+| Created time            | `---`		         | `---`                                  |
+| Created by              | `---`  		       | `---`                                  |
 | Currency                | numerical        | ❌                                     |
 | Date & Time             | string  		     | ❌                                     |
 | Duration                | string           | ❌                                     |
 | Email                   | string           | ❌                                     |
 | Formula                 | `---`            | `---`                                  |
-| Last modified by        | `---`            | ❌                                     |
-| Last modified time      | string           | ❌                                     |
+| Last modified by        | `---`            | `---`                                  |
+| Last modified time      | `---`            | `---`                                  |
 | Linked record           | string           | ✅                                     |
 | Long text           	  | string           | ❌                                     |
 | Lookup                  | `---`            | `---`                                  |
