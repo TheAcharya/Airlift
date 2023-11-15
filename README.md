@@ -231,6 +231,19 @@ UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 $TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
 ```
 
+CSV Example
+
+```text
+Cat ID,Animal Name,Location
+001,Lion,Namibia
+002,Tiger,India
+003,Panther,India
+004,Snow Leopard,Nepal
+005,Cheetah,South Africa
+006,Puma,South America
+007,Jaguar,Brazil
+```
+
 </p>
 </details>
 
