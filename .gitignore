@@ -14,3 +14,4 @@ settings.yml
 marker_data_demo
 upload_test_copy.sh
 Demo
+airlift/__pycache__
