@@ -16,13 +16,13 @@ class dropbox_client:
             try:
                 self.dbx.files_create_folder("/Marker Data")
             except dropbox.exceptions.ApiError as e:
-                print(f"The folder marker data already exists.")
+                print(f"The folder Marker Data already exists.")
         else:
             self.main_folder = "/Airlift"
             try:
                 self.dbx.files_create_folder("/Airlift")
             except dropbox.exceptions.ApiError as e:
-                print(f"The folder airlift already exists.")
+                print(f"The folder Airlift already exists.")
             
         c = datetime.now()
         self.sub_folder = f"{self.main_folder}{self.main_folder} {c}"
