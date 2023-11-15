@@ -206,7 +206,7 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 
 ## Column Types
 
-By default, Airlist will try to guess column types based on their content.
+By default, Airlift will try to guess column types based on their content.
 
 Some column types do not support assigning value to them because the database generates their content automatically.
 
