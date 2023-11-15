@@ -244,6 +244,8 @@ Cat ID,Animal Name,Location
 007,Jaguar,Brazil
 ```
 
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-without-attachments.gif?raw=true"> </p>
+
 </p>
 </details>
 
