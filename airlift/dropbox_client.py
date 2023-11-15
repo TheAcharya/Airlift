@@ -30,7 +30,7 @@ class dropbox_client:
                     print(f"The folder Airlift already exists.")
 
             c = datetime.now()
-            self.sub_folder = f"{self.main_folder}{self.main_folder} {c}"
+            self.sub_folder = f"{self.main_folder}{self.main_folder} {c.strftime('%H:%M:%S')}"
 
             try:
                 self.dbx.files_create_folder(self.sub_folder)
