@@ -35,7 +35,7 @@ def _csv_read_rows(csv_file:Iterable[str],fail_on_dup:bool) -> List[CSVRowType]:
 
     if duplicate_columns:
         if fail_on_dup:
-            raise CriticalError(f"Duplicate columns found in csv :{duplicate_columns}")
+            raise CriticalError(f"Duplicate columns found in CSV :{duplicate_columns}")
         else:
             rows = _remove_duplicates(rows)
 
