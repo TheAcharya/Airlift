@@ -197,7 +197,9 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_04.png?raw=true"> </p>
 
-_Do not share your access token with anyone._
+**Do not share your access token with anyone.**
+
+**When you generate a Dropbox OAuth 2 access token, it’s usually short-lived and expires in 4 hours or fewer. You would have to generate your access token again, otherwise you would get an error.**
 
 </p>
 </details>
