@@ -25,7 +25,7 @@ class new_client:
         }
 
         self.single_upload_url = f"https://api.airtable.com/v0/{self.base}/{self.table}"
-        logger.debug("Client Created")
+        logger.debug("Airtable Client Created")
 
     def single_upload(self,data:ATDATATYPE) -> None:
 
@@ -73,20 +73,20 @@ class new_client:
                             print(f"{column} not present in this row")
 
         else:
-            logger.info("All the columns are verified and present in both the file and airtable!")
+            logger.info("All the columns are verified and present in both the file and Airtable!")
 
         return data
     
     def _create_new_field(self,field_name:str) -> None:
         URL = f"https://api.airtable.com/v0/meta/bases/{self.base}/tables/{self.table}/fields"
-        new_field = {"name":field_name,"description":"This is a field created by airtable","type":"multilineText"}
+        new_field = {"name":field_name,"description":"This is a field created by Airtable","type":"multilineText"}
 
         response = requests.post(URL,headers=self.headers,data=json.dumps(new_field))
 
         if response.status_code == 200:
-            logger.info(f"Created new column {field_name} in airtable")
+            logger.info(f"Created new column {field_name} in Airtable")
         elif response.status_code == 422:
-            logger.warning("Encountered an 422 error in creating a new column in airtable!")
+            logger.warning("Encountered an 422 error in creating a new column in Airtable!")
         
         else:
             logger.warning(f"unknown error : {response.text}")
