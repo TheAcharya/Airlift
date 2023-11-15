@@ -73,7 +73,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             },
             "--attachment-columns-map":{
                 "nargs":2,
-                "help":"Specify if and how the attachment column must be mapped to new column"
+                "help":"Specify how the attachment column must be mapped in Airtable"
             },
         },
         "column_options": {
@@ -82,7 +82,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "help": "creates new columns that are not present in Airtable's table",
             },
         },
-        "Marker Specific Options": {
+        "custom application options": {
             "--md": {
                 "action": "store_true",
                 "help": argparse.SUPPRESS,
