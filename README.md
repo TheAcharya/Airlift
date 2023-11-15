@@ -231,7 +231,7 @@ UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 $TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
 ```
 
-CSV Example
+Example CSV
 
 ```text
 Cat ID,Animal Name,Location
@@ -264,6 +264,36 @@ UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
 $TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Image Filename" --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
+```
+
+Example CSV 
+
+```text
+Cat ID,Animal Name,Location,Image Filename
+001,Lion,Namibia,lion.jpg
+002,Tiger,India,tiger.jpg
+003,Panther,India,panther.jpg
+004,Snow Leopard,Nepal,snow_leopard.jpg
+005,Cheetah,South Africa,cheetah.jpg
+006,Puma,South America,puma.jpg
+007,Jaguar,Brazil,jaguar.jpg
+```
+
+Example Folder Structure
+
+```text
+Desktop/
+├─ Airlift/
+│  ├─ Data/
+│  │  ├─ zzz.csv
+│  │  ├─ cheetah.jpg
+│  │  ├─ jaguar.jpg
+│  │  ├─ lion.jpg
+│  │  ├─ panther.jpg
+│  │  ├─ puma.jpg
+│  │  ├─ snow_leopard.jpg
+│  │  ├─ tiger.jpg
+│  ├─ myscript.sh
 ```
 
 </p>
