@@ -42,7 +42,7 @@ def cli(*argv: str) -> None:
     logger.info("Validation done!")
 
     if not data:
-        raise CriticalError("file is empty")
+        raise CriticalError("File is empty!")
 
     data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation)
 
