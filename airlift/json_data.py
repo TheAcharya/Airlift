@@ -26,7 +26,7 @@ def _json_read_rows(json_file:Iterable[str],fail_on_dup:bool) -> List[CSVRowType
     reader = json.load(json_file)
     
     if not reader:
-        raise CriticalError("Json file has no data")
+        raise CriticalError("JSON file has no data")
     
     records = []
     for each_data in reader:
