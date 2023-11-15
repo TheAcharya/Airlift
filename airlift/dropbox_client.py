@@ -4,37 +4,40 @@ import os
 import dropbox
 import logging
 from datetime import datetime
+from airlift.utils_exceptions import CriticalError
 logger = logging.getLogger(__name__)
 class dropbox_client:
     def __init__(self,access_token,md):
-        
+    
         try:
-            self.dbx = dropbox.Dropbox(access_token)
-            logger.info("Created a Dropbox Client")
+            try:
+                self.dbx = dropbox.Dropbox(access_token)
+                logger.info("Created a Dropbox Client")
+            except:
+                raise CriticalError('Failed to create the Dropbox client')
+
+            if md:
+                self.main_folder = "/Marker Data"
+                try:
+                    self.dbx.files_create_folder("/Marker Data")
+                except Exception as e:
+                    print(f"The folder Marker Data already exists.")
+            else:
+                self.main_folder = "/Airlift"
+                try:
+                    self.dbx.files_create_folder("/Airlift")
+                except Exception as e:
+                    print(f"The folder Airlift already exists.")
+
+            c = datetime.now()
+            self.sub_folder = f"{self.main_folder}{self.main_folder} {c}"
+
+            try:
+                self.dbx.files_create_folder(self.sub_folder)
+            except dropbox.exceptions.ApiError as e:
+                print(f"The folder {self.sub_folder} already exists.")
         except Exception as e:
-            logger.error('Error in creating the Dropbox client',e)
-
-        if md:
-            self.main_folder = "/Marker Data"
-            try:
-                self.dbx.files_create_folder("/Marker Data")
-            except dropbox.exceptions.ApiError as e:
-                print(f"The folder Marker Data already exists.")
-        else:
-            self.main_folder = "/Airlift"
-            try:
-                self.dbx.files_create_folder("/Airlift")
-            except dropbox.exceptions.ApiError as e:
-                print(f"The folder Airlift already exists.")
-            
-        c = datetime.now()
-        self.sub_folder = f"{self.main_folder}{self.main_folder} {c}"
-
-        try:
-            self.dbx.files_create_folder(self.sub_folder)
-        except dropbox.exceptions.ApiError as e:
-            print(f"The folder {self.sub_folder} already exists.")
-
+            raise CriticalError("Error during dropbox client creation",e)
 
 
     def upload_to_dropbox(self,filename):
