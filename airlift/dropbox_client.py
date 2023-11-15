@@ -43,10 +43,9 @@ class dropbox_client:
     def upload_to_dropbox(self,filename):
         with open(filename, 'rb') as f:
             image_data = f.read()
-            image_name = os.path.basename(filename)
     
-            dropbox_path = f"{self.sub_folder}/{image_name}"
-           
+            dropbox_path = f"{self.sub_folder}/{filename}"
+     
             # Upload the image
             self.dbx.files_upload(image_data, dropbox_path)
 
