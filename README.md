@@ -215,7 +215,7 @@ For ease of use, usage and creation of `.sh` files is **recommended**.
 10. To execute your script, open Terminal, `sh /Users/xxx/Desktop/Airlift/myscript.sh`
 11. You can create and save multiple `.sh` files for different modes and configurations.
 
-<details><summary>Uploading Data with no Attachments</summary>
+<details><summary>Uploading Data without Attachments</summary>
 <p>
 
 ```bash
