@@ -71,6 +71,10 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "help": "specify one or more attachment columns",
                 "metavar": "ATTTACHMENT_COLUMNS",
             },
+            "--attachment-columns-map":{
+                "nargs":2,
+                "help":"Specify if and how the attachment column must be mapped to new column"
+            },
         },
         "column_options": {
             "--disable-bypass-column-creation": {
@@ -81,7 +85,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         "Marker Specific Options": {
             "--md": {
                 "action": "store_true",
-                "help": "creates folder named marker data in dropbox",
+                "help": argparse.SUPPRESS,
             },
         },
         "validation_options": {
