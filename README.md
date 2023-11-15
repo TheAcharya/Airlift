@@ -249,7 +249,10 @@ Some column types do not support assigning value to them because the database ge
 
 ## Examples
 
-For ease of use, usage and creation of `.sh` files is **recommended**. 
+<details><summary>Basic creation of folders and .sh file</summary>
+<p>
+
+For ease of use, usage and creation of `.sh` files is **recommended**.
 
 1. Create a folder called **Airlift** on your Desktop.
 2. Place the latest pre-compiled binary with the folder. 
@@ -262,6 +265,9 @@ For ease of use, usage and creation of `.sh` files is **recommended**.
 9. To give execute permission to your script, open Terminal, `chmod +x /Users/xxx/Desktop/Airlift/myscript.sh`
 10. To execute your script, open Terminal, `sh /Users/xxx/Desktop/Airlift/myscript.sh`
 11. You can create and save multiple `.sh` files for different modes and configurations.
+
+</p>
+</details>
 
 <details><summary>Uploading Data without Attachments</summary>
 <p>
