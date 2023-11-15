@@ -4,6 +4,26 @@ version = "0.1.0"
 description = "Upload & Merge Data with Attachments to Airtable"
 authors = ["Arjun <arjunprakash027@gmail.com>"]
 readme = "README.md"
+include = ["CHANGELOG.md"]
+license = "MIT"
+homepage = "https://github.com/TheAcharya/Airlift"
+repository = "https://github.com/TheAcharya/Airlift"
+documentation = "https://github.com/TheAcharya/Airlift/blob/main/README.md"
+keywords = ["csv", "json", "airtable", "dropbox", "import", "merge"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Environment :: Console",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft",
+    "Operating System :: Unix",
+    "Topic :: Database",
+    "Topic :: Internet",
+    "Topic :: Terminals",
+    "Topic :: Utilities",
+]
 
 [tool.poetry.scripts]
 airlift = "airlift.cli:main"
