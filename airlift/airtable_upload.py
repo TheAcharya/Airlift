@@ -48,7 +48,7 @@ def _worker(client:new_client,data_queue:Queue,progress_bar,dbx:dropbox_client,a
                                 else:
                                     data['fields'][key] = [{"url":dbx.upload_to_dropbox(f"{value}")}]
                         else:
-                            raise CriticalError("dropbox token not provided! aborting the upload")
+                            raise CriticalError("Dropbox token not provided! Aborting the upload!")
                 
                 client.single_upload(data)
                 progress_bar.update(1)
