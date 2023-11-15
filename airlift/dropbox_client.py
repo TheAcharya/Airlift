@@ -9,7 +9,7 @@ class dropbox_client:
     def __init__(self,access_token,md):
         
         self.dbx = dropbox.Dropbox(access_token)
-        logger.info("Created a dropbox client")
+        logger.info("Created a Dropbox Client")
 
         if md:
             self.main_folder = "/Marker Data"
