@@ -37,6 +37,7 @@
 - [Guide](#guide)
   - [macOS Gatekeeper & Notarization](#macos-gatekeeper--notarization)
   - [Prerequisite](#prerequisite)
+- [Column Types](#column-types)
 - [Examples](#examples)
 - [Credits](#credits)
 - [License](#license)
@@ -197,6 +198,49 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_04.png?raw=true"> </p>
 
 _Do not share your access token with anyone._
+
+</p>
+</details>
+
+## Column Types
+
+By default, Airlist will try to guess column types based on their content.
+
+Some column types do not support assigning value to them because the database generates their content automatically.
+
+<details><summary>Support Table</summary>
+<p>
+
+| Column Type Name   | Supported Values | Multiple Values (Comma Separated) |
+| ----------------------- | ---------------- | -------------------------------------- |
+| Attachment              | string           | ❌                                     |
+| Autonumber              | numerical        | ❌                                     |
+| Barcode                 | string           | ❌                                     |
+| Button                  | `---`            | ❌                                     |
+| Checkbox                | `true`, `false`  | ❌                                     |
+| Count                   | string, numerical| ❌                                     |
+| Created time            | string		       | ❌                                     |
+| Created by              | string  		     | ❌                                     |
+| Currency                | numerical        | ❌                                     |
+| Date & Time             | string  		     | ❌                                     |
+| Duration                | string           | ❌                                     |
+| Email                   | string           | ❌                                     |
+| Formula                 | `---`            | `---`                                  |
+| Last modified by        | `---`            | ❌                                     |
+| Last modified time      | string           | ❌                                     |
+| Linked record           | string           | ✅                                     |
+| Long text           	  | string           | ❌                                     |
+| Lookup                  | `---`            | `---`                                  |
+| Multiple select         | string           | ✅                                     |
+| Number       			      | numerical        | ❌                                     |
+| Percent                 | numerical        | ❌                                     |
+| Phone number            | string           | ❌                                     |
+| Rating                  | numerical        | ❌                                     |
+| Rollup                  | `---`            | `---`                                  |
+| Single line text        | string           | ❌                                     |
+| Single select        	  | string           | ❌                                     |
+| URL       			        | string           | ❌                                     |
+| User       			        | string           | ❌                                     |
 
 </p>
 </details>
