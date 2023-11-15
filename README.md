@@ -229,7 +229,7 @@ AIRTABLE_TABLE="REPLACE"
 UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
-$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
+$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --log $UPLOAD_LOG "$UPLOAD_PAYLOAD"
 ```
 
 Example CSV
@@ -264,7 +264,7 @@ DROPBOX_TOKEN="REPLACE"
 UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
-$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Image Filename" --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
+$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Image Filename" --log $UPLOAD_LOG "$UPLOAD_PAYLOAD"
 ```
 
 Example CSV 
@@ -316,7 +316,7 @@ DROPBOX_TOKEN="REPLACE"
 UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
-$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Image Filename" --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
+$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns-map "Image Filename" "Attachments" --log $UPLOAD_LOG "$UPLOAD_PAYLOAD"
 ```
 
 Example CSV 
