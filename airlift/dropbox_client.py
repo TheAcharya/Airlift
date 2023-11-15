@@ -37,7 +37,7 @@ class dropbox_client:
             except dropbox.exceptions.ApiError as e:
                 print(f"The folder {self.sub_folder} already exists.")
         except Exception as e:
-            raise CriticalError("Error during dropbox client creation",e)
+            raise CriticalError("Error during Dropbox client creation",e)
 
 
     def upload_to_dropbox(self,filename):
