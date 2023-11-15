@@ -103,6 +103,7 @@ general options:
 dropbox options:
   --dropbox-token                    your Dropbox OAuth 2 token
   --attachment-columns               specify one or more attachment columns
+  --attachment-columns-map           specify how the attachment column must be mapped in Airtable
 
 column options:
   --disable-bypass-column-creation   creates new columns that are not present in Airtable's table
