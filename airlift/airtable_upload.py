@@ -49,13 +49,14 @@ def _worker(client:new_client,data_queue:Queue,progress_bar,dbx:dropbox_client,a
                                 else:
                                     data['fields'][key] = [{"url":dbx.upload_to_dropbox(f"{value}")}]
 
-                            if attachment_columns_map:
-                                if key == attachment_columns_map[0]:
-                                    if dirname:
-                                        data['fields'][attachment_columns_map[1]] = [{"url":dbx.upload_to_dropbox(f"{dirname}/{value}")}]
-                                    else:
-                                        data['fields'][attachment_columns_map[1]] = [{"url":dbx.upload_to_dropbox(f"{value}")}]
-                                        
+                    if attachment_columns_map:
+                        if dbx:
+                            if key == attachment_columns_map[0]:
+                                if dirname:
+                                    data['fields'][attachment_columns_map[1]] = [{"url":dbx.upload_to_dropbox(f"{dirname}/{value}")}]
+                                else:
+                                    data['fields'][attachment_columns_map[1]] = [{"url":dbx.upload_to_dropbox(f"{value}")}]
+
                         else:
                             raise CriticalError("Dropbox token not provided! Aborting the upload!")
                 

@@ -8,8 +8,11 @@ logger = logging.getLogger(__name__)
 class dropbox_client:
     def __init__(self,access_token,md):
         
-        self.dbx = dropbox.Dropbox(access_token)
-        logger.info("Created a Dropbox Client")
+        try:
+            self.dbx = dropbox.Dropbox(access_token)
+            logger.info("Created a Dropbox Client")
+        except Exception as e:
+            logger.error('Error in creating the Dropbox client',e)
 
         if md:
             self.main_folder = "/Marker Data"
