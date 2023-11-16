@@ -303,6 +303,67 @@ Cat ID,Animal Name,Location
 </p>
 </details>
 
+<details><summary>Uploading Data with Multiple Attachments Column</summary>
+<p>
+
+```bash
+#!/bin/sh
+
+TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
+AIRTABLE_TOKEN="REPLACE"
+AIRTABLE_BASE="REPLACE"
+AIRTABLE_TABLE="REPLACE"
+DROPBOX_TOKEN="REPLACE"
+UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
+UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
+
+$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Image Filename" --log $UPLOAD_LOG "$UPLOAD_PAYLOAD"
+```
+
+Example CSV 
+
+```text
+Cat ID,Animal Name,Location,Colour Image,Black & White Image
+001,Lion,Namibia,Colour/lion.jpg,Black & White/lion.jpg
+002,Tiger,India,Colour/tiger.jpg,Black & White/tiger.jpg
+003,Panther,India,Colour/panther.jpg,Black & White/panther.jpg
+004,Snow Leopard,Nepal,Colour/snow_leopard.jpg,Black & White/snow_leopard.jpg
+005,Cheetah,South Africa,Colour/cheetah.jpg,Black & White/cheetah.jpg
+006,Puma,South America,Colour/puma.jpg,Black & White/puma.jpg
+007,Jaguar,Brazil,Colour/jaguar.jpg,Black & White/jaguar.jpg
+```
+
+Example Folder Structure
+
+```text
+Desktop/
+├─ Airlift/
+│  ├─ Data/
+│  │  ├─ zzz.csv
+│  │  ├─ Black & White/
+│  │  │  ├─ cheetah.jpg
+│  │  │  ├─ jaguar.jpg
+│  │  │  ├─ lion.jpg
+│  │  │  ├─ panther.jpg
+│  │  │  ├─ puma.jpg
+│  │  │  ├─ snow_leopard.jpg
+│  │  │  ├─ tiger.jpg
+│  │  ├─ Colour/
+│  │  │  ├─ cheetah.jpg
+│  │  │  ├─ jaguar.jpg
+│  │  │  ├─ lion.jpg
+│  │  │  ├─ panther.jpg
+│  │  │  ├─ puma.jpg
+│  │  │  ├─ snow_leopard.jpg
+│  │  │  ├─ tiger.jpg
+│  ├─ myscript.sh
+```
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments.gif?raw=true"> </p>
+
+</p>
+</details>
+
 <details><summary>Uploading Data with Attachments</summary>
 <p>
 
@@ -354,6 +415,7 @@ Desktop/
 
 </p>
 </details>
+
 
 <details><summary>Uploading Data with Attachments using Mapping</summary>
 <p>
