@@ -369,7 +369,7 @@ DROPBOX_TOKEN="REPLACE"
 UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
-$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Image Filename" --log $UPLOAD_LOG "$UPLOAD_PAYLOAD"
+$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Colour Image" "Black & White Image" --log $UPLOAD_LOG "$UPLOAD_PAYLOAD"
 ```
 
 Example CSV 
