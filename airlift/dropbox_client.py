@@ -43,10 +43,23 @@ class dropbox_client:
     def upload_to_dropbox(self,filename):
         with open(filename, 'rb') as f:
             image_data = f.read()
-    
-            dropbox_path = f"{self.sub_folder}/{filename}"
-     
-            # Upload the image
+
+        
+            file_path = os.path.split(filename)
+            filename = file_path[1]
+
+            if file_path[0]:
+                last_dir = os.path.split(file_path[0])
+
+            if last_dir:
+                if last_dir[0] is None:
+                    final_path = f'{filename}'
+                else:
+                    final_path = f'{last_dir[1]}/{filename}'
+            else:
+                final_path = f'{filename}'
+            
+            dropbox_path = f"{self.sub_folder}/{final_path}"
             self.dbx.files_upload(image_data, dropbox_path)
 
             shared_link_metadata = self.dbx.sharing_create_shared_link(path=dropbox_path)
