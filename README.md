@@ -411,7 +411,7 @@ Desktop/
 │  ├─ myscript.sh
 ```
 
-<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments.gif?raw=true"> </p>
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments-multi-column.gif?raw=true"> </p>
 
 </p>
 </details>
