@@ -1,5 +1,3 @@
-from pyairtable import Api
-import pyairtable.api.table as ATtable
 import logging
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 from airlift.airtable_error_handling import ClientError

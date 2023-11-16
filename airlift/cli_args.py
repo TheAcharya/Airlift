@@ -64,16 +64,19 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         },
         "dropbox options": {
             "--dropbox-token": {
+                "type":Path,
                 "help": "your Dropbox OAuth 2 token",
+                "metavar":'FILE',
             },
             "--attachment-columns": {
                 "nargs": "+",
                 "help": "specify one or more attachment columns",
-                "metavar": "ATTTACHMENT_COLUMNS",
+                "metavar":"\b",
             },
             "--attachment-columns-map":{
                 "nargs":2,
-                "help":"specify how the attachment column must be mapped in Airtable"
+                "help":"specify how the attachment column must be mapped in Airtable",
+                "metavar":"\b",
             },
         },
         "column_options": {

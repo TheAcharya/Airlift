@@ -1,17 +1,18 @@
-from pydrive.drive import GoogleDrive 
-from pydrive.auth import GoogleAuth 
 import os 
 import dropbox
 import logging
 from datetime import datetime
 from airlift.utils_exceptions import CriticalError
+import json
+from dropbox import DropboxOAuth2FlowNoRedirect
 logger = logging.getLogger(__name__)
 class dropbox_client:
     def __init__(self,access_token,md):
     
         try:
             try:
-                self.dbx = dropbox.Dropbox(access_token)
+                creds = self._get_tokens(access_token)
+                self.dbx = dropbox.Dropbox(oauth2_refresh_token=creds[1],app_key=creds[0])
                 logger.info("Created a Dropbox Client")
             except:
                 raise CriticalError('Failed to create the Dropbox client')
@@ -38,6 +39,46 @@ class dropbox_client:
                 print(f"The folder {self.sub_folder} already exists.")
         except Exception as e:
             raise CriticalError("Error during Dropbox client creation",e)
+
+
+    def _get_tokens(self,access_token):
+        with open(access_token,'r') as file:
+            creds = json.load(file)
+        
+        try:
+            app_key = creds['app_key']
+        except:
+            logger.warning("app_key not present in json file")
+            raise CriticalError("app_key not present in the json file, please check!")
+        
+        try:
+            refresh_token = creds['refresh_token']
+        except:
+            auth_flow = DropboxOAuth2FlowNoRedirect(app_key, use_pkce=True, token_access_type='offline')
+
+            authorize_url = auth_flow.start()
+            print("1. Go to: " + authorize_url)
+            print("2. Click \"Allow\" (you might have to log in first).")
+            print("3. Copy the authorization code.")
+            auth_code = input("Enter the authorization code here: ").strip()
+
+            try:
+                oauth_result = auth_flow.finish(auth_code)
+                refresh_token = oauth_result.refresh_token
+                with open(access_token,'r') as file:
+                    creds_data = json.load(file)
+                
+                creds_data['refresh_token'] = refresh_token
+
+                with open(access_token,'w') as file:
+                    json.dump(creds_data,file,indent=2)
+
+            except Exception as e:
+                logger.warning("error during retreival of refresh token")
+                raise CriticalError("error during retreival of refresh token")
+        
+        return (app_key,refresh_token)
+        
 
 
     def upload_to_dropbox(self,filename):

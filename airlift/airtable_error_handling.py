@@ -1,7 +1,7 @@
 # Using Airtable's Error Codes as reference:
 # https://support.airtable.com/docs/airtable-api-common-troubleshooting
 # https://airtable.com/developers/web/api/errors
-import requests
+
 from requests.exceptions import HTTPError
 from airlift.utils_exceptions import CriticalError, AirtableError
 
