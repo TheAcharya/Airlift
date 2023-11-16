@@ -26,7 +26,8 @@
 - Automated uploading of `.csv` or `.json` data to Airtable
 - Ability to update and auto-create new entries for [single select field](https://support.airtable.com/docs/single-select-field) and [multiple select field](https://support.airtable.com/docs/multiple-select-field)
 - No subscription of third party platform required
-- Ability to upload attachments via build-in Dropbox client 
+- Ability to upload attachments via build-in Dropbox client
+- Ability to upload attachments to multiple attachment columns
 
 ## Table of contents
 
