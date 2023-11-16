@@ -48,9 +48,9 @@
 
 **Airlift** draws inspiration from our very own [CSV2Notion Neo](https://github.com/TheAcharya/csv2notion-neo), which was inspired by Airtable’s [CSV import extension](https://support.airtable.com/docs/csv-import-extension). And with **Airlift**, we have come full circle.
 
-To send data to Airtable, users or applications need to write custom code using libraries that connect with Airtable's API. For normal end-users who aren’t developers, this can be an extremely challenging endeavor. For most users, Airtable’s [CSV import extension](https://support.airtable.com/docs/csv-import-extension) could be sufficient. 
+To send data to Airtable, users or applications need to write custom code using libraries that connect with Airtable's API. For normal end-users who aren’t developers, this can be an extremely challenging endeavor. For most users, Airtable’s [CSV import extension](https://support.airtable.com/docs/csv-import-extension) could be sufficient. But [CSV import extension](https://support.airtable.com/docs/csv-import-extension) is only available on paid plan.
 
-However, many experienced Airtable users want to send and transfer data automatically without using [Make](https://www.make.com) or [Zapier](https://zapier.com). This is where **Airlift** comes into play.
+Furthermore, many experienced Airtable users want to send and transfer data automatically without using [Make](https://www.make.com) or [Zapier](https://zapier.com). This is where **Airlift** comes into play.
 
 **Airlift** is free and open-source software. But you can [sponsor](https://github.com/sponsors/TheAcharya) us if you find it useful.
 
