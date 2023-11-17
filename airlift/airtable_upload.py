@@ -13,12 +13,8 @@ logger = logging.getLogger(__name__)
 ATDATA = List[Dict[str,Dict[str,str]]]
 
 
-def upload_data(client: new_client, new_data:ATDATA, workers:int, dropbox_token:str, dirname:str, attachment_columns:List[str],attachment_columns_map:List[str],md:bool) -> None:
-    if dropbox_token:
-        dbx = dropbox_client(dropbox_token,md)
-    else:
-        dbx = None
-
+def upload_data(client: new_client, new_data:ATDATA, workers:int, dbx:str, dirname:str, attachment_columns:List[str],attachment_columns_map:List[str]) -> None:
+    
     logger.info("Uploding data now!")
     with tqdm(total = len(new_data)) as progress_bar:
         try:

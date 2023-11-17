@@ -12,6 +12,7 @@ from airlift.csv_data import csv_read
 from airlift.airtable_upload import upload_data
 from airlift.json_data import json_read
 from airlift.airtable_client import new_client
+from airlift.dropbox_client import dropbox_client
 
 logger = logging.getLogger(__name__)
 
@@ -25,31 +26,37 @@ def cli(*argv: str) -> None:
 
     workers = args.workers if args.workers else 5
 
-    airtable_client = new_client(token=args.token,base=args.base,table=args.table)
-
-    logger.info(f"Validating {args.csv_file.name} and Airtable Schema")
-
-    suffix = pathlib.Path(args.csv_file.name).suffix
-
-    if "csv" in suffix:
-        data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
-    elif "json" in suffix:
-        data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+    if args.dropbox_token:
+        dbx = dropbox_client(args.dropbox_token,args.md,args.dropbox_refresh_token)
     else:
-        raise CriticalError("File type not supported!")
-    #print(data)
+        dbx = None
 
-    logger.info("Validation done!")
+    if not args.dropbox_refresh_token:
+        airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
-    if not data:
-        raise CriticalError("File is empty!")
+        logger.info(f"validating {args.csv_file.name} and Airtable Schema")
 
-    data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation)
+        suffix = pathlib.Path(args.csv_file.name).suffix
 
-    dirname = os.path.dirname(args.csv_file)
-    upload_data(client=airtable_client, new_data=data, workers = workers,dropbox_token = args.dropbox_token,dirname=dirname,attachment_columns=args.attachment_columns,md=args.md,attachment_columns_map=args.attachment_columns_map)
+        if "csv" in suffix:
+            data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+        elif "json" in suffix:
+            data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+        else:
+            raise CriticalError("File type not supported!")
+        #print(data)
 
-    logger.info("Done!")
+        logger.info("Validation done!")
+
+        if not data:
+            raise CriticalError("File is empty!")
+
+        data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation)
+
+        dirname = os.path.dirname(args.csv_file)
+        upload_data(client=airtable_client, new_data=data, workers = workers,dirname=dirname,dbx=dbx,attachment_columns=args.attachment_columns,attachment_columns_map=args.attachment_columns_map)
+
+        logger.info("Done!")
 
 def setup_logging(is_verbose: bool=False, log_file: Optional[Path]=None) -> None:
     logging.basicConfig(format="%(levelname)s: %(message)s")

@@ -25,20 +25,21 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "type": Path,
                 "help": "CSV or JSON file to upload",
                 "metavar": "FILE",
+                "nargs":"?",
             }
         },
         "general_options": {
             "--token": {
                 "help": "your Airtable personal access token",
-                "required": True,
+                
             },
             "--base": {
                 "help": "your Airtable Base ID",
-                "required": True,
+            
             },
             "--table": {
                 "help": "your Airtable Table ID",
-                "required": True,
+            
             },
             "--log": {
                 "type": Path,
@@ -64,8 +65,8 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         },
         "dropbox options": {
             "--dropbox-token": {
-                "type": Path,
-                "help": "your JSON file with Dropbox API App key",
+                "type":Path,
+                "help": "your Dropbox OAuth 2 token",
                 "metavar":'FILE',
             },
             "--attachment-columns": {
@@ -77,6 +78,10 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "nargs":2,
                 "help":"specify how the attachment column must be mapped in Airtable",
                 "metavar":"\b",
+            },
+            "--dropbox-refresh-token":{
+                "action":"store_true",
+                "help":"switch to change your refresh token",
             },
         },
         "column_options": {
