@@ -2,9 +2,9 @@
 
 <div>
 <h1>Airlift</h1>
-<!-- PyPI -->
-<a href="https://pypi.python.org/pypi/airlift-py">
-<img src="https://img.shields.io/pypi/v/airlift_py?label=version" alt="PyPI"/>
+<!-- license -->
+<a href="https://github.com/TheAcharya/Airlift/blob/main/LICENSE">
+<img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="license"/>
 </a>
 <!-- Python -->
 <a href="https://pypi.org/project/airlift-py/">
