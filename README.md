@@ -181,7 +181,7 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 <details><summary>Obtain your Dropbox App Key and Authorisation code:</summary>
 <p>
 
-1. Right-Click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file to your computer.
+1. Right-click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file to your computer.
 2. When using `--dropbox-token` make sure you input the full `PATH` of `dropbox-token.json` file.
 3. Login to your [Dropbox's App Console](https://www.dropbox.com/developers/apps) account via a web browser.
 4. Click on ‘Create app’ button.
@@ -242,9 +242,20 @@ Enter the authorization code here:    XXXZZaa0-poAAAAAAABZNgc9CwNdyryqoRAi4fxP2a
 17. Paste it back into the terminal.
 18. Airlift would update and store your Dropbox refresh token into your `dropbox-token.json` file.
 19. This is a one time procress. You will not be asked again.
-20. For any reason should you decide to delete and revoke the App from [Dropbox's App Console](https://www.dropbox.com/developers/apps) and created a new App, you would have to repeate the above mentioned steps.
 
 **Do not share your access json token file with anyone.**
+
+</p>
+</details>
+
+<details><summary>Reset and Update your Dropbox App key:</summary>
+<p>
+
+1. For reasons should you decide to delete and revoke the App from [Dropbox's App Console](https://www.dropbox.com/developers/apps) and created a new App, you would have to repeate the above mentioned steps.
+2. For easy updating of your your Dropbox App key, right-click and save [reset-create-dropbox-app-key.sh](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/reset-create-dropbox-app-key.sh) file to the same location of your `dropbox-token.json` file.
+4. To execute your script, open Terminal, type `sh ` and drag and drop `reset-create-dropbox-app-key.sh` file into the terminal.
+5. You will promted to enter your Dropbox App key.
+6. The script would overwrite `dropbox-token.json` file with your new Dropbox App key.
 
 </p>
 </details>
@@ -301,7 +312,7 @@ For ease of use, usage and creation of `.sh` files is **recommended**.
 
 1. Create a folder called **Airlift** on your Desktop.
 2. Place the latest pre-compiled binary with the folder.
-3. Right-Click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file and save it within your **Airlift**. 
+3. Right-click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file and save it within your **Airlift**. 
 4. Within that folder, create a folder, **Data**.
 5. **Data** is where you place your `.csv` or `.json` and attachments files.
 6. Create a file using any text editor. Name the script file with extension `.sh`
