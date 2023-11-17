@@ -38,7 +38,9 @@
   - [From Source](#from-source)
 - [Guide](#guide)
   - [macOS Gatekeeper & Notarization](#macos-gatekeeper--notarization)
-  - [Prerequisite](#prerequisite)
+- [Prerequisite](#prerequisite)
+  - [Airtable](#airtable)
+  - [Dropbox](#dropbox)
 - [Column Types](#column-types)
 - [Examples](#examples)
 - [Credits](#credits)
@@ -126,7 +128,9 @@ After trying to run `airlift` for the first time, the process will be blocked by
 - After approving `airlift`, it should run successfully. 
 - For more information, visit https://support.apple.com/en-us/HT202491.
 
-### Prerequisite
+## Prerequisite
+
+### Airtable
 
 You must pass a single `*.csv` or `*.json` file for upload. The CSV file must contain at least 2 rows. The first row will be used as a header.
 
@@ -170,6 +174,8 @@ We only require _Base ID_ and _Table ID_ for **Airlift**
 </details>
 
 Airtable's API does not allow direct uploading of attachments. In order to upload an attachment via Airtable's API, the attachment must first exist at a publicly accessible url. To mitigate this problem, Airlift will utilise [Dropbox](https://www.dropbox.com) as a temporary storage provider. [Dropbox’s basic account](https://www.dropbox.com/basic) offers 2GB of free storage. We believe it would be adequate for most operations.
+
+### Dropbox
 
 <details><summary>Obtain your Dropbox App Key and Updating JSON Token File:</summary>
 <p>
