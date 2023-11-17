@@ -3,12 +3,12 @@
 <div>
 <h1>Airlift</h1>
 <!-- PyPI -->
-<a href="https://pypi.python.org/pypi/airlift-py">
-<img src="https://img.shields.io/pypi/v/airlift-py?label=version" alt="PyPI"/>
+<a href="https://pypi.python.org/pypi/airlift_py">
+<img src="https://img.shields.io/pypi/v/airlift_py?label=version" alt="PyPI"/>
 </a>
 <!-- Python -->
-<a href="https://pypi.org/project/airlift-py/">
-<img src="https://img.shields.io/pypi/pyversions/airlift-py.svg" alt="Python"/>
+<a href="https://pypi.org/project/airlift_py/">
+<img src="https://img.shields.io/pypi/pyversions/airlift_py.svg" alt="Python"/>
 </a>
 <!-- release_github -->
 <a href="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml">
