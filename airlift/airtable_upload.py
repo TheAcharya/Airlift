@@ -1,13 +1,13 @@
-from airlift_py.airtable_client import new_client
+from airlift.airtable_client import new_client
 from typing import Any, Dict, Iterable, Iterator, List, Optional
-from airlift_py.utils_exceptions import CriticalError
+from airlift.utils_exceptions import CriticalError
 from tqdm import tqdm
 import logging
 from requests.exceptions import HTTPError
-from airlift_py.airtable_error_handling import ClientError
+from airlift.airtable_error_handling import ClientError
 from queue import Queue, Empty
 import concurrent.futures
-from airlift_py.dropbox_client import dropbox_client
+from airlift.dropbox_client import dropbox_client
 
 logger = logging.getLogger(__name__)
 ATDATA = List[Dict[str,Dict[str,str]]]

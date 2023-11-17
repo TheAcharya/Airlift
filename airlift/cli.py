@@ -6,13 +6,13 @@ from pathlib import Path
 from typing import Any, Optional
 import pathlib
 
-from airlift_py.utils_exceptions import CriticalError,AirtableError 
-from airlift_py.cli_args import parse_args
-from airlift_py.csv_data import csv_read
-from airlift_py.airtable_upload import upload_data
-from airlift_py.json_data import json_read
-from airlift_py.airtable_client import new_client
-from airlift_py.dropbox_client import dropbox_client,change_refresh_access_token
+from airlift.utils_exceptions import CriticalError,AirtableError 
+from airlift.cli_args import parse_args
+from airlift.csv_data import csv_read
+from airlift.airtable_upload import upload_data
+from airlift.json_data import json_read
+from airlift.airtable_client import new_client
+from airlift.dropbox_client import dropbox_client,change_refresh_access_token
 
 logger = logging.getLogger(__name__)
 

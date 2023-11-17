@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple, Union
-from airlift_py.version import __version__
+from airlift.version import __version__
 
 ArgToken = Union[str, Tuple[str, str]]
 ArgOption = Dict[str, Any]

@@ -2,7 +2,7 @@ import os
 import dropbox
 import logging
 from datetime import datetime
-from airlift_py.utils_exceptions import CriticalError
+from airlift.utils_exceptions import CriticalError
 import json
 from dropbox import DropboxOAuth2FlowNoRedirect
 from typing import Dict

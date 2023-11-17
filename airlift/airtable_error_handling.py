@@ -3,7 +3,7 @@
 # https://airtable.com/developers/web/api/errors
 
 from requests.exceptions import HTTPError
-from airlift_py.utils_exceptions import CriticalError, AirtableError
+from airlift.utils_exceptions import CriticalError, AirtableError
 
 def ClientError(error:HTTPError) -> None:
 

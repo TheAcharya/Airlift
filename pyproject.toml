@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "airlift_py"
+name = "airlift"
 version = "1.0.0"
 description = "Upload & Merge Data with Attachments to Airtable"
 authors = ["Arjun <arjunprakash027@gmail.com>"]
@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [tool.poetry.scripts]
-airlift = "airlift_py.cli:main"
+airlift = "airlift.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"

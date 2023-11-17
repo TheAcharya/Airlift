@@ -6,8 +6,8 @@ from typing import Any, Dict, Iterable, Iterator, List, Optional
 import datetime
 import email
 
-from airlift_py.utils_exceptions import CriticalError
-from airlift_py.airlift_data_guesser import guess_data_type
+from airlift.utils_exceptions import CriticalError
+from airlift.airlift_data_guesser import guess_data_type
 
 CSVRowType = Dict[str, Any]
 
