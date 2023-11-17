@@ -177,7 +177,7 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 
 ### Dropbox
 
-<details><summary>Obtain your Dropbox App Key and Authorization code:</summary>
+<details><summary>Obtain your Dropbox App Key and Authorisation code:</summary>
 <p>
 
 1. Right-Click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file to your computer.
