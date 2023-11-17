@@ -12,7 +12,7 @@ from airlift.csv_data import csv_read
 from airlift.airtable_upload import upload_data
 from airlift.json_data import json_read
 from airlift.airtable_client import new_client
-from airlift.dropbox_client import dropbox_client
+from airlift.dropbox_client import dropbox_client,change_refresh_access_token
 
 logger = logging.getLogger(__name__)
 
@@ -26,12 +26,13 @@ def cli(*argv: str) -> None:
 
     workers = args.workers if args.workers else 5
 
-    if args.dropbox_token:
-        dbx = dropbox_client(args.dropbox_token,args.md,args.dropbox_refresh_token)
-    else:
-        dbx = None
-
     if not args.dropbox_refresh_token:
+        
+        if args.dropbox_token:
+            dbx = dropbox_client(args.dropbox_token,args.md)
+        else:
+            dbx = None
+
         airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
         logger.info(f"Validating {args.csv_file.name} and Airtable Schema")
@@ -55,6 +56,9 @@ def cli(*argv: str) -> None:
 
         dirname = os.path.dirname(args.csv_file)
         upload_data(client=airtable_client, new_data=data, workers = workers,dirname=dirname,dbx=dbx,attachment_columns=args.attachment_columns,attachment_columns_map=args.attachment_columns_map)
+    else:
+        change_refresh_access_token(args.dropbox_token)
+
 
     logger.info("Done!")
 
