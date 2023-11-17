@@ -34,7 +34,7 @@ def cli(*argv: str) -> None:
     if not args.dropbox_refresh_token:
         airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
-        logger.info(f"validating {args.csv_file.name} and Airtable Schema")
+        logger.info(f"Validating {args.csv_file.name} and Airtable Schema")
 
         suffix = pathlib.Path(args.csv_file.name).suffix
 
