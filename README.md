@@ -60,14 +60,6 @@ Furthermore, many experienced Airtable users want to send and transfer data auto
 
 Download the latest release of the latest binary release [here](https://github.com/TheAcharya/airlift/releases).
 
-### With PIP
-
-```bash
-$ pip install --user airlift-py
-```
-
-**Python 3.7 or later required.**
-
 ### From source
 
 This project uses [poetry](https://python-poetry.org/) for dependency management and packaging. You will have to install it first. See [poetry official documentation](https://python-poetry.org/docs/) for instructions.
