@@ -261,6 +261,26 @@ Enter the authorization code here:    XXXZZaa0-poAAAAAAABZNgc9CwNdyryqoRAi4fxP2a
 </p>
 </details>
 
+<details><summary>Creating your Dropbox refresh token:</summary>
+<p>
+
+If you have created your and replaced your Dropbox App key in your `dropbox-token.json` file. You would need to re-create your Dropbox refresh token again.
+
+You can utalise this this `.sh` shoukd you need to authorise and refresh your `dropbox-token.json` file.
+
+```bash
+#!/bin/sh
+
+TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
+DROPBOX_TOKEN="/Users/xxx/Desktop/Airlift/dropbox-token.json"
+UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
+
+$TOOL_PATH --dropbox-token $DROPBOX_TOKEN --dropbox-refresh-token --log $UPLOAD_LOG
+```
+
+</p>
+</details>
+
 ## Column Types
 
 By default, Airlift will try to guess column types based on their content.
