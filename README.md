@@ -190,18 +190,17 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_02.png?raw=true"> </p>
 
 10. Go to the Settings tab.
-11. Scroll down to ‘OAuth 2’ block.
-12. Click ‘Generate’ button near ‘Generated access token’ text.
+11. Copy your App key and paste into your `dropbox-token.json` file. Where `REPLACE` is your App key.
 
-<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_03.png?raw=true"> </p>
+```json
+{
+  "app_key": "REPLACE"
+}
+```
 
 13. After the token is generated you’ll see a string of letters and numbers, which looks something like this:
 
-<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_04.png?raw=true"> </p>
-
 **Do not share your access token with anyone.**
-
-**When you generate a Dropbox OAuth 2 access token, it’s usually short-lived and expires in 4 hours or fewer. You would have to generate your access token again, otherwise you would get an error.**
 
 </p>
 </details>
