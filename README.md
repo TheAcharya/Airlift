@@ -299,16 +299,18 @@ Some column types do not support assigning value to them because the database ge
 For ease of use, usage and creation of `.sh` files is **recommended**.
 
 1. Create a folder called **Airlift** on your Desktop.
-2. Place the latest pre-compiled binary with the folder. 
-3. Within that folder, create a folder, **Data**.
-4. **Data** is where you place your `.csv` or `.json` and attachments files.
-5. Create a file using any text editor. Name the script file with extension `.sh`
-6. Copy and paste this syntax into the file, where **xxx** is the name of of your user directory and **zzz** is the name of your `.csv` or `.json` file.
-7. **REPLACE** the test with your relevent tokens and IDs.
-8. Save the script file as `myscript.sh` within your **Airlift** folder.
-9. To give execute permission to your script, open Terminal, `chmod +x /Users/xxx/Desktop/Airlift/myscript.sh`
-10. To execute your script, open Terminal, `sh /Users/xxx/Desktop/Airlift/myscript.sh`
-11. You can create and save multiple `.sh` files for different modes and configurations.
+2. Place the latest pre-compiled binary with the folder.
+3. Right-Click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file and save it within your **Airlift**. 
+4. Within that folder, create a folder, **Data**.
+5. **Data** is where you place your `.csv` or `.json` and attachments files.
+6. Create a file using any text editor. Name the script file with extension `.sh`
+7. Copy and paste this syntax into the file, where **xxx** is the name of of your user directory and **zzz** is the name of your `.csv` or `.json` file.
+8. **REPLACE** the text with your relevent tokens and IDs.
+9. Save the script file as `myscript.sh` within your **Airlift** folder.
+10. To give execute permission to your script, open Terminal, `chmod +x /Users/xxx/Desktop/Airlift/myscript.sh`
+12. To execute your script, open Terminal, `sh /Users/xxx/Desktop/Airlift/myscript.sh`
+13. To obtain your Dropbox App Key and Authorization code, please read the [Dropbox](#dropbox) section.
+14. You can create and save multiple `.sh` files for different modes and configurations.
 
 </p>
 </details>
