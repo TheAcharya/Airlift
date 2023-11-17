@@ -67,7 +67,7 @@ Download the latest release of the latest binary release [here](https://github.c
 ### With PIP
 
 ```bash
-$ pip install --user airlift
+$ pip install --user airlift-py
 ```
 
 **Python 3.7 or later required.**
