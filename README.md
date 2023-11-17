@@ -43,6 +43,7 @@
   - [Dropbox](#dropbox)
 - [Column Types](#column-types)
 - [Examples](#examples)
+- [Future Roadmap](#future-roadmap)
 - [Credits](#credits)
 - [License](#license)
 - [Reporting Bugs](#reporting-bugs)
@@ -519,6 +520,13 @@ Desktop/
 
 </p>
 </details>
+
+## Future Roadmap
+
+- Funtion to create new Airtable BSases
+- Funtion to Update & Add New Records
+- Robust Validation Options
+- And many more...
 
 ## Credits
 
