@@ -193,6 +193,8 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 10. Go to the Settings tab.
 11. Copy your App key and paste into your `dropbox-token.json` file. Where `REPLACE` is your App key.
 
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_03.png?raw=true"> </p>
+
 ```json
 {
   "app_key": "REPLACE"
@@ -211,10 +213,27 @@ INFO: All the columns are verified and present in both the file and Airtable!
 Enter the authorization code here:    
 ```
 
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_04.png?raw=true"> </p>
+
+14. Click Continue.
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_04.png?raw=true"> </p>
+
+15. Click Allow.
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_05.png?raw=true"> </p>
+
+16. You will be presented with your authorization code. Copy your authorization code.
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_06.png?raw=true"> </p>
+
 ```bash
 Enter the authorization code here:    XXXZZaa0-poAAAAAAABZNgc9CwNdyryqoRAi4fxP2aU
 ```
 
+17. Paste it back into the terminal.
+18. Airlift would update and store your Dropbox refresh token into your `dropbox-token.json` file.
+19. This is a one time procress. You will not be asked again.
 
 **Do not share your access token with anyone.**
 
