@@ -103,7 +103,7 @@ general options:
   -h, --help                         show this help message and exit
 
 dropbox options:
-  --dropbox-token                    your Dropbox OAuth 2 token
+  --dropbox-token FILE               your JSON file with Dropbox API App key 
   --attachment-columns               specify one or more attachment columns
   --attachment-columns-map           specify how the attachment column must be mapped in Airtable
 
