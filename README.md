@@ -28,6 +28,7 @@
 - No subscription of third party platform required
 - Ability to upload attachments via build-in Dropbox client
 - Ability to upload attachments to multiple attachment columns
+- Uses long-lived refresh token for Dropbox client
 
 ## Table of contents
 
@@ -314,7 +315,7 @@ TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
 AIRTABLE_TOKEN="REPLACE"
 AIRTABLE_BASE="REPLACE"
 AIRTABLE_TABLE="REPLACE"
-DROPBOX_TOKEN="REPLACE"
+DROPBOX_TOKEN="/Users/xxx/Desktop/Airlift/dropbox-token.json"
 UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
@@ -349,6 +350,8 @@ Desktop/
 │  │  ├─ snow_leopard.jpg
 │  │  ├─ tiger.jpg
 │  ├─ myscript.sh
+│  ├─ dropbox-token.json
+│  ├─ airlift [Binary Executable File]
 ```
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments.gif?raw=true"> </p>
@@ -366,7 +369,7 @@ TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
 AIRTABLE_TOKEN="REPLACE"
 AIRTABLE_BASE="REPLACE"
 AIRTABLE_TABLE="REPLACE"
-DROPBOX_TOKEN="REPLACE"
+DROPBOX_TOKEN="/Users/xxx/Desktop/Airlift/dropbox-token.json"
 UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
@@ -410,6 +413,8 @@ Desktop/
 │  │  │  ├─ snow_leopard.jpg
 │  │  │  ├─ tiger.jpg
 │  ├─ myscript.sh
+│  ├─ dropbox-token.json
+│  ├─ airlift [Binary Executable File]
 ```
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments-multi-column.gif?raw=true"> </p>
@@ -427,7 +432,7 @@ TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
 AIRTABLE_TOKEN="REPLACE"
 AIRTABLE_BASE="REPLACE"
 AIRTABLE_TABLE="REPLACE"
-DROPBOX_TOKEN="REPLACE"
+DROPBOX_TOKEN="/Users/xxx/Desktop/Airlift/dropbox-token.json"
 UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
 UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
 
@@ -462,6 +467,8 @@ Desktop/
 │  │  ├─ snow_leopard.jpg
 │  │  ├─ tiger.jpg
 │  ├─ myscript.sh
+│  ├─ dropbox-token.json
+│  ├─ airlift [Binary Executable File]
 ```
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments-map.gif?raw=true"> </p>
