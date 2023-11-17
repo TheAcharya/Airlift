@@ -171,15 +171,16 @@ We only require _Base ID_ and _Table ID_ for **Airlift**
 
 Airtable's API does not allow direct uploading of attachments. In order to upload an attachment via Airtable's API, the attachment must first exist at a publicly accessible url. To mitigate this problem, Airlift will utilise [Dropbox](https://www.dropbox.com) as a temporary storage provider. [Dropbox’s basic account](https://www.dropbox.com/basic) offers 2GB of free storage. We believe it would be adequate for most operations.
 
-<details><summary>Obtain your Dropbox OAuth 2 Access Token:</summary>
+<details><summary>Obtain your Dropbox App Key and Updating JSON Token File:</summary>
 <p>
 
-1. Login to your [Dropbox's App Console](https://www.dropbox.com/developers/apps) account via a web browser.
-2. Click on ‘Create app’ button.
-3. Choose Scoped access.
-4. Choose Full Dropbox access.
-5. Give your App a name. _The name of the App can be unique and personal to you._
-6. Click on ‘Create app’ button.
+1. Right-Click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file to your computer.
+2. Login to your [Dropbox's App Console](https://www.dropbox.com/developers/apps) account via a web browser.
+3. Click on ‘Create app’ button.
+4. Choose Scoped access.
+5. Choose Full Dropbox access.
+6. Give your App a name. _The name of the App can be unique and personal to you._
+7. Click on ‘Create app’ button.
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_01.png?raw=true"> </p>
 
@@ -198,7 +199,22 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 }
 ```
 
-13. After the token is generated you’ll see a string of letters and numbers, which looks something like this:
+12. On first usage of Airlift, you will be promted to visit Dropbox.
+13. Copy and paste the URL into your browser.
+
+```bash
+INFO: Validation done!
+INFO: All the columns are verified and present in both the file and Airtable!
+1. Go to: https://www.dropbox.com/oauth2/authorize?response_type=code&client_id=6zh18qgnw37ifpp&token_access_type=offline&code_challenge=TphrwcwmRtkGawgxFvWQcROFMbjsTeba9BGv0Lgi0nw&code_challenge_method=S256
+2. Click "Allow" (you might have to log in first).
+3. Copy the authorization code.
+Enter the authorization code here:    
+```
+
+```bash
+Enter the authorization code here:    XXXZZaa0-poAAAAAAABZNgc9CwNdyryqoRAi4fxP2aU
+```
+
 
 **Do not share your access token with anyone.**
 
