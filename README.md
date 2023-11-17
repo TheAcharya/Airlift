@@ -286,7 +286,7 @@ Some column types do not support assigning value to them because the database ge
 | Single line text        | string           | ❌                                     |
 | Single select        	  | string           | ❌                                     |
 | URL       			        | string           | ❌                                     |
-| User       			        | string           | ❌                                     |
+| User       			        | `---`            | `---`                                  |
 
 </p>
 </details>
