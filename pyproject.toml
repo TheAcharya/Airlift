@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "airlift"
+name = "airlift_py"
 version = "1.0.0"
 description = "Upload & Merge Data with Attachments to Airtable"
 authors = ["Arjun <arjunprakash027@gmail.com>"]
@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [tool.poetry.scripts]
-airlift = "airlift.cli:main"
+airlift = "airlift_py.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -41,4 +41,3 @@ pyairtable = "^2.1.0.post1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-package_name = "airlift-py"

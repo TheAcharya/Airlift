@@ -1,8 +1,8 @@
 import logging
 from typing import Any, Dict, Iterable, Iterator, List, Optional
-from airlift.airtable_error_handling import ClientError
-from airlift.utils_exceptions import AirtableError
-from airlift.csv_data import CSVRowType
+from airlift_py.airtable_error_handling import ClientError
+from airlift_py.utils_exceptions import AirtableError
+from airlift_py.csv_data import CSVRowType
 import json
 import requests
 
