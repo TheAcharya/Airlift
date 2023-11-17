@@ -177,16 +177,17 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 
 ### Dropbox
 
-<details><summary>Obtain your Dropbox App Key and Updating JSON Token File:</summary>
+<details><summary>Obtain your Dropbox App Key and Authorization code:</summary>
 <p>
 
 1. Right-Click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file to your computer.
-2. Login to your [Dropbox's App Console](https://www.dropbox.com/developers/apps) account via a web browser.
-3. Click on ‘Create app’ button.
-4. Choose Scoped access.
-5. Choose Full Dropbox access.
-6. Give your App a name. _The name of the App can be unique and personal to you._
-7. Click on ‘Create app’ button.
+2. When using `--dropbox-token` make sure you input the full `PATH` of `dropbox-token.json` file.
+3. Login to your [Dropbox's App Console](https://www.dropbox.com/developers/apps) account via a web browser.
+4. Click on ‘Create app’ button.
+5. Choose Scoped access.
+6. Choose Full Dropbox access.
+7. Give your App a name. _The name of the App can be unique and personal to you._
+8. Click on ‘Create app’ button.
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_01.png?raw=true"> </p>
 
@@ -208,9 +209,9 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 ```
 
 12. On first usage of Airlift, you will be promted to visit Dropbox.
-13. Copy and paste the URL into your browser.
+13. Copy and paste the full Dropbox URL into your browser.
 
-```bash
+```txt
 INFO: Validation done!
 INFO: All the columns are verified and present in both the file and Airtable!
 1. Go to: https://www.dropbox.com/oauth2/authorize?response_type=code&client_id=6zh18qgnw37ifpp&token_access_type=offline&code_challenge=TphrwcwmRtkGawgxFvWQcROFMbjsTeba9BGv0Lgi0nw&code_challenge_method=S256
@@ -240,8 +241,9 @@ Enter the authorization code here:    XXXZZaa0-poAAAAAAABZNgc9CwNdyryqoRAi4fxP2a
 17. Paste it back into the terminal.
 18. Airlift would update and store your Dropbox refresh token into your `dropbox-token.json` file.
 19. This is a one time procress. You will not be asked again.
+20. For any reason should you decide to delete and revoke the App from [Dropbox's App Console](https://www.dropbox.com/developers/apps) and created a new App, you would have to repeate the above mentioned steps.
 
-**Do not share your access token with anyone.**
+**Do not share your access json token file with anyone.**
 
 </p>
 </details>
