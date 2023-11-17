@@ -66,8 +66,12 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         "dropbox options": {
             "--dropbox-token": {
                 "type":Path,
-                "help": "your Dropbox OAuth 2 token",
+                "help": "your JSON file with Dropbox API App key",
                 "metavar":'FILE',
+            },
+            "--dropbox-refresh-token":{
+                "action":"store_true",
+                "help":"switch to change your refresh token",
             },
             "--attachment-columns": {
                 "nargs": "+",
@@ -78,10 +82,6 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "nargs":2,
                 "help":"specify how the attachment column must be mapped in Airtable",
                 "metavar":"\b",
-            },
-            "--dropbox-refresh-token":{
-                "action":"store_true",
-                "help":"switch to change your refresh token",
             },
         },
         "column_options": {
