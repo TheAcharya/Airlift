@@ -44,6 +44,7 @@ class dropbox_client:
         except Exception as e:
             if change_refresh_token:
                 logger.info("Refresh token has been updated")
+                sys.exit(0)
             else:
                 raise CriticalError("Error during Dropbox client creation")
 

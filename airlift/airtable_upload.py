@@ -29,6 +29,7 @@ def upload_data(client: new_client, new_data:ATDATA, workers:int, dbx:str, dirna
         except:
             raise CriticalError('Something went wrong while uploading the data')
     logger.info("Upload completed!")
+    
 def _worker(client:new_client,data_queue:Queue,progress_bar,dbx:dropbox_client,attachment_columns:List[str],dirname:str,attachment_columns_map:List[str]) -> None:            
     while True:
         try:

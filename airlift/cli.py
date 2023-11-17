@@ -56,7 +56,7 @@ def cli(*argv: str) -> None:
         dirname = os.path.dirname(args.csv_file)
         upload_data(client=airtable_client, new_data=data, workers = workers,dirname=dirname,dbx=dbx,attachment_columns=args.attachment_columns,attachment_columns_map=args.attachment_columns_map)
 
-        logger.info("Done!")
+    logger.info("Done!")
 
 def setup_logging(is_verbose: bool=False, log_file: Optional[Path]=None) -> None:
     logging.basicConfig(format="%(levelname)s: %(message)s")
