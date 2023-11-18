@@ -165,9 +165,9 @@ We only require _Base ID_ and _Table ID_ for **Airlift**
 
 ### Dropbox
 
-Airtable's API does not allow direct uploading of attachments. In order to upload an attachment via Airtable's API, the attachment must first exist at a publicly accessible url. To mitigate this problem, Airlift will utilise [Dropbox](https://www.dropbox.com) as a temporary storage provider. [Dropbox’s basic account](https://www.dropbox.com/basic) offers 2GB of free storage. We believe it would be adequate for most operations.
+Airtable's API does not allow direct uploading of attachments. In order to upload an attachment via Airtable's API, the attachment must first exist at a publicly accessible url. To mitigate this problem, Airlift will utilise [Dropbox](https://www.dropbox.com) as a temporary storage provider. [Dropbox’s basic account](https://www.dropbox.com/basic) offers 2GB of free storage. We believe it would be adequate for most operations. Once your attachments are uploaded by Airtable, you can delete the files from your Dropbox account.
 
-<details><summary>Obtain your Dropbox App Key and Authorisation code:</summary>
+<details><summary>Obtain your Dropbox App Key & Authorisation code (First Time Only):</summary>
 <p>
 
 1. Right-click and save [dropbox-token.json](https://raw.githubusercontent.com/TheAcharya/Airlift/main/assets/dropbox-token.json) file to your computer.
@@ -237,7 +237,7 @@ Enter the authorization code here:    XXXZZaa0-poAAAAAAABZNgc9CwNdyryqoRAi4fxP2a
 </p>
 </details>
 
-<details><summary>Reset and Update your Dropbox App key:</summary>
+<details><summary>Reset and Update your Dropbox App key (Optional):</summary>
 <p>
 
 1. For reasons should you decide to delete and revoke the App from [Dropbox's App Console](https://www.dropbox.com/developers/apps) and created a new App, you would have to repeate the above mentioned steps.
@@ -249,7 +249,7 @@ Enter the authorization code here:    XXXZZaa0-poAAAAAAABZNgc9CwNdyryqoRAi4fxP2a
 </p>
 </details>
 
-<details><summary>Creating your Dropbox refresh token:</summary>
+<details><summary>Creating your Dropbox refresh token (Optional):</summary>
 <p>
 
 If you have created your and replaced your Dropbox App key in your `dropbox-token.json` file. You would need to re-create your Dropbox refresh token again.
