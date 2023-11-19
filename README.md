@@ -39,6 +39,7 @@
   - [Dropbox](#dropbox)
 - [Column Types](#column-types)
 - [Examples](#examples)
+- [Use Cases](#use-cases)
 - [Future Roadmap](#future-roadmap)
 - [Credits](#credits)
 - [License](#license)
@@ -547,6 +548,14 @@ Desktop/
 - Funtion to Update & Add New Unique Records
 - Robust Validation Options
 - And many more...
+
+## Use Cases
+- Get the most out of your Airtable Free Account (_CSV import extension is only available on paid plans_)
+- No reliance on third-party automation platforms to sync your local `.csv` or `.json` data files to Airtable
+- Run data synchronisation locally 
+- On macOS: Utilise `.sh` scripts, Apple Shortcuts or Automator to synchronise your local data to Airtable
+- On Windows: Utilise Powershell or `.bat` files to synchronise your local data to Airtable
+- On Linux: Utilise `.sh` scripts or to synchronise your local data to Airtable
 
 ## Credits
 
