@@ -36,7 +36,25 @@ class new_client:
         else:
             logger.warning(f"Error creating records: {response}")
             raise AirtableError("Unable to upload data!")
-    
+        
+    def missing_field_single(self,field:str):
+
+        airtable_table_fields = []
+        url = f"https://api.airtable.com/v0/meta/bases/{self.base}/tables"
+        response = requests.get(url,headers=self.headers)
+        tables = json.loads(response.text)
+
+        for x in tables['tables']:
+            if x['id'] == self.table or x['name'] == self.table:
+                for fields in x['fields']:
+                    airtable_table_fields.append(fields['name'])
+        
+        if field in airtable_table_fields:
+            return True
+        
+        return False
+
+
     def missing_fields_check(self,data:ATDATATYPE,disable_bypass:bool):
         
         airtable_table_fields = []

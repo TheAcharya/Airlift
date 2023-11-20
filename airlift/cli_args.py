@@ -89,6 +89,11 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 "action": "store_true",
                 "help": "creates new columns that are not present in Airtable's table",
             },
+            "--columns-copy":{
+                "nargs":"+",
+                "help":"Copy the content of one column to multiple other columns",
+                "metavar":"\b",
+            },
         },
         "custom application options": {
             "--md": {

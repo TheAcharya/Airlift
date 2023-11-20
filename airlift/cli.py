@@ -55,7 +55,7 @@ def cli(*argv: str) -> None:
         data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation)
 
         dirname = os.path.dirname(args.csv_file)
-        upload_data(client=airtable_client, new_data=data, workers = workers,dirname=dirname,dbx=dbx,attachment_columns=args.attachment_columns,attachment_columns_map=args.attachment_columns_map)
+        upload_data(client=airtable_client, new_data=data, workers = workers,dirname=dirname,dbx=dbx,attachment_columns=args.attachment_columns,attachment_columns_map=args.attachment_columns_map,columns_copy=args.columns_copy)
     else:
         change_refresh_access_token(args.dropbox_token)
 
