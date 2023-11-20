@@ -91,7 +91,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             },
             "--columns-copy":{
                 "nargs":"+",
-                "help":"copy the content of one column to multiple other columns",
+                "help":"copys value of one column to multiple other columns",
                 "metavar":"\b",
             },
         },
