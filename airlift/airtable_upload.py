@@ -79,6 +79,5 @@ def _worker(client:new_client,data_queue:Queue,progress_bar,dbx:dropbox_client,a
                 ClientError(e)
             except Exception as e:
                 print(e)
-                raise CriticalError("An unexpected error occured! Please contact the developers.")
         except Empty:
             break
