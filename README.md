@@ -372,6 +372,40 @@ Cat ID,Animal Name,Location
 </p>
 </details>
 
+<details><summary>Uploading Data without Attachments (Copy Columns)</summary>
+<p>
+
+```bash
+#!/bin/sh
+
+TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
+AIRTABLE_TOKEN="REPLACE"
+AIRTABLE_BASE="REPLACE"
+AIRTABLE_TABLE="REPLACE"
+UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
+UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
+
+$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --columns-copy "Location" "Location-01" "Location-02" "Location-03" --log $UPLOAD_LOG "$UPLOAD_PAYLOAD"
+```
+
+Example CSV
+
+```text
+Cat ID,Animal Name,Location
+001,Lion,Namibia
+002,Tiger,India
+003,Panther,India
+004,Snow Leopard,Nepal
+005,Cheetah,South Africa
+006,Puma,South America
+007,Jaguar,Brazil
+```
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-without-attachments-columns-copy.gif?raw=true"> </p>
+
+</p>
+</details>
+
 <details><summary>Uploading Data with Attachments</summary>
 <p>
 
