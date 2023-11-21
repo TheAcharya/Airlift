@@ -6,7 +6,7 @@
 - ???
 
 **🔨 Improvements:**
-- Added ` --columns-copy` : Copys value of one column to multiple other columns (#25)
+- Added `--columns-copy` : Copys value of one column to multiple other columns (#25)
 - Improved error handling logic when attachments are not found
 
 ---
