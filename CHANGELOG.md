@@ -1,9 +1,9 @@
 # Changelog
 
-### 1.1.0
+### 1.0.1
 
 **🎉 Released:**
-- ???
+- 22nd November 2023
 
 **🔨 Improvements:**
 - Added `--columns-copy` : Copys value of one column to multiple other columns (#25)
