@@ -8,13 +8,19 @@ ArgOption = Dict[str, Any]
 ArgSchema = Dict[str, Dict[ArgToken, ArgOption]]
 HELP_ARGS_WIDTH = 50
 
+class CustomHelpFormatter(argparse.RawTextHelpFormatter):
+    def _format_args(self, action, default_metavar):
+        if action.nargs == argparse.ONE_OR_MORE:
+            return ""
+        return super()._format_args(action, default_metavar)
+    
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="airlift",
         description="https://github.com/TheAcharya/Airlift \n\nUpload & Merge Data with Attachments to Airtable",
         usage="%(prog)s [-h] --token TOKEN --base BASE --table TABLE [OPTION]... FILE",
         add_help=False,
-        formatter_class=lambda prog: argparse.RawTextHelpFormatter(
+        formatter_class=lambda prog: CustomHelpFormatter(
             prog, max_help_position=HELP_ARGS_WIDTH
         ),
     )
@@ -76,12 +82,12 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             "--attachment-columns": {
                 "nargs": "+",
                 "help": "specify one or more attachment columns",
-                "metavar":"\b",
+                "metavar":"column"
             },
             "--attachment-columns-map":{
                 "nargs":2,
                 "help":"specify how the attachment column must be mapped in Airtable",
-                "metavar":"\b",
+                "metavar":"",
             },
         },
         "column_options": {
@@ -92,7 +98,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             "--columns-copy":{
                 "nargs":"+",
                 "help":"copys value of one column to multiple other columns",
-                "metavar":"\b",
+                "metavar":"column",
             },
         },
         "custom application options": {
