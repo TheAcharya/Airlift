@@ -200,7 +200,7 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 }
 ```
 
-12. On first usage of Airlift, you will be promted to visit Dropbox.
+12. On first usage of Airlift, you will be promoted to visit Dropbox.
 13. Copy and paste the full Dropbox URL into your browser.
 
 ```txt
