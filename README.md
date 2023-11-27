@@ -579,8 +579,8 @@ Desktop/
 
 ## Future Roadmap
 
-- Funtion to create new Airtable Bases
-- Funtion to Update & Add New Unique Records
+- Ability to create new Airtable Bases
+- Ability to Update & Add New Unique Records
 - Robust Validation Options
 - And many more...
 
