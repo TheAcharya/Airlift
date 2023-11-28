@@ -1,5 +1,15 @@
 # Changelog
 
+### 1.0.2
+
+**🎉 Released:**
+- Next Relase
+
+**🐞 Bug Fix:**
+- Fixed `metavar` argument parser (#24)
+
+---
+
 ### 1.0.1
 
 **🎉 Released:**
