@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Optional
 import pathlib
 
+from airlift.version import __version__
 from airlift.utils_exceptions import CriticalError,AirtableError 
 from airlift.cli_args import parse_args
 from airlift.csv_data import csv_read
@@ -23,6 +24,7 @@ def abort(*_: Any) -> None:  # pragma: no cover
 def cli(*argv: str) -> None:
     args = parse_args(argv)
     setup_logging(is_verbose=args.verbose,log_file=args.log)
+    logger.info(f"Airtable version {__version__}")
 
     workers = args.workers if args.workers else 5
 
