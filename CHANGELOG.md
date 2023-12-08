@@ -3,7 +3,10 @@
 ### 1.0.2
 
 **🎉 Released:**
-- Next Relase
+- Next Release
+
+**🔨 Improvements:**
+- Added Airlift version number in Log File (#26)
 
 **🐞 Bug Fix:**
 - Fixed `metavar` argument parser (#24)
