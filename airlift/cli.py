@@ -24,7 +24,7 @@ def abort(*_: Any) -> None:  # pragma: no cover
 def cli(*argv: str) -> None:
     args = parse_args(argv)
     setup_logging(is_verbose=args.verbose,log_file=args.log)
-    logger.info(f"Airtable version {__version__}")
+    logger.info(f"Airlift version {__version__}")
 
     workers = args.workers if args.workers else 5
 
