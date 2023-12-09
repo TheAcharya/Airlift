@@ -77,10 +77,6 @@ def _worker(client: new_client, data_queue: Queue, progress_bar, dbx: dropbox_cl
                                 except Exception as e:
                                     data['fields'][attachment_columns_map[1]] = ""
 
-                            else:
-                                progressbar.streams.flush()
-                                logger.error("Dropbox token not provided! Aborting the upload!")
-
                 client.single_upload(data)
                 progress_bar.update(1)
             except Exception as e:
