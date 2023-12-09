@@ -16,21 +16,21 @@ ATDATA = List[Dict[str,Dict[str,str]]]
 def upload_data(client: new_client, new_data:ATDATA, workers:int, dbx:str, dirname:str, attachment_columns:List[str],attachment_columns_map:List[str],columns_copy:List[str]) -> None:
     
     logger.info("Uploding data now!")
-    #with tqdm(total = len(new_data)) as progress_bar:
-    try:
-        data_queue = Queue()
-        for data in new_data:
-            data_queue.put(data)
+    with tqdm(total = len(new_data)) as progress_bar:
+        try:
+            data_queue = Queue()
+            for data in new_data:
+                data_queue.put(data)
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-            futures = [executor.submit(_worker,client,data_queue,dbx,attachment_columns,dirname,attachment_columns_map,columns_copy) for _ in range(workers)]
-            concurrent.futures.wait(futures,timeout=None)
+            with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
+                futures = [executor.submit(_worker,client,data_queue,progress_bar,dbx,attachment_columns,dirname,attachment_columns_map,columns_copy) for _ in range(workers)]
+                concurrent.futures.wait(futures,timeout=None)
 
-    except:
-        raise CriticalError('Something went wrong while uploading the data')
+        except:
+            tqdm.write('Something went wrong while uploading the data')
     logger.info("Upload completed!")
     
-def _worker(client:new_client,data_queue:Queue,dbx:dropbox_client,attachment_columns:List[str],dirname:str,attachment_columns_map:List[str],columns_copy:List[str]) -> None:            
+def _worker(client:new_client,data_queue:Queue,progress_bar,dbx:dropbox_client,attachment_columns:List[str],dirname:str,attachment_columns_map:List[str],columns_copy:List[str]) -> None:            
     while True:
         try:
             data = data_queue.get_nowait()
@@ -70,14 +70,12 @@ def _worker(client:new_client,data_queue:Queue,dbx:dropbox_client,attachment_col
                                     data['fields'][attachment_columns_map[1]] = ""
 
                         else:
-                            raise CriticalError("Dropbox token not provided! Aborting the upload!")
+                            tqdm.write("Dropbox token not provided! Aborting the upload!")
                 
                 # print(data)
                 client.single_upload(data)
-                #progress_bar.update(1)
-            except HTTPError as e:
-                ClientError(e)
+                progress_bar.update(1)
             except Exception as e:
-                print(e)
+                tqdm.write(e)
         except Empty:
             break
