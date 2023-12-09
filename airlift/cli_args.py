@@ -117,14 +117,10 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             },
         },
     }
-
-    try:
-        _parse_schema(parser, schema)
-        args = parser.parse_args(argv)
-        return args
-    except argparse.ArgumentError as e:
-        parser.print_usage()
-        print(f"error: {e}")
+    
+    _parse_schema(parser, schema)
+    args = parser.parse_args(argv)
+    return args
 
 def _parse_schema(
         parser: argparse.ArgumentParser, schema: ArgSchema
