@@ -13,6 +13,7 @@ client_secrets.json
 settings.yml
 marker_data_demo
 upload_test_copy.sh
+upload_test_large.sh
 Demo
 Demo2
 dropbox_token.json

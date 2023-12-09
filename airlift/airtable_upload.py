@@ -8,6 +8,7 @@ from queue import Queue, Empty
 import concurrent.futures
 from airlift.dropbox_client import dropbox_client
 import progressbar
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 ATDATA = List[Dict[str, Dict[str, str]]]
@@ -16,22 +17,22 @@ ATDATA = List[Dict[str, Dict[str, str]]]
 def upload_data(client: new_client, new_data: ATDATA, workers: int, dbx: str, dirname: str,
                 attachment_columns: List[str], attachment_columns_map: List[str], columns_copy: List[str]) -> None:
     logger.info("Uploding data now!")
-    with progressbar.ProgressBar(max_value=len(new_data)) as progress_bar:
-        try:
-            data_queue = Queue()
-            for data in new_data:
-                data_queue.put(data)
+    progress_bar = tqdm(total=len(new_data), desc='uploading')
+    
+    try:
+        data_queue = Queue()
+        for data in new_data:
+            data_queue.put(data)
 
-            with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-                futures = [executor.submit(_worker, client, data_queue, progress_bar, dbx,
-                                           attachment_columns, dirname, attachment_columns_map, columns_copy) for _ in
-                           range(workers)]
-                concurrent.futures.wait(futures, timeout=None)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = [executor.submit(_worker, client, data_queue, progress_bar, dbx,
+                                        attachment_columns, dirname, attachment_columns_map, columns_copy) for _ in
+                        range(workers)]
+            concurrent.futures.wait(futures, timeout=None)
 
-        except Exception as e:
-            progressbar.streams.flush()
-            logger.error('Something went wrong while uploading the data: %s', str(e))
-    logger.info("Upload completed!")
+    except Exception as e:
+        logger.error('Something went wrong while uploading the data: %s', str(e))
+    
 
 
 def _worker(client: new_client, data_queue: Queue, progress_bar, dbx: dropbox_client, attachment_columns: List[str],
@@ -77,10 +78,12 @@ def _worker(client: new_client, data_queue: Queue, progress_bar, dbx: dropbox_cl
                                 except Exception as e:
                                     data['fields'][attachment_columns_map[1]] = ""
 
+                        else:
+                            logger.error("Dropbox token not provided! Aborting the upload!")
+
                 client.single_upload(data)
                 progress_bar.update(1)
             except Exception as e:
-                progressbar.streams.flush()
                 logger.error(str(e))
         except Empty:
             break
