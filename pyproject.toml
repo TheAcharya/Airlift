@@ -34,6 +34,7 @@ pyairtable = "^2.1.0.post1"
 requests = "^2.31.0"
 tqdm = "^4.64.0"
 dropbox = "^11.36.2"
+progressbar2 = "^4.2.0"
 
 [tool.poetry.group.dev.dependencies]
 pyairtable = "^2.1.0.post1"
