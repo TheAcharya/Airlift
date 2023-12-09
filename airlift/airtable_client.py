@@ -86,7 +86,7 @@ class new_client:
                         try:
                             del datas['fields'][column]
                         except:
-                            print(f"{column} not present in this row")
+                            logger.warning(f"{column} not present in this row")
 
         else:
             logger.info("All the columns are verified and present in both the file and Airtable!")

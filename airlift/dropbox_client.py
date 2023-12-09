@@ -25,13 +25,13 @@ class dropbox_client:
                 try:
                     self.dbx.files_create_folder("/Marker Data")
                 except Exception as e:
-                    print(f"The folder Marker Data already exists.")
+                    logger.warning(f"The folder Marker Data already exists.")
             else:
                 self.main_folder = "/Airlift"
                 try:
                     self.dbx.files_create_folder("/Airlift")
                 except Exception as e:
-                    print(f"The folder Airlift already exists.")
+                    logger.warning(f"The folder Airlift already exists.")
 
             c = datetime.now()
             self.sub_folder = f"{self.main_folder}{self.main_folder} {c.strftime('%Y-%m-%d')} {c.strftime('%H-%M-%S')}"
@@ -39,7 +39,7 @@ class dropbox_client:
             try:
                 self.dbx.files_create_folder(self.sub_folder)
             except dropbox.exceptions.ApiError as e:
-                print(f"The folder {self.sub_folder} already exists.")
+                logger.warning(f"The folder {self.sub_folder} already exists.")
         except Exception as e:
             raise CriticalError("Error during Dropbox client creation",e)
 
@@ -60,9 +60,9 @@ class dropbox_client:
             auth_flow = DropboxOAuth2FlowNoRedirect(app_key, use_pkce=True, token_access_type='offline')
 
             authorize_url = auth_flow.start()
-            print("1. Go to: " + authorize_url)
-            print("2. Click \"Allow\" (you might have to log in first).")
-            print("3. Copy the authorization code.")
+            logger.warning("1. Go to: " + authorize_url)
+            logger.warning("2. Click \"Allow\" (you might have to log in first).")
+            logger.warning("3. Copy the authorization code.")
             auth_code = input("Enter the authorization code here: ").strip()
 
             try:
@@ -128,9 +128,9 @@ def change_refresh_access_token(access_token):
     auth_flow = DropboxOAuth2FlowNoRedirect(app_key, use_pkce=True, token_access_type='offline')
 
     authorize_url = auth_flow.start()
-    print("1. Go to: " + authorize_url)
-    print("2. Click \"Allow\" (you might have to log in first).")
-    print("3. Copy the authorization code.")
+    logger.warning("1. Go to: " + authorize_url)
+    logger.warning("2. Click \"Allow\" (you might have to log in first).")
+    logger.warning("3. Copy the authorization code.")
     auth_code = input("Enter the authorization code here: ").strip()
 
     try:

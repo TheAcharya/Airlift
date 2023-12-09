@@ -14,5 +14,4 @@ def ClientError(error:HTTPError) -> None:
         raise AirtableError("Accessing a protected resource without authorization or with invalid credentials!")
     
     elif error.response.status_code == 422:
-        print(error.response.text)
         raise CriticalError("The request data is invalid!")
