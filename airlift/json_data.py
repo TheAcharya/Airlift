@@ -1,10 +1,10 @@
 import json
 import logging
+import datetime
+import email
 from collections import Counter
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional
-import datetime
-import email
 
 from airlift.utils_exceptions import CriticalError
 from airlift.airlift_data_guesser import guess_data_type
