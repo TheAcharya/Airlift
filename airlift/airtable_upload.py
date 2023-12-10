@@ -1,13 +1,13 @@
+import logging
+import concurrent.futures
+import progressbar
 from airlift.airtable_client import new_client
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 from airlift.utils_exceptions import CriticalError
-import logging
 from requests.exceptions import HTTPError
 from airlift.airtable_error_handling import ClientError
 from queue import Queue, Empty
-import concurrent.futures
 from airlift.dropbox_client import dropbox_client
-import progressbar
 from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
