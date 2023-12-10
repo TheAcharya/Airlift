@@ -2,9 +2,9 @@ import logging
 import os
 import signal
 import sys
+import pathlib
 from pathlib import Path
 from typing import Any, Optional
-import pathlib
 
 from airlift.version import __version__
 from airlift.utils_exceptions import CriticalError,AirtableError 
