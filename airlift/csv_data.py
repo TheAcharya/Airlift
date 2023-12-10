@@ -1,9 +1,9 @@
 import csv
 import logging
+import os
 from collections import Counter
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional
-import os
 
 from airlift.utils_exceptions import CriticalError
 
