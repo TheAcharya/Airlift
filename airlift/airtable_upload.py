@@ -17,22 +17,21 @@ ATDATA = List[Dict[str, Dict[str, str]]]
 def upload_data(client: new_client, new_data: ATDATA, workers: int, dbx: str, dirname: str,
                 attachment_columns: List[str], attachment_columns_map: List[str], columns_copy: List[str]) -> None:
     logger.info("Uploding data now!")
-    #progress_bar = tqdm(total=len(new_data), desc='uploading')
+    progress_bar = tqdm(total=len(new_data), desc='uploading')
     
-    with alive_bar(len(new_data)) as progress_bar:
-        try:
-            data_queue = Queue()
-            for data in new_data:
-                data_queue.put(data)
+    try:
+        data_queue = Queue()
+        for data in new_data:
+            data_queue.put(data)
 
-            with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-                futures = [executor.submit(_worker, client, data_queue, progress_bar, dbx,
-                                            attachment_columns, dirname, attachment_columns_map, columns_copy) for _ in
-                            range(workers)]
-                concurrent.futures.wait(futures, timeout=None)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = [executor.submit(_worker, client, data_queue, progress_bar, dbx,
+                                        attachment_columns, dirname, attachment_columns_map, columns_copy) for _ in
+                        range(workers)]
+            concurrent.futures.wait(futures, timeout=None)
 
-        except Exception as e:
-            logger.error('Something went wrong while uploading the data: %s', str(e))
+    except Exception as e:
+        logger.error('Something went wrong while uploading the data: %s', str(e))
     
 
 
@@ -73,7 +72,7 @@ def _worker(client: new_client, data_queue: Queue, progress_bar, dbx: dropbox_cl
                                     if dirname:
                                         data['fields'][attachment_columns_map[1]] = [
                                             {"url": dbx.upload_to_dropbox(f"{dirname}/{value}")}]
-                                    else:
+                                    else: 
                                         data['fields'][attachment_columns_map[1]] = [
                                             {"url": dbx.upload_to_dropbox(f"{value}")}]
                                 except Exception as e:
@@ -83,7 +82,7 @@ def _worker(client: new_client, data_queue: Queue, progress_bar, dbx: dropbox_cl
                             logger.error("Dropbox token not provided! Aborting the upload!")
 
                 client.single_upload(data)
-                progress_bar()
+                progress_bar.update(1)
             except Exception as e:
                 logger.error(str(e))
         except Empty:
