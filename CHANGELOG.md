@@ -3,10 +3,11 @@
 ### 1.0.2
 
 **🎉 Released:**
-- Next Release
+- 11th December 2023
 
 **🔨 Improvements:**
 - Added Airlift version number in Log File (#26)
+- Added multiprocessing support by adding `freeze support` (#13)
 
 **🐞 Bug Fix:**
 - Fixed `metavar` argument parser (#24)
