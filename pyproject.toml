@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "airlift"
-version = "1.0.1"
+version = "1.0.2"
 description = "Upload & Merge Data with Attachments to Airtable"
 authors = ["Arjun <arjunprakash027@gmail.com>"]
 readme = "README.md"
