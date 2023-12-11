@@ -14,7 +14,7 @@ ATDATA = List[Dict[str, Dict[str, str]]]
 def upload_data(client: new_client, new_data: ATDATA, workers: int, dbx: str, dirname: str,
                 attachment_columns: List[str], attachment_columns_map: List[str], columns_copy: List[str]) -> None:
     logger.info("Uploding data now!")
-    progress_bar = tqdm(total=len(new_data), desc='uploading')
+    progress_bar = tqdm(total=len(new_data))
     
     try:
         data_queue = Queue()
