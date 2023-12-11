@@ -7,10 +7,10 @@
 
 **🔨 Improvements:**
 - Added Airlift version number in Log File (#26)
-- Added multiprocessing support by adding `freeze support` (#13)
 
 **🐞 Bug Fix:**
 - Fixed `metavar` argument parser (#24)
+- Fixed `tqdm` breaking due to multiprocess (#13)
 
 ---
 
