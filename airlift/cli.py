@@ -28,36 +28,43 @@ def cli(*argv: str) -> None:
 
     workers = args.workers if args.workers else 5
 
-    if not args.dropbox_refresh_token:
+    if not args.dropbox_refresh_token: #if dropbox-refresh-token flag is not present, continue normal procedure
 
+        #creating drop box client
         if args.dropbox_token:
             dbx = dropbox_client(args.dropbox_token,args.md)
         else:
             dbx = None
 
+        #creating airtable client
         airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
         logger.info(f"Validating {args.csv_file.name} and Airtable Schema")
 
         suffix = pathlib.Path(args.csv_file.name).suffix
 
+        #converting data into airtable supported format
         if "csv" in suffix:
             data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
         elif "json" in suffix:
             data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
         else:
             raise CriticalError("File type not supported!")
-        #print(data)
 
         logger.info("Validation done!")
 
         if not data:
             raise CriticalError("File is empty!")
 
-        data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation)
+        #checking for missing columns
+        if args.rename_key_column:
+            ignore_column_check = [args.rename_key_column[0]]
 
+        data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation,ignore_columns=ignore_column_check)
+        
+        #uploading the data
         dirname = os.path.dirname(args.csv_file)
-        upload_data(client=airtable_client, new_data=data, workers = workers,dirname=dirname,dbx=dbx,attachment_columns=args.attachment_columns,attachment_columns_map=args.attachment_columns_map,columns_copy=args.columns_copy)
+        upload_data(client=airtable_client, new_data=data, workers = workers,dirname=dirname,dbx=dbx,attachment_columns=args.attachment_columns,attachment_columns_map=args.attachment_columns_map,columns_copy=args.columns_copy,rename_key_column=args.rename_key_column)
     else:
         change_refresh_access_token(args.dropbox_token)
 

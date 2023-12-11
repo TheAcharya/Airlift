@@ -55,7 +55,7 @@ class new_client:
         return False
 
 
-    def missing_fields_check(self,data:ATDATATYPE,disable_bypass:bool):
+    def missing_fields_check(self,data:ATDATATYPE,disable_bypass:bool,ignore_columns:List[str]):
         
         airtable_table_fields = []
         user_csv_fields = []
@@ -70,6 +70,9 @@ class new_client:
                 for fields in x['fields']:
                     airtable_table_fields.append(fields['name'])
 
+        if ignore_columns:
+            for column in ignore_columns:
+                airtable_table_fields.append(column)
         
         for csv_key,csv_value in data[0]['fields'].items():
             user_csv_fields.append(csv_key)
