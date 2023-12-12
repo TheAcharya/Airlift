@@ -3,7 +3,7 @@
 ### 1.0.3
 
 **🎉 Released:**
-- 12th December 2023
+- 13th December 2023
 
 **🔨 Improvements:**
 - Added `--rename-key-column` : rename the key column in the file to a different key column in Airtable (#27)
