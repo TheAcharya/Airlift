@@ -627,7 +627,7 @@ Desktop/
 │  ├─ airlift [Binary Executable File]
 ```
 
-<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments.gif?raw=true"> </p>
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments-rename-key-column.gif?raw=true"> </p>
 
 </p>
 </details>
