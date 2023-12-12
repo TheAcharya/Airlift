@@ -461,60 +461,6 @@ Desktop/
 </p>
 </details>
 
-<details><summary>Uploading Data with Attachments</summary>
-<p>
-
-```bash
-#!/bin/sh
-
-TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
-AIRTABLE_TOKEN="REPLACE"
-AIRTABLE_BASE="REPLACE"
-AIRTABLE_TABLE="REPLACE"
-DROPBOX_TOKEN="/Users/xxx/Desktop/Airlift/dropbox-token.json"
-UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
-UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
-
-$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns "Image Filename" --log $UPLOAD_LOG "$UPLOAD_PAYLOAD"
-```
-
-Example CSV 
-
-```text
-Cat ID,Animal Name,Location,Image Filename
-001,Lion,Namibia,lion.jpg
-002,Tiger,India,tiger.jpg
-003,Panther,India,panther.jpg
-004,Snow Leopard,Nepal,snow_leopard.jpg
-005,Cheetah,South Africa,cheetah.jpg
-006,Puma,South America,puma.jpg
-007,Jaguar,Brazil,jaguar.jpg
-```
-
-Example Folder Structure
-
-```text
-Desktop/
-├─ Airlift/
-│  ├─ Data/
-│  │  ├─ zzz.csv
-│  │  ├─ cheetah.jpg
-│  │  ├─ jaguar.jpg
-│  │  ├─ lion.jpg
-│  │  ├─ panther.jpg
-│  │  ├─ puma.jpg
-│  │  ├─ snow_leopard.jpg
-│  │  ├─ tiger.jpg
-│  ├─ myscript.sh
-│  ├─ dropbox-token.json
-│  ├─ airlift [Binary Executable File]
-```
-
-<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments.gif?raw=true"> </p>
-
-</p>
-</details>
-
 <details><summary>Uploading Data with Multiple Attachments Column</summary>
 <p>
 
@@ -628,6 +574,60 @@ Desktop/
 ```
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments-map.gif?raw=true"> </p>
+
+</p>
+</details>
+
+<details><summary>Uploading Data with Attachments (Rename Key Column + Mapping)</summary>
+<p>
+
+```bash
+#!/bin/sh
+
+TOOL_PATH="/Users/xxx/Desktop/Airlift/airlift"
+AIRTABLE_TOKEN="REPLACE"
+AIRTABLE_BASE="REPLACE"
+AIRTABLE_TABLE="REPLACE"
+DROPBOX_TOKEN="/Users/xxx/Desktop/Airlift/dropbox-token.json"
+UPLOAD_PAYLOAD="/Users/xxx/Desktop/Airlift/Data/zzz.csv"
+UPLOAD_LOG="/Users/xxx/Desktop/Airlift/log.txt"
+
+$TOOL_PATH --token $AIRTABLE_TOKEN --base $AIRTABLE_BASE --table $AIRTABLE_TABLE --dropbox-token $DROPBOX_TOKEN --attachment-columns-map "Image Filename" "Attachments" --rename-key-column "Cat ID" "Animal ID" --log $UPLOAD_LOG --verbose "$UPLOAD_PAYLOAD"
+```
+
+Example CSV 
+
+```text
+Cat ID,Animal Name,Location,Image Filename
+001,Lion,Namibia,lion.jpg
+002,Tiger,India,tiger.jpg
+003,Panther,India,panther.jpg
+004,Snow Leopard,Nepal,snow_leopard.jpg
+005,Cheetah,South Africa,cheetah.jpg
+006,Puma,South America,puma.jpg
+007,Jaguar,Brazil,jaguar.jpg
+```
+
+Example Folder Structure
+
+```text
+Desktop/
+├─ Airlift/
+│  ├─ Data/
+│  │  ├─ zzz.csv
+│  │  ├─ cheetah.jpg
+│  │  ├─ jaguar.jpg
+│  │  ├─ lion.jpg
+│  │  ├─ panther.jpg
+│  │  ├─ puma.jpg
+│  │  ├─ snow_leopard.jpg
+│  │  ├─ tiger.jpg
+│  ├─ myscript.sh
+│  ├─ dropbox-token.json
+│  ├─ airlift [Binary Executable File]
+```
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/big-cats-with-attachments.gif?raw=true"> </p>
 
 </p>
 </details>
