@@ -12,7 +12,7 @@ ATDATA = List[Dict[str, Dict[str, str]]]
 
 
 def upload_data(client: new_client, new_data: ATDATA, workers: int, dbx: str, dirname: str,
-                attachment_columns: List[str], attachment_columns_map: List[str], columns_copy: List[str]) -> None:
+                attachment_columns: List[str], attachment_columns_map: List[str], columns_copy: List[str], rename_key_column: List[str]) -> None:
     logger.info("Uploding data now!")
     progress_bar = tqdm(total=len(new_data))
     
@@ -23,7 +23,7 @@ def upload_data(client: new_client, new_data: ATDATA, workers: int, dbx: str, di
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
             futures = [executor.submit(_worker, client, data_queue, progress_bar, dbx,
-                                        attachment_columns, dirname, attachment_columns_map, columns_copy) for _ in
+                                        attachment_columns, dirname, attachment_columns_map, columns_copy,rename_key_column) for _ in
                         range(workers)]
             concurrent.futures.wait(futures, timeout=None)
 
@@ -33,7 +33,7 @@ def upload_data(client: new_client, new_data: ATDATA, workers: int, dbx: str, di
 
 
 def _worker(client: new_client, data_queue: Queue, progress_bar, dbx: dropbox_client, attachment_columns: List[str],
-            dirname: str, attachment_columns_map: List[str], columns_copy: List[str]) -> None:
+            dirname: str, attachment_columns_map: List[str], columns_copy: List[str], rename_key_column:List[str]) -> None:
     while True:
         try:
             data = data_queue.get_nowait()
@@ -48,6 +48,15 @@ def _worker(client: new_client, data_queue: Queue, progress_bar, dbx: dropbox_cl
                         logger.warning(
                             f"The Column {column} is not present in airtable! Please create it and try again")
                         pass
+
+            if rename_key_column:
+                if client.missing_field_single(rename_key_column[1]):
+                    data['fields'][rename_key_column[1]] = data['fields'][rename_key_column[0]]
+                    del data['fields'][rename_key_column[0]]
+                else:
+                    logger.warning(
+                            f"The Key Column {column} is not present in airtable! Please create it and try again")
+                    pass
 
             try:
                 for key, value in data['fields'].items():
