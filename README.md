@@ -104,6 +104,7 @@ dropbox options:
 column options:
   --disable-bypass-column-creation   creates new columns that are not present in Airtable's table
   --columns-copy                     copys value of one column to multiple other columns
+  --rename-key-column                rename the key column in the file to a different key column in Airtable
 
 validation options:
   --fail-on-duplicate-csv-columns    fail if CSV has duplicate columns;
