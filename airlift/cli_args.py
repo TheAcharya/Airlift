@@ -102,7 +102,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             },
             "--rename-key-column":{
                 "nargs":2,
-                "help":"rename the key column in the file to key column in airtable",
+                "help":"rename the key column in the file to a different key column in airtable",
                 "metavar":"column",
             },
         },
