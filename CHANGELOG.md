@@ -1,5 +1,15 @@
 # Changelog
 
+### 1.0.4
+
+**🎉 Released:**
+- Next Release
+
+**🔨 Improvements:**
+- Improved progress bar behaviour (#30)
+
+---
+
 ### 1.0.3
 
 **🎉 Released:**
