@@ -10,7 +10,7 @@ from airlift.version import __version__
 from airlift.utils_exceptions import CriticalError,AirtableError 
 from airlift.cli_args import parse_args
 from airlift.csv_data import csv_read
-from airlift.airtable_upload import upload_data
+from airlift.airtable_upload import Upload
 from airlift.json_data import json_read
 from airlift.airtable_client import new_client
 from airlift.dropbox_client import dropbox_client,change_refresh_access_token
@@ -59,12 +59,14 @@ def cli(*argv: str) -> None:
         #checking for missing columns
         if args.rename_key_column:
             ignore_column_check = [args.rename_key_column[0]]
+        else:
+            ignore_column_check = None
 
         data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation,ignore_columns=ignore_column_check)
         
         #uploading the data
-        dirname = os.path.dirname(args.csv_file)
-        upload_data(client=airtable_client, new_data=data, workers = workers,dirname=dirname,dbx=dbx,attachment_columns=args.attachment_columns,attachment_columns_map=args.attachment_columns_map,columns_copy=args.columns_copy,rename_key_column=args.rename_key_column)
+        upload_instance = Upload(client=airtable_client, new_data=data,dbx=dbx,args=args)
+        upload_instance.upload_data()
     else:
         change_refresh_access_token(args.dropbox_token)
 
