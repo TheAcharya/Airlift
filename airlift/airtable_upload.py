@@ -6,14 +6,15 @@ from queue import Queue, Empty
 from airlift.dropbox_client import dropbox_client
 import os
 from tqdm import tqdm
-
+from icecream import ic
+from airlift.dropbox_client import dropbox_client
 
 logger = logging.getLogger(__name__)
 ATDATA = List[Dict[str, Dict[str, str]]]
 
 
 class Upload:
-    def __init__(self,client: new_client, new_data:ATDATA,dbx:str,args:dict):
+    def __init__(self,client: new_client, new_data:ATDATA,dbx:dropbox_client,args:dict):
         self.dbx = dbx
         self.new_data = new_data
         self.client = client
@@ -51,6 +52,7 @@ class Upload:
         while True:
             try:
                 data = data_queue.get_nowait()
+            
                 if self.attachment_columns_map:
                     data['fields'][self.attachment_columns_map[1]] = ""
 
@@ -83,6 +85,7 @@ class Upload:
                                         else:
                                             data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{value}")}]
                                     except Exception as e:
+                                        tqdm.write(f"{data['fields'][key]} Could not be found!")
                                         data['fields'][key] = ""
 
                         if self.attachment_columns_map:
@@ -96,6 +99,7 @@ class Upload:
                                             data['fields'][self.attachment_columns_map[1]] = [
                                                 {"url": self.dbx.upload_to_dropbox(f"{value}")}]
                                     except Exception as e:
+                                        tqdm.write(f"{['fields'][self.attachment_columns_map[1]]} Could not be found!")
                                         data['fields'][self.attachment_columns_map[1]] = ""
 
                             else:

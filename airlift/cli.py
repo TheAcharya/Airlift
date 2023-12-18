@@ -14,6 +14,7 @@ from airlift.airtable_upload import Upload
 from airlift.json_data import json_read
 from airlift.airtable_client import new_client
 from airlift.dropbox_client import dropbox_client,change_refresh_access_token
+from icecream import ic
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,7 @@ def abort(*_: Any) -> None:  # pragma: no cover
     os._exit(1)
 
 def cli(*argv: str) -> None:
+    ic.disable()
     args = parse_args(argv)
     setup_logging(is_verbose=args.verbose,log_file=args.log)
     logger.info(f"Airlift version {__version__}")
