@@ -6,7 +6,10 @@
 - Next Release
 
 **🔨 Improvements:**
+- Added `.json` support for [MarkersExtractor](https://github.com/TheAcharya/MarkersExtractor) (#28)
 - Improved progress bar behaviour (#30)
+- Improved warning log output
+- Improved internal codebase
 
 ---
 
