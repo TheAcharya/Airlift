@@ -3,7 +3,7 @@
 ### 1.0.4
 
 **🎉 Released:**
-- Next Release
+- 18th December 2023
 
 **🔨 Improvements:**
 - Added `.json` support for [MarkersExtractor](https://github.com/TheAcharya/MarkersExtractor) (#28)
