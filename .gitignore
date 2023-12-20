@@ -1,20 +1,4 @@
-playground.ipynb
-new_data.csv
-upload_test.sh
 test.log
-upload_test_vig.sh
-a.csv
-a.json
-IMG_3046.jpg
-airlift_linux
 # Mac/OSX
 .DS_Store
-client_secrets.json
-settings.yml
-marker_data_demo
-upload_test_copy.sh
-upload_test_large.sh
-Demo
-Demo2
-dropbox_token.json
 airlift/__pycache__
