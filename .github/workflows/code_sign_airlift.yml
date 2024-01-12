@@ -38,6 +38,7 @@ jobs:
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         cp -R ./bin/airlift "$PARENT/dist/bin"
+        cp -R ./bin/entitlements.plist "$PARENT/dist/bin"
         
     - name: Verify Files
       run: |
