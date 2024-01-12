@@ -60,7 +60,7 @@ jobs:
         security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
         security import certificate.p12 -k build.keychain -P $APPLE_CERT_PASSWORD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
-        /usr/bin/codesign --force -s $APPLE_TEAM_ID "$APP" -v
+        /usr/bin/codesign --force -s $APPLE_TEAM_ID --options runtime "$APP" -v
         
     - name: Verify Codesign Airlift
       run: |
@@ -68,24 +68,3 @@ jobs:
         APP="$PARENT/dist/bin/airlift"
 
         /usr/bin/codesign -dv --verbose=4 "$APP"
-        
-    - name: Notarize app
-      env:
-        APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
-        APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
-        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      run: |
-        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-        APP="$PARENT/dist/bin/airlift"
-    
-        echo "Create keychain profile"
-        xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
-        
-        echo "Creating temp notarization archive"
-        ditto -c -k --keepParent "$APP" "notarization.zip"
-        
-        echo "Notarize app"
-        xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --progress --wait
-        
-        echo "Attach staple"
-        xcrun stapler staple "$APP"
