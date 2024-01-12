@@ -22,7 +22,7 @@ jobs:
     - name: Copy Local Distribution 
       run: |
         mkdir -p dist/bin
-        cp -R ./Bin/. ./dist/bin
+        cp -R ./bin/. ./dist/bin
 
     - name: Verify Copied Files
       run: |
@@ -37,7 +37,7 @@ jobs:
     - name: Copy Local Resources
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-        cp -R ./Bin/airlift "$PARENT/dist/bin"
+        cp -R ./bin/airlift "$PARENT/dist/bin"
         
     - name: Verify Uninstaller
       run: |
@@ -53,6 +53,7 @@ jobs:
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         APP="$PARENT/dist/bin/airlift"
+        ENTITLE="$PARENT/dist/bin/entitlements.plist"
     
         echo $APPLE_CERT_DATA | base64 --decode > certificate.p12
         security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
@@ -60,7 +61,7 @@ jobs:
         security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
         security import certificate.p12 -k build.keychain -P $APPLE_CERT_PASSWORD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
-        /usr/bin/codesign --force -s $APPLE_TEAM_ID --options runtime "$APP" -v
+        /usr/bin/codesign --force -s $APPLE_TEAM_ID --options runtime --entitlements $ENTITLE "$APP" -v
         
     - name: Verify Codesign Airlift
       run: |
