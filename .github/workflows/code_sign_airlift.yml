@@ -39,7 +39,7 @@ jobs:
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         cp -R ./bin/airlift "$PARENT/dist/bin"
         
-    - name: Verify Uninstaller
+    - name: Verify Files
       run: |
         echo "Checking copied files..."
         ls -l ./dist/bin
