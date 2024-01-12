@@ -1,4 +1,5 @@
 test.log
 # Mac/OSX
 .DS_Store
+.nova
 airlift/__pycache__
