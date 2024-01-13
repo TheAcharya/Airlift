@@ -87,7 +87,7 @@ jobs:
         xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --progress --wait
         
         echo "Attach Staple"
-        xcrun stapler staple "UAPP"
+        xcrun stapler staple "$APP"
         
     - name: Verify Codesign Airlift
       run: |
