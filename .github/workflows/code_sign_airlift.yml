@@ -67,10 +67,31 @@ jobs:
         chmod +x "$ENTITLE"
         
         /usr/bin/codesign --force -s $APPLE_TEAM_ID --options runtime --entitlements "$ENTITLE" "$APP" -v
+    
+    - name: Notarize Airlift
+      env:
+        APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+        APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
+        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        APP="$PARENT/dist/bin/airlift"
+    
+        echo "Create Keychain Profile"
+        xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
+        
+        echo "Creating Temp Notarization Archive"
+        ditto -c -k --keepParent "$APP" "notarization.zip"
+        
+        echo "Notarize app"
+        xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --progress --wait
+        
+        echo "Attach Staple"
+        xcrun stapler staple "UAPP"
         
     - name: Verify Codesign Airlift
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         APP="$PARENT/dist/bin/airlift"
-
+    
         /usr/bin/codesign -dv --verbose=4 "$APP"
