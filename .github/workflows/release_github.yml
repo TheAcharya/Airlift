@@ -153,7 +153,7 @@ jobs:
           cp -R  ./bin/entitlements.plist dist/
           cp ./LICENSE dist/
 
-          zip -q -j dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip "dist/"
+          zip -q -r dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip "dist/"
 
       - name: Pack up binary for linux
         if: matrix.os == 'ubuntu-latest'
