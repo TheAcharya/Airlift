@@ -112,7 +112,9 @@ jobs:
 
       - name: Pack up binary for macos
         if: matrix.os == 'macos-latest'
-        run: zip -q -j dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip ./dist/${{ env.PACKAGE_NAME }}
+        run: |
+          zip -q -j dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip ./dist/${{ env.PACKAGE_NAME }}
+          ls ./dist/
 
       - name: Pack up binary for linux
         if: matrix.os == 'ubuntu-latest'
