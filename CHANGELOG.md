@@ -3,7 +3,7 @@
 ### 1.0.5
 
 **🎉 Released:**
-- Next Release
+- 15th January 2024
 
 **🔨 Improvements:**
 - Added codesign and notarization to macOS binary
