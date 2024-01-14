@@ -159,6 +159,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           cp ./LICENSE dist/
+          ls dist/
           tar -zcvf dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.tar.gz -C "dist/"
 
       - name: Pack up binary for windows
