@@ -1,0 +1,57 @@
+name: create_dmg_test
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release after build'
+        required: true
+        default: 'no'
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install create-dmg
+      run: npm install --global create-dmg
+
+    - name: Create Distribution directory
+      run: mkdir -p dist/bin
+
+    - name: Copy Local Distribution 
+      run: |
+        mkdir -p dist/bin
+        cp -R ./bin/. ./dist/bin
+
+    - name: Verify Copied Files
+      run: |
+        echo "Checking copied files..."
+        ls -l ./dist/bin
+
+    - name: Prepare Directories
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        mkdir -p "$PARENT/dist/bin"
+
+    - name: Copy Local Resources
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        cp -R ./bin/airlift "$PARENT/dist/bin"
+        cp -R ./bin/entitlements.plist "$PARENT/dist/bin"
+        
+    - name: Verify Files
+      run: |
+        echo "Checking copied files..."
+        ls -l ./dist/bin
+        
+    - name: Build Airlift DMG
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        APP="$PARENT/dist/bin/airlift"
+        OUTPUT="$PARENT/dist/dmg-builds/dmg-output"
+    
+        create-dmg "$APP" "$OUTPUT"
