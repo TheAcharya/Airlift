@@ -47,7 +47,7 @@ jobs:
       run: |
         echo "Checking copied files..."
         ls -l ./dist/bin
-
+      
     - name: Codesign Airlift
       env: 
         APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
@@ -95,3 +95,11 @@ jobs:
         APP="$PARENT/dist/bin/airlift"
     
         /usr/bin/codesign -dv --verbose=4 "$APP"
+        
+    - name: Build Airlift DMG
+    run: |
+      PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+      APP="$PARENT/dist/bin/airlift"
+      OUTPUT="$PARENT/dist/dmg-builds/dmg-output/"
+    
+      create-dmg "$APP" "$OUTPUT"
