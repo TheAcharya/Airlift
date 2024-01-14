@@ -16,8 +16,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Install node-appdmg
-      run: install --global create-dmg
+    - name: Install create-dmg
+      run: npm install --global create-dmg
 
     - name: Create Distribution directory
       run: mkdir -p dist/bin
