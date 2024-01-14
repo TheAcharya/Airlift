@@ -168,7 +168,7 @@ jobs:
           choco install zip
           copy ./bin/entitlements.plist dist/
           copy ./LICENSE dist/
-          zip -q -j dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip ./dist/${{ env.PACKAGE_NAME }}.exe
+          zip -q -r dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip "dist/"
 
       - name: Save release binaries for ${{ matrix.OS_CODE }}
         uses: actions/upload-artifact@v3
