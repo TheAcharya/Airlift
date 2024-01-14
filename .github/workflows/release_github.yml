@@ -158,7 +158,8 @@ jobs:
       - name: Pack up binary for linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          
+          PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+          mkdir -p "$PARENT/dist/bin"
           cp -R "$PARENT/dist/bin/${{ env.PACKAGE_NAME }}" dist/
           cp ./LICENSE dist/
           
@@ -167,9 +168,6 @@ jobs:
       - name: Pack up binary for windows
         if: matrix.os == 'windows-latest'
         run: |
-        
-          cp -R "$PARENT/dist/bin/${{ env.PACKAGE_NAME }}" dist/
-          cp ./LICENSE dist/
           
           choco install zip
           zip -q -j dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip ./dist/${{ env.PACKAGE_NAME }}.exe
