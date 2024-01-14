@@ -1,5 +1,15 @@
 # Changelog
 
+### 1.0.5
+
+**🎉 Released:**
+- Next Release
+
+**🔨 Improvements:**
+- Added codesign and notarization to macOS binary
+
+---
+
 ### 1.0.4
 
 **🎉 Released:**
