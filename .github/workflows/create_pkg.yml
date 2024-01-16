@@ -119,6 +119,6 @@ jobs:
         security import certificate.p12 -k build-i.keychain -P $APPLE_INSTALL_CERT_PASSWORD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
         
-        /usr/bin/codesign --force -s $APPLE_TEAM_ID --identifier "co.theacharya.Airlift" --options runtime,library --entitlements "$ENTITLE" "$APP" -v
+        
         
 
