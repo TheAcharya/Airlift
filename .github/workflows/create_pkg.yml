@@ -1,4 +1,4 @@
-name: code_sign_airlift
+name: create_pkg
 
 on:
   workflow_dispatch:
