@@ -41,7 +41,7 @@ jobs:
         echo "Checking copied files..."
         ls -l ./dist/bin
         
-    - name: Create PKG for macOS
+    - name: Create Airlift PKG for macOS
       env: 
         APPLE_INSTALL_CERT_DATA: ${{ secrets.APPLE_INSTALL_CERT_DATA }}
         APPLE_INSTALL_CERT_PASSWORD: ${{ secrets.APPLE_INSTALL_CERT_PASSWORD }}
@@ -65,13 +65,13 @@ jobs:
         security import certificate.p12 -k build-i.keychain -P $APPLE_INSTALL_CERT_PASSWORD -T /usr/bin/pkgbuild
         security set-key-partition-list -S apple-tool:,apple:,pkgbuild: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
         
-        echo "creating temp dir"
+        echo "Creating Temp Dir"
         TMP_DIR="$OUTPUT_DIR/tmp_pkgbuild"
         mkdir -p "$TMP_DIR"
 
         cp "$BINARY_PATH" "$TMP_DIR/$(basename "$BINARY_PATH")"
 
-        echo "running creating pkg"
+        echo "Running Creating PKG"
         pkgbuild --root "$TMP_DIR" --identifier "$PKG_IDENTIFIER" --version "$VERSION" --install-location "$INSTALL_LOCATION" --sign "$SIGNING_IDENTITY" "$OUTPUT_DIR/$PACKAGE_NAME.pkg"
 
         rm -rf "$TMP_DIR"
@@ -88,7 +88,7 @@ jobs:
         echo "Create Keychain Profile"
         xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
         
-        echo "Notarize PKG"
+        echo "Notarize Airlift PKG"
         xcrun notarytool submit "$PKG" --keychain-profile "notarytool-profile" --progress --wait
         
         echo "Attach staple"
