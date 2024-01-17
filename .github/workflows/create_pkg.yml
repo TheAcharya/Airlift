@@ -128,6 +128,31 @@ jobs:
 
         rm -rf "$TMP_DIR"
 
+    - name: Notarize Airlift PKG
+      env:
+        APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+        APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
+        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        PKG="$PARENT/dist/pkg-build/Airlift.pkg"
+        
+        echo "PKG=$PKG" >> $GITHUB_ENV
+        echo "Create Keychain Profile"
+        xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
+        
+        echo "Notarize Airlift PKG"
+        xcrun notarytool submit "$PKG" --keychain-profile "notarytool-profile" --progress --wait
+        
+        echo "Attach staple"
+        xcrun stapler staple "$PKG"
+
+    - name: Load release binaries for macos
+      uses: actions/download-artifact@v3
+      with:
+        name: airlift pkg release
+        path: ${{ env.PKG }}
+
         
         
 
