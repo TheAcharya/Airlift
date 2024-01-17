@@ -156,7 +156,7 @@ jobs:
     - name: Load release binaries for macos
       uses: actions/download-artifact@v3
       with:
-        name: airlift pkg release
+        name: Airlift.pkg
         path: dist
 
         
