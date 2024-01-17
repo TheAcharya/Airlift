@@ -157,7 +157,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: airlift pkg release
-        path: dist/pkg_full
+        path: dist
 
         
         
