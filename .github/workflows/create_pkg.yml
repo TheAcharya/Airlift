@@ -152,7 +152,7 @@ jobs:
 
         cp -R "$PKG" ./dist/pkg_full
 
-        ls "$PKG"
+        ls "$PARENT/dist/pkg-build"
 
     - name: Load release binaries for macos
       uses: actions/download-artifact@v3
