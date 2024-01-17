@@ -93,7 +93,13 @@ jobs:
         
         echo "Attach staple"
         xcrun stapler staple "$PKG"
-        
+      
+    - name: Verify Codesign Airlift PKG
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        PKG="$PARENT/dist/pkg-build/Airlift.pkg"
+      
+        /usr/bin/codesign -dv --verbose=4 "$PKG"  
         
         
 
