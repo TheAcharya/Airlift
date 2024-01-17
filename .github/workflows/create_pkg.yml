@@ -147,17 +147,17 @@ jobs:
         xcrun stapler staple "$PKG"
 
         echo "copy pkg"
-        mkdir -p dist/pkg_full
+        mkdir -p dist_bin
 
-        cp -R "$PKG" ./dist/pkg_full
+        zip -q -r dist_bin/bin_x64.zip "$PKG"
 
         ls "$PARENT/dist/pkg-build"
 
     - name: Load release binaries for macos
       uses: actions/download-artifact@v3
       with:
-        name: Airlift.pkg
-        path: dist
+        name: Airlift pkg
+        path: dist_bin
 
         
         
