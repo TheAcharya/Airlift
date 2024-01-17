@@ -77,11 +77,6 @@ jobs:
         pkgbuild --root "$TMP_DIR" --identifier "$PKG_IDENTIFIER" --version "$VERSION" --install-location "$INSTALL_LOCATION" --sign "$SIGNING_IDENTITY" "$OUTPUT_DIR/$PACKAGE_NAME.pkg"
 
         rm -rf "$TMP_DIR"
-        
-    - name: Verify Files
-      run: |
-        echo "Checking copied files..."
-        ls -l ./dist/pkg-build/
               
     - name: Notarize Airlift PKG
       env:
