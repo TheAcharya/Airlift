@@ -146,7 +146,6 @@ jobs:
         echo "Attach staple"
         xcrun stapler staple "$PKG"
 
-
     - name: Load release binaries for macos
       uses: actions/upload-artifact@v3
       with:
