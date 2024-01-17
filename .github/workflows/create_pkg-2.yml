@@ -87,9 +87,6 @@ jobs:
         
         echo "Create Keychain Profile"
         xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
-          
-        echo "Creating Temp Notarization Archive"
-        ditto -c -k --keepParent "$APP" "notarization.zip"
         
         echo "Notarize PKG"
         xcrun notarytool submit "$PKG" --keychain-profile "notarytool-profile" --progress --wait
