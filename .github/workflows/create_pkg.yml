@@ -142,7 +142,14 @@ jobs:
         
         echo "Notarize Airlift PKG"
         xcrun notarytool submit "$PKG" --keychain-profile "notarytool-profile" --progress --wait
-  
+        
+        echo "Attach staple"
+        xcrun stapler staple "$PKG"
+
+        echo "copy pkg"
+        mkdir -p dist/pkg_full
+
+        cp -R "$PKG" ./dist/pkg_full
 
         ls "$PARENT/dist/pkg-build"
 
@@ -150,7 +157,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: airlift pkg release
-        path: ${{ env.PKG }}
+        path: dist/pkg_full
 
         
         
