@@ -29,6 +29,7 @@ jobs:
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         mkdir -p "$PARENT/dist/bin"
+        mkdir -p "$PARENT/dist/pkg-build""
 
     - name: Copy Local Resources
       run: |
@@ -40,6 +41,7 @@ jobs:
       run: |
         echo "Checking copied files..."
         ls -l ./dist/bin
+        ls -l ./dist/pkg-build
         
     - name: Create Airlift PKG for macOS
       env: 
