@@ -36,12 +36,7 @@ jobs:
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         cp -R ./bin/airlift "$PARENT/dist/bin"
         cp -R ./bin/entitlements.plist "$PARENT/dist/bin"
-        
-    - name: Verify Files
-      run: |
-        echo "Checking copied files..."
-        ls -l ./dist/bin
-        ls -l ./dist/pkg-build
+      
         
     - name: Create Airlift PKG for macOS
       env: 
