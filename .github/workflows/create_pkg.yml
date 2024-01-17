@@ -136,7 +136,7 @@ jobs:
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         PKG="$PARENT/dist/pkg-build/Airlift.pkg"
-        PKG_DIR = "$PARENT/dist/pkg-build"
+        PKG_DIR="$PARENT/dist/pkg-build"
         
         echo "PKG=$PKG_DIR" >> $GITHUB_ENV
         echo "Create Keychain Profile"
