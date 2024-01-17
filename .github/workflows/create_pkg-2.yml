@@ -3,10 +3,7 @@ name: create_pkg-2
 on:
 push:
   branches: [main]
-
-workflow_dispatch:
   
-
 jobs:
   build:
     runs-on: macos-latest
