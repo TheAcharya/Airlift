@@ -148,7 +148,8 @@ jobs:
 
         echo "copy pkg"
         mkdir -p dist_bin
-
+        
+        echo "zipping"
         zip -q -r dist_bin/bin_x64.zip "$PKG"
 
         ls "$PARENT/dist/pkg-build"
