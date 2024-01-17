@@ -29,7 +29,7 @@ jobs:
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         mkdir -p "$PARENT/dist/bin"
-        mkdir -p "$PARENT/dist/pkg-build""
+        mkdir -p "$PARENT/dist/pkg-build"
 
     - name: Copy Local Resources
       run: |
