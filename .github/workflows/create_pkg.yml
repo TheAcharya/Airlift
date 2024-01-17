@@ -115,7 +115,7 @@ jobs:
         security default-keychain -s build-i.keychain
         security unlock-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
         security import certificate.p12 -k build-i.keychain -P $APPLE_INSTALL_CERT_PASSWORD -T /usr/bin/codesign
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
+        security set-key-partition-list -S apple-tool:,apple:,pkgbuild: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
         
         echo "creating temp dir"
         TMP_DIR="$OUTPUT_DIR/tmp_pkgbuild"
