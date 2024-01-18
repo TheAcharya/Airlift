@@ -52,7 +52,7 @@ jobs:
         PACKAGE_NAME="Airlift"
         OUTPUT_DIR="$PARENT/dist/pkg-build"
         VERSION="1.0.5"
-        SIGNING_IDENTITY="$APPLE_TEAM_ID_INSTALL"
+        SIGNING_IDENTITY="Developer ID Installer: The Acharya Pte. Ltd. (99HS259QDZ)"
 
         echo "running security keychain"
         echo $APPLE_INSTALL_CERT_DATA | base64 --decode > certificate.p12
