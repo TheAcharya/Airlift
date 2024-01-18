@@ -74,9 +74,22 @@ jobs:
         rm -rf "$TMP_DIR"
       
     - name: Verify Codesign Airlift PKG
+      env: 
+        APPLE_INSTALL_CERT_DATA: ${{ secrets.APPLE_INSTALL_CERT_DATA }}
+        APPLE_INSTALL_CERT_PASSWORD: ${{ secrets.APPLE_INSTALL_CERT_PASSWORD }}
+        KEYCHAIN_PASSWORD_IN: ${{ secrets.KEYCHAIN_PASSWORD_IN }}
+        APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         PKG="$PARENT/dist/pkg-build/Airlift.pkg"
+
+        echo "running security keychain"
+        echo $APPLE_INSTALL_CERT_DATA | base64 --decode > certificate.p12
+        security create-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
+        security default-keychain -s build-i.keychain
+        security unlock-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
+        security import certificate.p12 -k build-i.keychain -P $APPLE_INSTALL_CERT_PASSWORD -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
       
         /usr/bin/codesign -dv --verbose=4 "$PKG"  
         
