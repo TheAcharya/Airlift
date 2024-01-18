@@ -69,7 +69,7 @@ jobs:
         cp "$BINARY_PATH" "$TMP_DIR/$(basename "$BINARY_PATH")"
 
         echo "Running Creating PKG"
-        pkgbuild --root "$TMP_DIR" --identifier "$PKG_IDENTIFIER" --keychain "build-i.keychain" --version "$VERSION" --install-location "$INSTALL_LOCATION" --sign "$SIGNING_IDENTITY" "$OUTPUT_DIR/$PACKAGE_NAME.pkg"
+        pkgbuild --root "$TMP_DIR" --identifier "$PKG_IDENTIFIER" --version "$VERSION" --install-location "$INSTALL_LOCATION" --sign "$SIGNING_IDENTITY" "$OUTPUT_DIR/$PACKAGE_NAME.pkg"
 
         rm -rf "$TMP_DIR"
       
