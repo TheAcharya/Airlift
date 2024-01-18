@@ -44,6 +44,54 @@ jobs:
       run: |
         echo "Checking copied files..."
         ls -l ./dist/bin
+      
+    - name: Codesign Airlift
+      env: 
+        APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
+        APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        APP="$PARENT/dist/bin/airlift"
+        ENTITLE="$PARENT/dist/bin/entitlements.plist"
+        ls -l "$PARENT/dist/bin"
+
+        echo $APPLE_CERT_DATA | base64 --decode > certificate.p12
+        security create-keychain -p $KEYCHAIN_PASSWORD build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain
+        security import certificate.p12 -k build.keychain -P $APPLE_CERT_PASSWORD -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD build.keychain
+        
+        chmod +x "$ENTITLE"
+        
+        /usr/bin/codesign --force -s $APPLE_TEAM_ID --identifier "co.theacharya.Airlift" --options runtime,library --entitlements "$ENTITLE" "$APP" -v
+        
+    - name: Notarize Airlift
+      env:
+        APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+        APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
+        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        APP="$PARENT/dist/bin/airlift"
+        
+        echo "Create Keychain Profile"
+        xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
+          
+        echo "Creating Temp Notarization Archive"
+        ditto -c -k --keepParent "$APP" "notarization.zip"
+          
+        echo "Notarize App"
+        xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --progress --wait
+          
+    - name: Verify Codesign Airlift
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        APP="$PARENT/dist/bin/airlift"
+    
+        /usr/bin/codesign -dv --verbose=4 "$APP"
         
     - name: Create PKG for macOS
       env: 
