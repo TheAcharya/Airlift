@@ -1,0 +1,98 @@
+name: create_pkg-3
+
+on:
+  push:
+    branches: [main]
+  
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create Distribution directory
+      run: mkdir -p dist/bin
+
+    - name: Copy Local Distribution 
+      run: |
+        mkdir -p dist/bin
+        cp -R ./bin/. ./dist/bin
+
+    - name: Verify Copied Files
+      run: |
+        echo "Checking copied files..."
+        ls -l ./dist/bin
+
+    - name: Prepare Directories
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        mkdir -p "$PARENT/dist/bin"
+        mkdir -p "$PARENT/dist/pkg-build"
+
+    - name: Copy Local Resources
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        cp -R ./bin/airlift "$PARENT/dist/bin"
+        cp -R ./bin/entitlements.plist "$PARENT/dist/bin"
+      
+        
+    - name: Create Airlift PKG for macOS
+      env: 
+        APPLE_INSTALL_CERT_DATA: ${{ secrets.APPLE_INSTALL_CERT_DATA }}
+        APPLE_INSTALL_CERT_PASSWORD: ${{ secrets.APPLE_INSTALL_CERT_PASSWORD }}
+        KEYCHAIN_PASSWORD_IN: ${{ secrets.KEYCHAIN_PASSWORD_IN }}
+        APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        BINARY_PATH="$PARENT/dist/bin/airlift"
+        PKG_IDENTIFIER="co.theacharya.Airlift"
+        INSTALL_LOCATION="$HOME/Applications/Airlift"
+        PACKAGE_NAME="Airlift"
+        OUTPUT_DIR="$PARENT/dist/pkg-build"
+        VERSION="1.0.5"
+        SIGNING_IDENTITY="$APPLE_TEAM_ID_INSTALL"
+
+        PKG="$PARENT/dist/pkg-build/Airlift.pkg"
+        echo "PKG=$PKG" >> $GITHUB_ENV
+
+        echo "running security keychain"
+        echo $APPLE_INSTALL_CERT_DATA | base64 --decode > certificate.p12
+        security create-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
+        security default-keychain -s build-i.keychain
+        security unlock-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
+        security import certificate.p12 -k build-i.keychain -P $APPLE_INSTALL_CERT_PASSWORD -T /usr/bin/pkgbuild
+        security set-key-partition-list -S apple-tool:,apple:,pkgbuild: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
+        
+        echo "Creating Temp Dir"
+        TMP_DIR="$OUTPUT_DIR/tmp_pkgbuild"
+        mkdir -p "$TMP_DIR"
+
+        cp "$BINARY_PATH" "$TMP_DIR/$(basename "$BINARY_PATH")"
+
+        echo "Running Creating PKG"
+        pkgbuild --root "$TMP_DIR" --identifier "$PKG_IDENTIFIER" --version "$VERSION" --install-location "$INSTALL_LOCATION" --sign "$SIGNING_IDENTITY" "$OUTPUT_DIR/$PACKAGE_NAME.pkg"
+
+        rm -rf "$TMP_DIR"
+
+    - name: Load release binaries for macos
+      uses: actions/upload-artifact@v3
+      with:
+        name: Airlift pkg
+        path: ${{ env.PKG }}
+
+    - name: Verify Codesign Airlift PKG
+      env: 
+        APPLE_INSTALL_CERT_DATA: ${{ secrets.APPLE_INSTALL_CERT_DATA }}
+        APPLE_INSTALL_CERT_PASSWORD: ${{ secrets.APPLE_INSTALL_CERT_PASSWORD }}
+        KEYCHAIN_PASSWORD_IN: ${{ secrets.KEYCHAIN_PASSWORD_IN }}
+        APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        PKG="$PARENT/dist/pkg-build/Airlift.pkg"
+      
+        /usr/bin/codesign -dv --verbose=4 "$PKG"  
+        
+        
+
