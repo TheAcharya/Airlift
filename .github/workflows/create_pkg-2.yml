@@ -37,7 +37,6 @@ jobs:
         cp -R ./bin/airlift "$PARENT/dist/bin"
         cp -R ./bin/entitlements.plist "$PARENT/dist/bin"
       
-        
     - name: Create Airlift PKG for macOS
       env: 
         APPLE_INSTALL_CERT_DATA: ${{ secrets.APPLE_INSTALL_CERT_DATA }}
@@ -59,6 +58,7 @@ jobs:
         security create-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
         security default-keychain -s build-i.keychain
         security unlock-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
+        sleep 10
         security import certificate.p12 -k build-i.keychain -P $APPLE_INSTALL_CERT_PASSWORD -T /usr/bin/pkgbuild
         security set-key-partition-list -S apple-tool:,apple:,pkgbuild: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
         
@@ -84,9 +84,9 @@ jobs:
         
         echo "Create Keychain Profile"
         xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
-        
+       
         echo "Notarize Airlift PKG"
-        xcrun notarytool submit "$PKG" --keychain-profile "notarytool-profile" --progress --wait
+        xcrun notarytool submit "$PKG" --keychain-profile "notarytool-profile" --keychain "build-i.keychain" --progress --wait
         
         echo "Attach staple"
         xcrun stapler staple "$PKG"
