@@ -42,7 +42,7 @@ jobs:
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         BINARY_PATH="$PARENT/dist/bin/airlift"
         PKG_IDENTIFIER="co.theacharya.Airlift"
-        INSTALL_LOCATION="$HOME/Applications/Airlift"
+        INSTALL_LOCATION="/Applications/Airlift"
         PACKAGE_NAME="Airlift-unsigned"
         OUTPUT_DIR="$PARENT/dist/pkg-build"
         VERSION="1.0.5"
