@@ -124,11 +124,6 @@ jobs:
           PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
           mkdir -p "$PARENT/dist/bin"
           mkdir -p "$PARENT/dist/pkg-build"
-          OUTPUT_DIR="$PARENT/dist/pkg-build"
-          
-          echo "Creating Temp Dir"
-          TMP_DIR="$OUTPUT_DIR/tmp_pkgbuild"
-          mkdir -p "$PARENT/dist/pkg-build"
 
           cp -R ./dist/${{ env.PACKAGE_NAME }} "$PARENT/dist/bin"
           cp -R ./bin/entitlements.plist "$PARENT/dist/bin"
@@ -171,6 +166,7 @@ jobs:
           KEYCHAIN_PASSWORD_IN: ${{ secrets.KEYCHAIN_PASSWORD_IN }}
           APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
         run: |
+          PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
           BINARY_PATH="$PARENT/dist/bin/${{ env.PACKAGE_NAME }}"
           PKG_IDENTIFIER="co.theacharya.Airlift"
           INSTALL_LOCATION="/Applications/Airlift"
@@ -178,6 +174,9 @@ jobs:
           OUTPUT_DIR="$PARENT/dist/pkg-build"
           VERSION=${{ env.APP_VERSION }}
 
+          echo "Creating Temp Dir"
+          TMP_DIR="$OUTPUT_DIR/tmp_pkgbuild"
+          mkdir -p "$PARENT/dist/pkg-build"
 
           cp "$BINARY_PATH" "$TMP_DIR/$(basename "$BINARY_PATH")"
 
