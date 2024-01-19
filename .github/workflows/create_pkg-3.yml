@@ -94,6 +94,7 @@ jobs:
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
         
+        echo "SPKG=$SPKG" >> $GITHUB_ENV
         echo "Create Keychain Profile"
         xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
         
@@ -102,6 +103,12 @@ jobs:
         
         echo "Attach staple"
         xcrun stapler staple "$SPKG"
+    
+    - name: Load release binaries for macos
+      uses: actions/upload-artifact@v3
+      with:
+        name: Airlift_signed_pkg
+        path: ${{ env.SPKG }}
           
         
 
