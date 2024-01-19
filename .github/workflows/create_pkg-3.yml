@@ -107,7 +107,7 @@ jobs:
     - name: Load release binaries for macos
       uses: actions/upload-artifact@v3
       with:
-        name: Airlift_signed_pkg
+        name: Airlift
         path: ${{ env.SPKG }}
           
         
