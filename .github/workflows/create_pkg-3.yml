@@ -62,7 +62,7 @@ jobs:
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         echo "Checking copied files..."
-        ls -l "$PARENT/dist/dist/pkg-build"
+        ls -l "$PARENT/dist/pkg-build"
       
     - name: Productsign Airlift
       env: 
@@ -72,8 +72,8 @@ jobs:
         APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-        PKG="$PARENT/dist/dist/pkg-build/Airlift.pkg"
-        SPKG="$PARENT/dist/dist/pkg-build/Airlift-Signed.pkg"
+        PKG="$PARENT/dist/pkg-build/Airlift.pkg"
+        SPKG="$PARENT/dist/pkg-build/Airlift-Signed.pkg"
         SIGNING_IDENTITY="$APPLE_TEAM_ID_INSTALL"
       
         echo $APPLE_INTSALL_CERT_DATA | base64 --decode > certificate.p12
