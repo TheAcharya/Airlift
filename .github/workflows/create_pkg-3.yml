@@ -1,12 +1,12 @@
-name: create_pkg-3
+name: create_pkg
 
 on:
-workflow_dispatch:
-  inputs:
-    release:
-      description: 'Release after build'
-      required: true
-      default: 'no'
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release after build'
+        required: true
+        default: 'no'
   
 jobs:
   build:
