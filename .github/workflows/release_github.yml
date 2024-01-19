@@ -174,7 +174,7 @@ jobs:
           
           echo "Creating Temp Dir"
           TMP_DIR="$OUTPUT_DIR/tmp_pkgbuild"
-          mkdir -p "$TMP_DIR"
+          mkdir -p "$PARENT/dist/pkg-build"
 
           cp "$BINARY_PATH" "$TMP_DIR/$(basename "$BINARY_PATH")"
 
