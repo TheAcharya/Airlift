@@ -119,8 +119,6 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
           APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
-          KEYCHAIN_PASSWORD_IN: ${{ secrets.KEYCHAIN_PASSWORD_IN }}
-          APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
         run: |
           mkdir -p dist
           PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
@@ -151,8 +149,22 @@ jobs:
             
           echo "Notarize App"
           xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --progress --wait
+
           
-        
+          cp -R "$PARENT/dist/bin/${{ env.PACKAGE_NAME }}" dist/
+          cp -R  ./bin/entitlements.plist dist/
+          cp ./LICENSE dist/
+
+          zip -q -r dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip "dist/"
+      
+      - name: Create pkg and productsign it
+        if: matrix.os == 'macos-latest'
+        env:
+          APPLE_INTSALL_CERT_DATA: ${{ secrets.APPLE_INSTALL_CERT_DATA }}
+          APPLE_INSTALL_CERT_PASSWORD: ${{ secrets.APPLE_INSTALL_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD_IN: ${{ secrets.KEYCHAIN_PASSWORD_IN }}
+          APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
+        run: |
           BINARY_PATH="$PARENT/dist/bin/${{ env.PACKAGE_NAME }}"
           PKG_IDENTIFIER="co.theacharya.Airlift"
           INSTALL_LOCATION="/Applications/Airlift"
@@ -198,15 +210,8 @@ jobs:
           echo "Attach staple"
           xcrun stapler staple "$SPKG"
 
-
           rm -rf "$TMP_DIR"
-          cp -R "$PARENT/dist/bin/${{ env.PACKAGE_NAME }}" dist/
-          cp -R  ./bin/entitlements.plist dist/
-          cp ./LICENSE dist/
-
-          zip -q -r dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip "dist/"
-      
-
+          
       - name: Pack up binary for linux
         if: matrix.os == 'ubuntu-latest'
         run: |
