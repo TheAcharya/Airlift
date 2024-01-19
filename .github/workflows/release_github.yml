@@ -183,9 +183,6 @@ jobs:
           security unlock-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
           security import certificate.p12 -k build-i.keychain -P $APPLE_INSTALL_CERT_PASSWORD -T /usr/bin/productsign
           security set-key-partition-list -S apple-tool:,apple:,productsign: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
-
-          security import certificate.p12 -k build.keychain -P $APPLE_CERT_PASSWORD -T /usr/bin/productsign
-          security set-key-partition-list -S apple-tool:,apple:,productsign: -s -k $KEYCHAIN_PASSWORD build.keychain
         
           /usr/bin/productsign --sign "$SIGNING_IDENTITY" "$PKG" "$SPKG"
 
