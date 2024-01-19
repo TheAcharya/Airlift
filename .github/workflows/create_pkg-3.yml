@@ -60,8 +60,9 @@ jobs:
         
     - name: Verify Files
       run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
         echo "Checking copied files..."
-        ls -l ./dist/pkg-build
+        ls -l "$PARENT/dist/dist/pkg-build"
       
     - name: Productsign Airlift
       env: 
