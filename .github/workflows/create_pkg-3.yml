@@ -43,7 +43,7 @@ jobs:
         BINARY_PATH="$PARENT/dist/bin/airlift"
         PKG_IDENTIFIER="co.theacharya.Airlift"
         INSTALL_LOCATION="$HOME/Applications/Airlift"
-        PACKAGE_NAME="Airlift"
+        PACKAGE_NAME="Airlift-unsigned"
         OUTPUT_DIR="$PARENT/dist/pkg-build"
         VERSION="1.0.5"
         
@@ -72,8 +72,8 @@ jobs:
         APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
       run: |
         PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-        PKG="$PARENT/dist/pkg-build/Airlift.pkg"
-        SPKG="$PARENT/dist/pkg-build/Airlift-Signed.pkg"
+        PKG="$PARENT/dist/pkg-build/Airlift-unsigned.pkg"
+        SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
         SIGNING_IDENTITY="$APPLE_TEAM_ID_INSTALL"
       
         echo $APPLE_INTSALL_CERT_DATA | base64 --decode > certificate.p12
@@ -84,6 +84,24 @@ jobs:
         security set-key-partition-list -S apple-tool:,apple:,productsign: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
         
         /usr/bin/productsign --sign "$SIGNING_IDENTITY" "$PKG" "$SPKG"
+        
+    - name: Notarize Airlift PKG
+    env:
+      APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+      APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    run: |
+      PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+      SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
+      
+      echo "Create Keychain Profile"
+      xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
+      
+      echo "Notarize Airlift PKG"
+      xcrun notarytool submit "$SPKG" --keychain-profile "notarytool-profile" --progress --wait
+      
+      echo "Attach staple"
+      xcrun stapler staple "$SPKG"
         
         
 
