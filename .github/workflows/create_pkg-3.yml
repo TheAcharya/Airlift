@@ -84,24 +84,24 @@ jobs:
         security set-key-partition-list -S apple-tool:,apple:,productsign: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
         
         /usr/bin/productsign --sign "$SIGNING_IDENTITY" "$PKG" "$SPKG"
-        
+      
     - name: Notarize Airlift PKG
-    env:
-      APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
-      APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-    run: |
-      PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-      SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
-      
-      echo "Create Keychain Profile"
-      xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
-      
-      echo "Notarize Airlift PKG"
-      xcrun notarytool submit "$SPKG" --keychain-profile "notarytool-profile" --progress --wait
-      
-      echo "Attach staple"
-      xcrun stapler staple "$SPKG"
+      env:
+        APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+        APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
+        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      run: |
+        PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+        SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
         
+        echo "Create Keychain Profile"
+        xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
+        
+        echo "Notarize Airlift PKG"
+        xcrun notarytool submit "$SPKG" --keychain-profile "notarytool-profile" --progress --wait
+        
+        echo "Attach staple"
+        xcrun stapler staple "$SPKG"
+          
         
 
