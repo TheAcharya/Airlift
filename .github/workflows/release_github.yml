@@ -164,6 +164,9 @@ jobs:
           APPLE_INSTALL_CERT_PASSWORD: ${{ secrets.APPLE_INSTALL_CERT_PASSWORD }}
           KEYCHAIN_PASSWORD_IN: ${{ secrets.KEYCHAIN_PASSWORD_IN }}
           APPLE_TEAM_ID_INSTALL: ${{ secrets.APPLE_TEAM_ID_INSTALL }}
+          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
+          APPLE_DEV_ID_PASSWORD: ${{ secrets.APPLE_DEV_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
           PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
           BINARY_PATH="$PARENT/dist/bin/${{ env.PACKAGE_NAME }}"
