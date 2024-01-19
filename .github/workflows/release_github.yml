@@ -124,7 +124,6 @@ jobs:
           PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
           mkdir -p "$PARENT/dist/bin"
           mkdir -p "$PARENT/dist/pkg-build"
-
           cp -R ./dist/${{ env.PACKAGE_NAME }} "$PARENT/dist/bin"
           cp -R ./bin/entitlements.plist "$PARENT/dist/bin"
 
@@ -173,10 +172,10 @@ jobs:
           PACKAGE_NAME="Airlift-unsigned"
           OUTPUT_DIR="$PARENT/dist/pkg-build"
           VERSION=${{ env.APP_VERSION }}
-
+          
           echo "Creating Temp Dir"
           TMP_DIR="$OUTPUT_DIR/tmp_pkgbuild"
-          mkdir -p "$PARENT/dist/pkg-build"
+          mkdir -p "$TMP_DIR"
 
           cp "$BINARY_PATH" "$TMP_DIR/$(basename "$BINARY_PATH")"
 
