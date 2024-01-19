@@ -123,6 +123,7 @@ jobs:
           mkdir -p dist
           PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
           mkdir -p "$PARENT/dist/bin"
+          mkdir -p "$PARENT/dist/pkg-build"
           cp -R ./dist/${{ env.PACKAGE_NAME }} "$PARENT/dist/bin"
           cp -R ./bin/entitlements.plist "$PARENT/dist/bin"
 
@@ -149,11 +150,60 @@ jobs:
           echo "Notarize App"
           xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --progress --wait
           
+        
+          BINARY_PATH="$PARENT/dist/bin/${{ env.PACKAGE_NAME }}"
+          PKG_IDENTIFIER="co.theacharya.Airlift"
+          INSTALL_LOCATION="/Applications/Airlift"
+          PACKAGE_NAME="Airlift-unsigned"
+          OUTPUT_DIR="$PARENT/dist/pkg-build"
+          VERSION=${{ env.APP_VERSION }}
+          
+          echo "Creating Temp Dir"
+          TMP_DIR="$OUTPUT_DIR/tmp_pkgbuild"
+          mkdir -p "$TMP_DIR"
+
+          cp "$BINARY_PATH" "$TMP_DIR/$(basename "$BINARY_PATH")"
+
+          echo "Running Creating PKG"
+          pkgbuild --root "$TMP_DIR" --identifier "$PKG_IDENTIFIER" --version "$VERSION" --install-location "$INSTALL_LOCATION" "$OUTPUT_DIR/$PACKAGE_NAME.pkg"
+
+          echo "Checking pkg files..."
+          ls -l "$PARENT/dist/pkg-build"
+
+          PKG="$PARENT/dist/pkg-build/Airlift-unsigned.pkg"
+          SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
+          SIGNING_IDENTITY="$APPLE_TEAM_ID_INSTALL"
+          
+          echo "sign pkg"
+          echo $APPLE_INTSALL_CERT_DATA | base64 --decode > certificate.p12
+          security create-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
+          security default-keychain -s build-i.keychain
+          security unlock-keychain -p $KEYCHAIN_PASSWORD_IN build-i.keychain
+          security import certificate.p12 -k build-i.keychain -P $APPLE_INSTALL_CERT_PASSWORD -T /usr/bin/productsign
+          security set-key-partition-list -S apple-tool:,apple:,productsign: -s -k $KEYCHAIN_PASSWORD_IN build-i.keychain
+        
+          /usr/bin/productsign --sign "$SIGNING_IDENTITY" "$PKG" "$SPKG"
+
+          SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
+        
+          echo "SPKG=$SPKG" >> $GITHUB_ENV
+          echo "Create Keychain Profile"
+          xcrun notarytool store-credentials "notarytool-profile" --apple-id $APPLE_DEV_ID --password $APPLE_DEV_ID_PASSWORD --team-id $APPLE_TEAM_ID
+          
+          echo "Notarize Airlift PKG"
+          xcrun notarytool submit "$SPKG" --keychain-profile "notarytool-profile" --progress --wait
+          
+          echo "Attach staple"
+          xcrun stapler staple "$SPKG"
+
+
+          rm -rf "$TMP_DIR"
           cp -R "$PARENT/dist/bin/${{ env.PACKAGE_NAME }}" dist/
           cp -R  ./bin/entitlements.plist dist/
           cp ./LICENSE dist/
 
           zip -q -r dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip "dist/"
+      
 
       - name: Pack up binary for linux
         if: matrix.os == 'ubuntu-latest'
@@ -167,6 +217,13 @@ jobs:
           choco install zip
           copy ./LICENSE dist/
           zip -q -r dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip "dist/"
+      
+      - name: Load release binaries for macos
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: Airlift_${{env.APP_VERSION}}_pkg
+          path: ${{ env.SPKG }}
 
       - name: Save release binaries for ${{ matrix.OS_CODE }}
         uses: actions/upload-artifact@v3
