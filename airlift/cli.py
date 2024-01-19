@@ -96,7 +96,7 @@ def main() -> None:
     signal.signal(signal.SIGINT, abort)
     try:
         cli(*sys.argv[1:])
-    except Exception as e:
+    except (AirtableError,CriticalError) as e:
         logger.critical(str(e))
         sys.exit(1)
     except KeyboardInterrupt:

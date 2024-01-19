@@ -37,14 +37,17 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         "general_options": {
             "--token": {
                 "help": "your Airtable personal access token",
+                "required":True,
                 
             },
             "--base": {
                 "help": "your Airtable Base ID",
+                "required":True,
             
             },
             "--table": {
                 "help": "your Airtable Table ID",
+                "required":True,
             
             },
             "--log": {
