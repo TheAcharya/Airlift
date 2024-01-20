@@ -279,13 +279,16 @@ jobs:
         with:
           name: release_dist_bin_macos
           path: dist
+      - name: Load release pkg
+        uses: actions/download-artifact@v3
+        with:
+          name: Airlift_${{env.APP_VERSION}}_pkg
+          path: dist
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: | 
-              "dist/*"
-              "dist/Airlift.pkg"
+          artifacts: "dist/*"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.TAG_VERSION }}
           draft: true
