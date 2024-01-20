@@ -214,6 +214,8 @@ jobs:
           echo "Attach staple"
           xcrun stapler staple "$SPKG"
 
+          cp "$SPKG" "dist/"
+
           rm -rf "$TMP_DIR"
           
       - name: Pack up binary for linux
