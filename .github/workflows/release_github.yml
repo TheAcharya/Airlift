@@ -232,7 +232,7 @@ jobs:
           copy ./LICENSE dist/
           zip -q -r dist_bin/bin_${{ env.PACKAGE_NAME }}_${{ env.APP_VERSION }}_${{ matrix.OS_CODE }}_x64.zip "dist/"
       
-      - name: Load release binaries for macos
+      - name: Save release binaries for macos
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v3
         with:
@@ -283,7 +283,9 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "dist/*"
+          artifacts: | 
+              "dist/*"
+              "dist/Airlift.pkg"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.TAG_VERSION }}
           draft: true
