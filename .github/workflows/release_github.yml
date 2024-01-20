@@ -215,7 +215,8 @@ jobs:
           xcrun stapler staple "$SPKG"
 
           cp "$SPKG" "dist/"
-
+          
+          ls "dist"
           rm -rf "$TMP_DIR"
           
       - name: Pack up binary for linux
