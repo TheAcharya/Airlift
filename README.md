@@ -118,7 +118,7 @@ For macOS, you have the option of two distinct releases: one packaged within a `
 <details><summary>Privacy & Security</summary>
 <p>
 
-<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/macOS-privacy?raw=true"> </p>
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/macOS-privacy.png?raw=true"> </p>
 
 </p>
 </details>
