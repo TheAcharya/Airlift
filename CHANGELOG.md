@@ -1,5 +1,16 @@
 # Changelog
 
+### 1.0.6
+
+**🎉 Released:**
+- Next Release
+
+**🔨 Improvements:**
+- Added new macOS pkg release with notarization ticket stapled
+- Improved error message without arguments
+
+---
+
 ### 1.0.5
 
 **🎉 Released:**
