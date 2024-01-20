@@ -59,7 +59,7 @@ Furthermore, many experienced Airtable users want to send and transfer data auto
 
 ### Pre-compiled Binary (Recommended)
 
-Download the latest release of the latest binary release [here](https://github.com/TheAcharya/airlift/releases).
+Download the latest release of the latest release [here](https://github.com/TheAcharya/airlift/releases).
 
 ### From source
 
@@ -111,15 +111,22 @@ validation options:
                                      otherwise last column will be used
 ```
 
-### macOS Gatekeeper & Notarization
+### macOS Release
 
-After trying to run `airlift` for the first time, the process will be blocked by macOS's Gatekeeper, and a system dialog will appear which includes
+For macOS, you have the option of two distinct releases: one packaged within a `.zip` archive and the other in a `.pkg` format. Navigate to the `Privacy & Security` settings and set your preference to `App Store and identified developers`.
 
-> "airlift" can't be opened because the developer cannot be verified...
+<details><summary>Privacy & Security</summary>
+<p>
 
-- To approve the process and allow `airlift` to run, go to System Preferences, Security & Privacy, General, and look in the bottom right corner for a button to click.
-- After approving `airlift`, it should run successfully. 
-- For more information, visit https://support.apple.com/en-us/HT202491.
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/macOS-privacy?raw=true"> </p>
+
+</p>
+</details>
+
+Utilise the `Airlift.pkg` installer to install the command-line binary into your system. Upon completion, find the installed binary located within `/Applications/Airlift/airlift`. To uninstall, you can simply delete the folder containing the binary.
+
+<p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/macOS-installer.png?raw=true"> </p>
+
 
 ## Prerequisite
 
