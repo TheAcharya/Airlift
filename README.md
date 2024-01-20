@@ -113,10 +113,10 @@ validation options:
 
 ### macOS Release
 
-For macOS, you have the option of two distinct releases: one packaged within a `.zip` archive and the other in a `.pkg` format. Navigate to the `Privacy & Security` settings and set your preference to `App Store and identified developers`.
-
 <details><summary>Privacy & Security</summary>
 <p>
+
+For macOS, you have the option of two distinct releases: one packaged within a `.zip` archive and the other in a `.pkg` format. Navigate to the `Privacy & Security` settings and set your preference to `App Store and identified developers`.
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/macOS-privacy.png?raw=true"> </p>
 
