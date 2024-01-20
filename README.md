@@ -33,7 +33,7 @@
   - [Pre-compiled Binary (Recommended)](#pre-compiled-binary-recommended)
   - [From Source](#from-source)
 - [Guide](#guide)
-  - [macOS Gatekeeper & Notarization](#macos-gatekeeper--notarization)
+  - [macOS Release](#macos-release)
 - [Prerequisite](#prerequisite)
   - [Airtable](#airtable)
   - [Dropbox](#dropbox)
