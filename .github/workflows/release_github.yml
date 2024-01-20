@@ -189,7 +189,7 @@ jobs:
           ls -l "$PARENT/dist/pkg-build"
 
           PKG="$PARENT/dist/pkg-build/Airlift-unsigned.pkg"
-          SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
+          SPKG="$PARENT/dist/pkg-build/Airlift_${{env.APP_VERSION}}.pkg"
           SIGNING_IDENTITY="$APPLE_TEAM_ID_INSTALL"
           
           echo "sign pkg"
@@ -202,7 +202,7 @@ jobs:
         
           /usr/bin/productsign --sign "$SIGNING_IDENTITY" "$PKG" "$SPKG"
 
-          SPKG="$PARENT/dist/pkg-build/Airlift.pkg"
+          SPKG="$PARENT/dist/pkg-build/Airlift_${{env.APP_VERSION}}.pkg"
         
           echo "SPKG=$SPKG" >> $GITHUB_ENV
           echo "Create Keychain Profile"
@@ -236,7 +236,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: Airlift_${{env.APP_VERSION}}_pkg
+          name: release_airlift_pkg
           path: ${{ env.SPKG }}
 
       - name: Save release binaries for ${{ matrix.OS_CODE }}
@@ -279,10 +279,11 @@ jobs:
         with:
           name: release_dist_bin_macos
           path: dist
+
       - name: Load release pkg
         uses: actions/download-artifact@v3
         with:
-          name: Airlift_${{env.APP_VERSION}}_pkg
+          name: release_airlift_pkg
           path: dist
 
       - name: Create Release
