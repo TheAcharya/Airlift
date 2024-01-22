@@ -171,7 +171,7 @@ jobs:
           PARENT=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
           BINARY_PATH="$PARENT/dist/bin/${{ env.PACKAGE_NAME }}"
           PKG_IDENTIFIER="co.theacharya.Airlift"
-          INSTALL_LOCATION="/Applications/Airlift"
+          INSTALL_LOCATION="/usr/local/bin"
           PACKAGE_NAME="Airlift-unsigned"
           OUTPUT_DIR="$PARENT/dist/pkg-build"
           VERSION=${{ env.APP_VERSION }}
