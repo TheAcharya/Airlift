@@ -123,10 +123,13 @@ For macOS, you have the option of two distinct releases: one packaged within a `
 </p>
 </details>
 
-Utilise the `Airlift.pkg` installer to install the command-line binary into your system. Upon completion, find the installed binary located within `/Applications/Airlift/airlift`. To uninstall, you can simply delete the folder containing the binary.
+Utilise the `Airlift.pkg` installer to install the command-line binary into your system. Upon completion, find the installed binary `airlift` located within `/usr/local/bin`. To uninstall, you can utalise this terminal command.
+
+```plain
+sudo rm /usr/local/bin/airlift
+```
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/macOS-installer.png?raw=true"> </p>
-
 
 ## Prerequisite
 
