@@ -1,0 +1,42 @@
+name: Update Homebrew Cask
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  update-cask:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Homebrew Tap repository
+        uses: actions/checkout@v2
+        with:
+          repository: TheAcharya/homebrew-tap
+          path: homebrew-tap
+
+      - name: Set up Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Fetch latest release version
+        id: get-version
+        run: |
+          VERSION=$(curl -s https://api.github.com/repos/TheAcharya/Airlift/releases/latest | jq -r .tag_name)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Update Cask file
+        run: |
+          sed -i 's/version "[0-9.]*"/version "${{ env.VERSION }}"/' homebrew-tap/Casks/airlift.rb
+
+      - name: Commit and push changes
+        run: |
+          cd homebrew-tap
+          git add Casks/airlift.rb
+          git commit -m "Update Airlift version to ${{ env.VERSION }}"
+          git push
+
+
