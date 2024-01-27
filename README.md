@@ -61,6 +61,12 @@ Furthermore, many experienced Airtable users want to send and transfer data auto
 
 Download the latest release of the latest release [here](https://github.com/TheAcharya/airlift/releases).
 
+### With [Homebrew](https://brew.sh/) (Recommended for macOS)
+
+```bash
+$ brew install TheAcharya/homebrew-tap/airlift
+```
+
 ### From source
 
 This project uses [poetry](https://python-poetry.org/) for dependency management and packaging. You will have to install it first. See [poetry official documentation](https://python-poetry.org/docs/) for instructions.
