@@ -64,7 +64,7 @@ Download the latest release of the latest release [here](https://github.com/TheA
 ### With [Homebrew](https://brew.sh/) (Recommended for macOS)
 
 ```bash
-$ brew install TheAcharya/homebrew-tap/airlift
+brew install TheAcharya/homebrew-tap/airlift
 ```
 
 ### From source
