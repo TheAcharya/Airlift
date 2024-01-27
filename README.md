@@ -67,6 +67,14 @@ Download the latest release of the latest release [here](https://github.com/TheA
 $ brew install TheAcharya/homebrew-tap/airlift
 ```
 
+## Uninstallation
+
+### With [Homebrew](https://brew.sh/) (Recommended for macOS)
+
+```bash
+$ brew uninstall --cask airlift
+```
+
 ### From source
 
 This project uses [poetry](https://python-poetry.org/) for dependency management and packaging. You will have to install it first. See [poetry official documentation](https://python-poetry.org/docs/) for instructions.
