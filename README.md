@@ -66,11 +66,6 @@ Download the latest release of the latest release [here](https://github.com/TheA
 ```bash
 $ brew install TheAcharya/homebrew-tap/airlift
 ```
-
-## Uninstallation
-
-### With [Homebrew](https://brew.sh/) (Recommended for macOS)
-
 ```bash
 $ brew uninstall --cask airlift
 ```
