@@ -1,5 +1,15 @@
 # Changelog
 
+### 1.0.7
+
+**🎉 Released:**
+- Next Release
+
+**🐞 Bug Fix:**
+- Fixed Dropbox refresh token creation (#31)
+
+---
+
 ### 1.0.6
 
 **🎉 Released:**
