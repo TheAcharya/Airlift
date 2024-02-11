@@ -5,6 +5,9 @@
 **🎉 Released:**
 - Next Release
 
+**🔨 Improvements:**
+- Improved log output with `--verbose` augmentation
+
 **🐞 Bug Fix:**
 - Fixed Dropbox refresh token creation (#31)
 
