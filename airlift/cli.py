@@ -23,57 +23,64 @@ def abort(*_: Any) -> None:  # pragma: no cover
     os._exit(1)
 
 def cli(*argv: str) -> None:
-    ic.disable()
-    args = parse_args(argv)
-    setup_logging(is_verbose=args.verbose,log_file=args.log)
-    logger.info(f"Airlift version {__version__}")
+    try:
+        ic.disable()
+        args = parse_args(argv)
+        setup_logging(is_verbose=args.verbose,log_file=args.log)
+        logger.info(f"Airlift version {__version__}")
 
-    workers = args.workers if args.workers else 5
+        workers = args.workers if args.workers else 5
 
-    if not args.dropbox_refresh_token: #if dropbox-refresh-token flag is not present, continue normal procedure
+        if not args.dropbox_refresh_token: #if dropbox-refresh-token flag is not present, continue normal procedure
 
-        #creating drop box client
-        if args.dropbox_token:
-            dbx = dropbox_client(args.dropbox_token,args.md)
+            #creating drop box client
+            if args.dropbox_token:
+                dbx = dropbox_client(args.dropbox_token,args.md)
+            else:
+                dbx = None
+
+            #creating airtable client
+            airtable_client = new_client(token=args.token,base=args.base,table=args.table)
+
+            logger.info(f"Validating {args.csv_file.name} and Airtable Schema")
+
+            suffix = pathlib.Path(args.csv_file.name).suffix
+
+            #converting data into airtable supported format
+            if "csv" in suffix:
+                data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+            elif "json" in suffix:
+                data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+            else:
+                raise CriticalError("File type not supported!")
+
+            logger.info("Validation done!")
+
+            if not data:
+                raise CriticalError("File is empty!")
+
+            #checking for missing columns
+            if args.rename_key_column:
+                ignore_column_check = [args.rename_key_column[0]]
+            else:
+                ignore_column_check = None
+
+            data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation,ignore_columns=ignore_column_check)
+            
+            #uploading the data
+            upload_instance = Upload(client=airtable_client, new_data=data,dbx=dbx,args=args)
+            upload_instance.upload_data()
         else:
-            dbx = None
+            change_refresh_access_token(args.dropbox_token)
 
-        #creating airtable client
-        airtable_client = new_client(token=args.token,base=args.base,table=args.table)
 
-        logger.info(f"Validating {args.csv_file.name} and Airtable Schema")
+        logger.info("Done!")
 
-        suffix = pathlib.Path(args.csv_file.name).suffix
-
-        #converting data into airtable supported format
-        if "csv" in suffix:
-            data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
-        elif "json" in suffix:
-            data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+    except Exception as e:
+        if args.verbose:
+            logger.error('Error at %s', 'division', exc_info=e)
         else:
-            raise CriticalError("File type not supported!")
-
-        logger.info("Validation done!")
-
-        if not data:
-            raise CriticalError("File is empty!")
-
-        #checking for missing columns
-        if args.rename_key_column:
-            ignore_column_check = [args.rename_key_column[0]]
-        else:
-            ignore_column_check = None
-
-        data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation,ignore_columns=ignore_column_check)
-        
-        #uploading the data
-        upload_instance = Upload(client=airtable_client, new_data=data,dbx=dbx,args=args)
-        upload_instance.upload_data()
-    else:
-        change_refresh_access_token(args.dropbox_token)
-
-
-    logger.info("Done!")
+            logger.error(e)
 
 def setup_logging(is_verbose: bool=False, log_file: Optional[Path]=None) -> None:
     logging.basicConfig(format="%(levelname)s: %(message)s")
