@@ -10,6 +10,7 @@
 
 **🐞 Bug Fix:**
 - Fixed Dropbox refresh token creation (#31)
+- Improved error handling of property mismatch (#33)
 
 ---
 
