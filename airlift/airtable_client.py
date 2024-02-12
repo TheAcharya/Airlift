@@ -5,6 +5,7 @@ from typing import Any, Dict, Iterable, Iterator, List, Optional
 from airlift.airtable_error_handling import ClientError
 from airlift.utils_exceptions import AirtableError
 from airlift.csv_data import CSVRowType
+from icecream import ic
 
 ATDATATYPE = Dict[str,Dict[str,str]]
 
@@ -27,14 +28,16 @@ class new_client:
 
     def single_upload(self,data:ATDATATYPE) -> None:
 
+        
         data["typecast"] = True
         response = requests.post(self.single_upload_url, headers=self.headers, data=json.dumps(data))
+        
 
         if response.status_code == 200:
             pass
             #logger.debug("Request completed successfully!")
         else:
-            logger.warning(f"Error creating records: {response}")
+            logger.warning(f"Error creating records: {response.text}")
             raise AirtableError("Unable to upload data!")
         
     def missing_field_single(self,field:str):
