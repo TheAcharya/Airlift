@@ -3,7 +3,7 @@
 ### 1.0.7
 
 **🎉 Released:**
-- Next Release
+- 16th February 2024
 
 **🔨 Improvements:**
 - Improved logic for `--dropbox-refresh-token` augmentation (#34)
