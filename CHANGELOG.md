@@ -6,7 +6,7 @@
 - Next Release
 
 **🔨 Improvements:**
-- Improved logic for `--dropbox-refresh-token` augmentation
+- Improved logic for `--dropbox-refresh-token` augmentation (#34)
 - Improved log output with `--verbose` augmentation
 
 **🐞 Bug Fix:**
