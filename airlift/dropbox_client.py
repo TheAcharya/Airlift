@@ -129,9 +129,9 @@ def change_refresh_access_token(access_token):
     auth_flow = DropboxOAuth2FlowNoRedirect(app_key, use_pkce=True, token_access_type='offline')
 
     authorize_url = auth_flow.start()
-    logger.warning("1. Go to: " + authorize_url)
-    logger.warning("2. Click \"Allow\" (you might have to log in first).")
-    logger.warning("3. Copy the authorization code.")
+    print("STEP 1. Go to: " + authorize_url)
+    print("STEP 2. Click \"Allow\" (you might have to log in first).")
+    print("STEP 3. Copy the authorization code.")
     auth_code = input("Enter the authorization code here: ").strip()
 
     try:

@@ -71,8 +71,23 @@ def cli(*argv: str) -> None:
             upload_instance = Upload(client=airtable_client, new_data=data,dbx=dbx,args=args)
             upload_instance.upload_data()
         else:
-            change_refresh_access_token(args.dropbox_token)
+            get_token = True
+            while get_token:
+                os.system('cls' if os.name=='nt' else 'clear')
+                try:
+                    change_refresh_access_token(args.dropbox_token)
+                    get_token = False
+                except:
+                    print("Error during retreival of token! do you want to try again (y/n)")
+                    user_choice = input("(y/n)->")
 
+                    if user_choice.lower() == 'y':
+                        get_token = True
+                    elif user_choice.lower() == 'n':
+                        get_token = False
+                    else:
+                        print(f"{user_choice} is an invalid choice please choose y or n.")
+                        get_token = False
 
         logger.info("Done!")
 
