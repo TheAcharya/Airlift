@@ -1,20 +1,19 @@
-<a href="https://github.com/TheAcharya/Airlift"><img src="https://github.com/TheAcharya/Airlift/blob/main/assets/Airlift_Icon.png?raw=true" width="200" alt="App icon" align="left"/>
-
-<div>
-<h1>Airlift</h1>
-<!-- license -->
-<a href="https://github.com/TheAcharya/Airlift/blob/main/LICENSE">
-<img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="license"/>
-</a>
-<!-- release_github -->
-<a href="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml">
-<img src="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml/badge.svg" alt="release_github"/>
-</a>
-<p>
-<p>An automated method to upload & merge *.csv or *.json data files with attachments to <a href="https://www.airtable.com" target="_blank">Airtable</a> database.</p>
-
-<br>
-<br>
+<div style="display: flex; align-items: center;">
+  <a href="https://github.com/TheAcharya/Airlift">
+    <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/Airlift_Icon.png?raw=true" width="200" alt="App icon" style="margin-right: 20px;"/>
+  </a>
+  <div style="display: flex; flex-direction: column;">
+    <h1 style="margin: 0;">Airlift</h1>
+    <!-- license -->
+    <a href="https://github.com/TheAcharya/Airlift/blob/main/LICENSE">
+      <img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="license"/>
+    </a>
+    <!-- release_github -->
+    <a href="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml">
+      <img src="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml/badge.svg" alt="release_github"/>
+    </a>
+    <p>An automated method to upload & merge *.csv or *.json data files with attachments to <a href="https://www.airtable.com" target="_blank">Airtable</a> database.</p>
+  </div>
 </div>
 
 ## Core Features
