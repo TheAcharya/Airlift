@@ -32,7 +32,6 @@ class new_client:
         data["typecast"] = True
         response = requests.post(self.single_upload_url, headers=self.headers, data=json.dumps(data))
         
-
         if response.status_code == 200:
             pass
             #logger.debug("Request completed successfully!")
@@ -43,9 +42,8 @@ class new_client:
     def missing_field_single(self,field:str):
 
         airtable_table_fields = []
-        url = f"https://api.airtable.com/v0/meta/bases/{self.base}/tables"
-        response = requests.get(url,headers=self.headers)
-        tables = json.loads(response.text)
+        
+        tables = self._retreive_table()
 
         for x in tables['tables']:
             if x['id'] == self.table or x['name'] == self.table:
@@ -63,9 +61,9 @@ class new_client:
         airtable_table_fields = []
         user_csv_fields = []
 
-        url = f"https://api.airtable.com/v0/meta/bases/{self.base}/tables"
-        response = requests.get(url,headers=self.headers)
-        tables = json.loads(response.text)
+        
+        tables = self._retreive_table()
+
 
         for x in tables['tables']:
             if x['id'] == self.table or x['name'] == self.table:
@@ -99,6 +97,20 @@ class new_client:
 
         return data
     
+    def _retreive_table(self):
+        url = f"https://api.airtable.com/v0/meta/bases/{self.base}/tables"
+        response = requests.get(url,headers=self.headers)
+        tables = json.loads(response.text)
+
+
+        if tables:
+            if 'error' in tables:
+                logger.warning(f'error:{tables["error"]["message"]}')
+                raise AirtableError(f'error:{tables["error"]["message"]}')
+            
+            else:
+                return tables
+
     def _create_new_field(self,field_name:str) -> None:
         URL = f"https://api.airtable.com/v0/meta/bases/{self.base}/tables/{self.table}/fields"
         new_field = {"name":field_name,"description":"This is a field created by Airtable","type":"multilineText"}

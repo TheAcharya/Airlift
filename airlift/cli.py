@@ -78,7 +78,7 @@ def cli(*argv: str) -> None:
                     change_refresh_access_token(args.dropbox_token)
                     get_token = False
                 except:
-                    print("Error during retreival of token! Do you want to try again? (y/n)")
+                    print("Error during retreival of token! do you want to try again (y/n)")
                     user_choice = input("(y/n)->")
 
                     if user_choice.lower() == 'y':
