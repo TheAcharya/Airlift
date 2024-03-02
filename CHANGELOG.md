@@ -1,5 +1,15 @@
 # Changelog
 
+### 1.0.8
+
+**🎉 Released:**
+- 2nd March 2024
+
+**🐞 Bug Fix:**
+- Improved error handling of Airtable wrong token (#35)
+
+---
+
 ### 1.0.7
 
 **🎉 Released:**
