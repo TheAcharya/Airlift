@@ -66,7 +66,7 @@ def cli(*argv: str) -> None:
                 ignore_column_check = None
 
             data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation,ignore_columns=ignore_column_check)
-            
+        
             #uploading the data
             upload_instance = Upload(client=airtable_client, new_data=data,dbx=dbx,args=args)
             upload_instance.upload_data()
@@ -78,7 +78,7 @@ def cli(*argv: str) -> None:
                     change_refresh_access_token(args.dropbox_token)
                     get_token = False
                 except:
-                    print("Error during retreival of token! Do you want to try again? (y/n)")
+                    print("Error during retreival of token! do you want to try again (y/n)")
                     user_choice = input("(y/n)->")
 
                     if user_choice.lower() == 'y':

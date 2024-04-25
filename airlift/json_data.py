@@ -8,6 +8,7 @@ from typing import Any, Dict, Iterable, Iterator, List, Optional
 
 from airlift.utils_exceptions import CriticalError
 from airlift.airlift_data_guesser import guess_data_type
+from icecream import ic
 
 CSVRowType = Dict[str, Any]
 

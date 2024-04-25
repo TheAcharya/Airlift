@@ -86,6 +86,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             },
             "--attachment-columns-map":{
                 "nargs":2,
+                "action":"append",
                 "help":"specify how the attachment column must be mapped in Airtable",
                 "metavar":"",
             },

@@ -26,9 +26,6 @@ class Upload:
         self.rename_key_column=args.rename_key_column
         self.workers = args.workers if args.workers else 5
 
-
-        
-
     def upload_data(self) -> None:
         logger.info("Uploding data now!")
         progress_bar = tqdm(total=len(self.new_data),leave=False)
@@ -54,7 +51,8 @@ class Upload:
                 data = data_queue.get_nowait()
             
                 if self.attachment_columns_map:
-                    data['fields'][self.attachment_columns_map[1]] = ""
+                    for attachment in self.attachment_columns_map:
+                        data['fields'][attachment[1]] = ""
 
                 if self.columns_copy:
                     for column in self.columns_copy[1::]:
@@ -84,23 +82,26 @@ class Upload:
                                             data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
                                         else:
                                             data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{value}")}]
+                                        
                                     except Exception as e:
                                         tqdm.write(f"{data['fields'][key]} Could not be found!")
                                         data['fields'][key] = ""
 
                         if self.attachment_columns_map:
                             if self.dbx:
-                                if key == self.attachment_columns_map[0]:
-                                    try:
-                                        if self.dirname:
-                                            data['fields'][self.attachment_columns_map[1]] = [
-                                                {"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
-                                        else: 
-                                            data['fields'][self.attachment_columns_map[1]] = [
-                                                {"url": self.dbx.upload_to_dropbox(f"{value}")}]
-                                    except Exception as e:
-                                        tqdm.write(f"{['fields'][self.attachment_columns_map[1]]} Could not be found!")
-                                        data['fields'][self.attachment_columns_map[1]] = ""
+                                for attachments in self.attachment_columns_map:
+                                    if key == attachments[0]:
+                                        try:
+                                            if self.dirname:
+                                                data['fields'][attachments[1]] = [
+                                                    {"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
+                                            else: 
+                                                data['fields'][attachments[1]] = [
+                                                    {"url": self.dbx.upload_to_dropbox(f"{value}")}]
+                                        except Exception as e:
+                                            tqdm.write(f"{['fields'][attachments[1]]} Could not be found!")
+                                            data['fields'][attachments[1]] = ""
+                                    #ic(data['fields'])
 
                             else:
                                 logger.error("Dropbox token not provided! Aborting the upload!")

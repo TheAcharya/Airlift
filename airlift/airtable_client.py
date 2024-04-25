@@ -28,7 +28,6 @@ class new_client:
 
     def single_upload(self,data:ATDATATYPE) -> None:
 
-        
         data["typecast"] = True
         response = requests.post(self.single_upload_url, headers=self.headers, data=json.dumps(data))
         
