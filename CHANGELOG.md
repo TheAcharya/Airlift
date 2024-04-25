@@ -5,6 +5,9 @@
 **🎉 Released:**
 - 25th April 2024
 
+**🔨 Improvements:**
+- Added support for multiple attachemnt columns mapping
+
 **🐞 Bug Fix:**
 - Improved handling of multiple attachemnt columns (#36)
 
