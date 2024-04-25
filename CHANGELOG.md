@@ -1,5 +1,14 @@
 # Changelog
 
+### 1.0.9
+
+**🎉 Released:**
+- 25th April 2024
+
+**🐞 Bug Fix:**
+- Improved handling of multiple attachemnt columns (#36)
+
+
 ### 1.0.8
 
 **🎉 Released:**
