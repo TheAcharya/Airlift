@@ -26,6 +26,8 @@ class Upload:
         self.rename_key_column=args.rename_key_column
         self.workers = args.workers if args.workers else 5
 
+        ic(self.attachment_columns_map)
+
     def upload_data(self) -> None:
         logger.info("Uploding data now!")
         progress_bar = tqdm(total=len(self.new_data),leave=False)
@@ -49,7 +51,7 @@ class Upload:
         while True:
             try:
                 data = data_queue.get_nowait()
-            
+                
                 if self.attachment_columns_map:
                     for attachment in self.attachment_columns_map:
                         data['fields'][attachment[1]] = ""
@@ -84,7 +86,7 @@ class Upload:
                                             data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{value}")}]
                                         
                                     except Exception as e:
-                                        tqdm.write(f"{data['fields'][key]} Could not be found!")
+                                        tqdm.write(f"{value} Could not be found!")
                                         data['fields'][key] = ""
 
                         if self.attachment_columns_map:
@@ -99,7 +101,7 @@ class Upload:
                                                 data['fields'][attachments[1]] = [
                                                     {"url": self.dbx.upload_to_dropbox(f"{value}")}]
                                         except Exception as e:
-                                            tqdm.write(f"{['fields'][attachments[1]]} Could not be found!")
+                                            tqdm.write(f"{value} Could not be found!")
                                             data['fields'][attachments[1]] = ""
                                     #ic(data['fields'])
 
@@ -109,7 +111,8 @@ class Upload:
                     self.client.single_upload(data)
                     progress_bar.update(1)
                 except Exception as e:
-                    logger.error(str(e))
+                    logger.error(e)
+                    logger.error('Error at %s', 'division', exc_info=e)
             except Empty:
                 break
 
