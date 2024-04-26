@@ -5,7 +5,7 @@ labels: "bug"
 body:
 - type: input
   attributes:
-    label: Airlife Version?
+    label: Airlift Version?
     description: Which version of Airlift are you using? If unsure, run `airlift --version`
   validations:
     required: true
