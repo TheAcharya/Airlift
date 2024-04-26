@@ -3,7 +3,7 @@
 ### 1.0.9
 
 **🎉 Released:**
-- 25th April 2024
+- 26th April 2024
 
 **🔨 Improvements:**
 - Added support for multiple attachemnt columns mapping
