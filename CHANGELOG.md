@@ -3,7 +3,7 @@
 ### 1.1.0
 
 **🎉 Released:**
-- 
+- 27th April 2024
 
 **🔨 Improvements:**
 - Added support to auto-skip image upload when associated row has missing images (#37)
