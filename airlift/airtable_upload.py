@@ -25,8 +25,11 @@ class Upload:
         self.columns_copy=args.columns_copy
         self.rename_key_column=args.rename_key_column
         self.workers = args.workers if args.workers else 5
+        self.log = args.log
 
-        ic(self.attachment_columns_map)
+    def write_log(self,file_path, line):
+        with open(file_path, 'a') as file:
+            file.write(line + '\n')
 
     def upload_data(self) -> None:
         logger.info("Uploding data now!")
@@ -86,6 +89,7 @@ class Upload:
                                             data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{value}")}]
                                         
                                     except Exception as e:
+                                        self.write_log(self.log,f"{value} Could not be found!")
                                         tqdm.write(f"{value} Could not be found!")
                                         data['fields'][key] = ""
 
@@ -101,6 +105,7 @@ class Upload:
                                                 data['fields'][attachments[1]] = [
                                                     {"url": self.dbx.upload_to_dropbox(f"{value}")}]
                                         except Exception as e:
+                                            self.write_log(self.log,f"{value} Could not be found!")
                                             tqdm.write(f"{value} Could not be found!")
                                             data['fields'][attachments[1]] = ""
                                     #ic(data['fields'])
@@ -112,7 +117,7 @@ class Upload:
                     progress_bar.update(1)
                 except Exception as e:
                     logger.error(e)
-                    logger.error('Error at %s', 'division', exc_info=e)
+
             except Empty:
                 break
 
