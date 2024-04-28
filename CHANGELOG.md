@@ -1,5 +1,13 @@
 # Changelog
 
+### 1.1.1
+
+**🎉 Released:**
+- 28th April 2024
+
+**🔨 Improvements:**
+- Added support to log skpped images (#38)
+
 ### 1.1.0
 
 **🎉 Released:**
