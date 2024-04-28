@@ -8,6 +8,8 @@
 **🔨 Improvements:**
 - Added support to log skpped images (#38)
 
+---
+
 ### 1.1.0
 
 **🎉 Released:**
@@ -15,6 +17,8 @@
 
 **🔨 Improvements:**
 - Added support to auto-skip image upload when associated row has missing images (#37)
+
+---
 
 ### 1.0.9
 
@@ -27,6 +31,7 @@
 **🐞 Bug Fix:**
 - Improved handling of multiple attachemnt columns (#36)
 
+---
 
 ### 1.0.8
 
