@@ -6,7 +6,7 @@
 - 28th April 2024
 
 **🔨 Improvements:**
-- Added support to log skpped images (#38)
+- Added support to log skipped images (#38)
 
 ---
 
