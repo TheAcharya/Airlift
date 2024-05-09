@@ -88,10 +88,11 @@ jobs:
         with:
           name: release_dist_reqs
 
-      - name: Set up Python ${{ env.BUILD_PYTHON_VERSION }}
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.BUILD_PYTHON_VERSION }}
+          python-version: 3.8
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
