@@ -89,7 +89,7 @@ jobs:
           name: release_dist_reqs
 
       - name: Set up Python ${{ env.BUILD_PYTHON_VERSION }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.BUILD_PYTHON_VERSION }}
 
@@ -257,7 +257,7 @@ jobs:
           echo "TAG_VERSION=v$APP_VERSION" >> $GITHUB_ENV
 
       - name: Load release python packages
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release_dist_python
           path: dist
