@@ -42,13 +42,13 @@ jobs:
         run: poetry build
 
       - name: Save release python requirements
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release_dist_reqs
           path: requirements.txt
 
       - name: Save release python packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release_dist_python
           path: dist
@@ -67,7 +67,7 @@ jobs:
             OS_CODE: win
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Get version
         if: matrix.os == 'macos-latest'
@@ -84,12 +84,12 @@ jobs:
           echo "APP_VERSION=$APP_VERSION" >> $GITHUB_ENV
 
       - name: Load release python requirements
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release_dist_reqs
 
       - name: Set up Python ${{ env.BUILD_PYTHON_VERSION }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.BUILD_PYTHON_VERSION }}
 
@@ -234,13 +234,13 @@ jobs:
       
       - name: Save release binaries for macos
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release_airlift_pkg
           path: ${{ env.SPKG }}
 
       - name: Save release binaries for ${{ matrix.OS_CODE }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release_dist_bin_${{ matrix.OS_CODE }}
           path: dist_bin
@@ -250,7 +250,7 @@ jobs:
     needs: [build_binaries]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Get tag version
         run: |
           APP_VERSION=$(sed -n 's/^__version__ = "\([^"]\+\)"$/\1/p' ${{ env.PACKAGE_NAME }}/version.py)
@@ -263,25 +263,25 @@ jobs:
           path: dist
 
       - name: Load release binaries for linux
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release_dist_bin_linux
           path: dist
 
       - name: Load release binaries for windows
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release_dist_bin_win
           path: dist
 
       - name: Load release binaries for macos
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release_dist_bin_macos
           path: dist
 
       - name: Load release pkg
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release_airlift_pkg
           path: dist
