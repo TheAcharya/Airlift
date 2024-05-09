@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       POETRY_VIRTUALENVS_CREATE: false
-      PIP_DISABLE_PIP_VERSION_CHECK: 1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
