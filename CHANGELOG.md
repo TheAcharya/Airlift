@@ -1,5 +1,15 @@
 # Changelog
 
+### 1.1.2
+
+**🎉 Released:**
+- 10th May 2024
+
+**🔨 Improvements:**
+- Updated dependencies packages
+
+---
+
 ### 1.1.1
 
 **🎉 Released:**
