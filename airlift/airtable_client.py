@@ -3,6 +3,7 @@ import json
 import requests
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 from airlift.airtable_error_handling import ClientError
+from airlift.utils_exceptions import CriticalError
 from airlift.utils_exceptions import AirtableError
 from airlift.csv_data import CSVRowType
 from icecream import ic

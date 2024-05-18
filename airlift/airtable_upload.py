@@ -8,6 +8,7 @@ import os
 from tqdm import tqdm
 from icecream import ic
 from airlift.dropbox_client import dropbox_client
+from airlift.utils_exceptions import CriticalError
 
 logger = logging.getLogger(__name__)
 ATDATA = List[Dict[str, Dict[str, str]]]
@@ -42,11 +43,20 @@ class Upload:
 
             with concurrent.futures.ThreadPoolExecutor(max_workers=self.workers) as executor:
                 futures = [executor.submit(self._worker,data_queue, progress_bar) for _ in
-                            range(self.workers)]
-                concurrent.futures.wait(futures, timeout=None)
+                            range(self.workers)]    
+                
+                for future in concurrent.futures.as_completed(futures):
+                    try:
+                        future.result()  # This will re-raise any exception caught in the worker
+                    except CriticalError as e:
+                        logger.error('A critical error occurred in one of the worker threads: %s', str(e))
+                        self.stop_event.set()  # Signal other workers to stop
+                        break
+                #concurrent.futures.wait(futures, timeout=None)
 
         except Exception as e:
-            logger.error('Something went wrong while uploading the data: %s', str(e))
+            #logger.error('Something went wrong while uploading the data: %s', str(e))
+            raise CriticalError('Something went wrong while uploading the data')
         
 
 
@@ -64,18 +74,14 @@ class Upload:
                         if self.client.missing_field_single(column):
                             data['fields'][column] = data['fields'][self.columns_copy[0]]
                         else:
-                            logger.warning(
-                                f"The Column {column} is not present in airtable! Please create it and try again")
-                            pass
+                            raise CriticalError(f"The Column {column} is not present in airtable! Please create it and try again")
 
                 if self.rename_key_column:
                     if self.client.missing_field_single(self.rename_key_column[1]):
                         data['fields'][self.rename_key_column[1]] = data['fields'][self.rename_key_column[0]]
                         del data['fields'][self.rename_key_column[0]]
                     else:
-                        logger.warning(
-                                f"The Key Column {column} is not present in airtable! Please create it and try again")
-                        pass
+                        raise CriticalError(f"The Key Column {self.rename_key_column[1]} is not present in airtable! Please create it and try again")
 
                 try:
                     for key, value in data['fields'].items():
@@ -118,6 +124,11 @@ class Upload:
                 except Exception as e:
                     logger.error(e)
 
-            except Empty:
-                break
+            except Exception as e:
+
+                if data_queue.empty():
+                    break
+                else:
+                    logger.error(e)
+                    raise CriticalError
 
