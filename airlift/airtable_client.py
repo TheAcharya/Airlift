@@ -56,8 +56,15 @@ class new_client:
         return False
 
 
-    def missing_fields_check(self,data:ATDATATYPE,disable_bypass:bool,ignore_columns:List[str]):
+    def _missing_fields_check(self,data:ATDATATYPE,args:dict):
         
+        disable_bypass = args.disable_bypass_column_creation
+
+        if args.rename_key_column:
+            ignore_columns = [args.rename_key_column[0]]
+        else:
+            ignore_columns = None
+
         airtable_table_fields = []
         user_csv_fields = []
 
@@ -124,6 +131,43 @@ class new_client:
         
         else:
             logger.warning(f"unknown error : {response.text}")
+    
+    
+
+    def _rename_key_column_check(self,args:dict) -> None:
+        
+        if args.rename_key_column[1] == args.rename_key_column[0]:
+            raise CriticalError("rename-key-column arguement has same column name!")
+    
+    def create_uploadable_data(self,data:ATDATATYPE,args:dict):
+        
+        
+        data = self._missing_fields_check(data,args)
+
+        #validation and creating new data fields
+        if args.rename_key_column:
+            self._rename_key_column_check(args=args)
+
+        if args.attachment_columns_map:
+            for attachment in args.attachment_columns_map:
+                data['fields'][attachment[1]] = ""
+
+        if args.columns_copy:
+            for column in args.columns_copy[1::]:
+                if self.missing_field_single(column):
+                    data['fields'][column] = data['fields'][args.columns_copy[0]]
+                else:
+                    raise CriticalError(f"The Column {column} is not present in airtable! Please create it and try again")
+
+        if args.rename_key_column:
+            if self.missing_field_single(args.rename_key_column[1]):
+                data['fields'][args.rename_key_column[1]] = data['fields'][args.rename_key_column[0]]
+                del data['fields'][args.rename_key_column[0]]
+            else:
+                raise CriticalError(f"The Key Column {args.rename_key_column[1]} is not present in airtable! Please create it and try again")
+
+        return data
+
         
  
             

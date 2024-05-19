@@ -64,71 +64,49 @@ class Upload:
         while True:
             try:
                 data = data_queue.get_nowait()
-                
-                if self.attachment_columns_map:
-                    for attachment in self.attachment_columns_map:
-                        data['fields'][attachment[1]] = ""
+                for key, value in data['fields'].items():
+                    if self.attachment_columns:
+                        if self.dbx:
+                            if key in self.attachment_columns:
+                                try:
+                                    if self.dirname:
+                                        data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
+                                    else:
+                                        data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{value}")}]
+                                    
+                                except Exception as e:
+                                    self.write_log(self.log,f"{value} Could not be found!")
+                                    tqdm.write(f"{value} Could not be found!")
+                                    data['fields'][key] = ""
 
-                if self.columns_copy:
-                    for column in self.columns_copy[1::]:
-                        if self.client.missing_field_single(column):
-                            data['fields'][column] = data['fields'][self.columns_copy[0]]
-                        else:
-                            raise CriticalError(f"The Column {column} is not present in airtable! Please create it and try again")
-
-                if self.rename_key_column:
-                    if self.client.missing_field_single(self.rename_key_column[1]):
-                        data['fields'][self.rename_key_column[1]] = data['fields'][self.rename_key_column[0]]
-                        del data['fields'][self.rename_key_column[0]]
-                    else:
-                        raise CriticalError(f"The Key Column {self.rename_key_column[1]} is not present in airtable! Please create it and try again")
-
-                try:
-                    for key, value in data['fields'].items():
-                        if self.attachment_columns:
-                            if self.dbx:
-                                if key in self.attachment_columns:
+                    if self.attachment_columns_map:
+                        if self.dbx:
+                            for attachments in self.attachment_columns_map:
+                                if key == attachments[0]:
                                     try:
                                         if self.dirname:
-                                            data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
-                                        else:
-                                            data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{value}")}]
-                                        
+                                            data['fields'][attachments[1]] = [
+                                                {"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
+                                        else: 
+                                            data['fields'][attachments[1]] = [
+                                                {"url": self.dbx.upload_to_dropbox(f"{value}")}]
                                     except Exception as e:
                                         self.write_log(self.log,f"{value} Could not be found!")
                                         tqdm.write(f"{value} Could not be found!")
-                                        data['fields'][key] = ""
+                                        data['fields'][attachments[1]] = ""
+                                #ic(data['fields'])
 
-                        if self.attachment_columns_map:
-                            if self.dbx:
-                                for attachments in self.attachment_columns_map:
-                                    if key == attachments[0]:
-                                        try:
-                                            if self.dirname:
-                                                data['fields'][attachments[1]] = [
-                                                    {"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
-                                            else: 
-                                                data['fields'][attachments[1]] = [
-                                                    {"url": self.dbx.upload_to_dropbox(f"{value}")}]
-                                        except Exception as e:
-                                            self.write_log(self.log,f"{value} Could not be found!")
-                                            tqdm.write(f"{value} Could not be found!")
-                                            data['fields'][attachments[1]] = ""
-                                    #ic(data['fields'])
+                        else:
+                            logger.error("Dropbox token not provided! Aborting the upload!")
 
-                            else:
-                                logger.error("Dropbox token not provided! Aborting the upload!")
-
-                    self.client.single_upload(data)
-                    progress_bar.update(1)
-                except Exception as e:
-                    logger.error(e)
-
+                self.client.single_upload(data)
+                progress_bar.update(1)
             except Exception as e:
-
                 if data_queue.empty():
                     break
                 else:
                     logger.error(e)
                     raise CriticalError
+
+                
 

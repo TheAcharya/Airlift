@@ -59,13 +59,8 @@ def cli(*argv: str) -> None:
             if not data:
                 raise CriticalError("File is empty!")
 
-            #checking for missing columns
-            if args.rename_key_column:
-                ignore_column_check = [args.rename_key_column[0]]
-            else:
-                ignore_column_check = None
-
-            data = airtable_client.missing_fields_check(data,disable_bypass=args.disable_bypass_column_creation,ignore_columns=ignore_column_check)
+            #validating data and creating an uploadable data
+            data = airtable_client.create_uploadable_data(data=data,args=args)
         
             #uploading the data
             upload_instance = Upload(client=airtable_client, new_data=data,dbx=dbx,args=args)
