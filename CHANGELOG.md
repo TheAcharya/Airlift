@@ -1,5 +1,16 @@
 # Changelog
 
+### 1.1.3
+
+**🎉 Released:**
+- 20th May 2024
+
+**🔨 Improvements:**
+- Improved log output for `--rename-key-column`
+- Improved upload speed
+
+---
+
 ### 1.1.2
 
 **🎉 Released:**
