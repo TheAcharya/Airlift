@@ -141,32 +141,33 @@ class new_client:
     
     def create_uploadable_data(self,data:ATDATATYPE,args:dict):
         
-        
         data = self._missing_fields_check(data,args)
+        all_data = data
 
+        logger.info("Creating airtable compitable data! Please wait")
+        for data in all_data:
         #validation and creating new data fields
-        if args.rename_key_column:
-            self._rename_key_column_check(args=args)
+            if args.rename_key_column:
+                self._rename_key_column_check(args=args)
 
-        if args.attachment_columns_map:
-            for attachment in args.attachment_columns_map:
-                data['fields'][attachment[1]] = ""
+            if args.attachment_columns_map:
+                for attachment in args.attachment_columns_map:
+                    data['fields'][attachment[1]] = ""
 
-        if args.columns_copy:
-            for column in args.columns_copy[1::]:
-                if self.missing_field_single(column):
-                    data['fields'][column] = data['fields'][args.columns_copy[0]]
+            if args.columns_copy:
+                for column in args.columns_copy[1::]:
+                    if self.missing_field_single(column):
+                        data['fields'][column] = data['fields'][args.columns_copy[0]]
+                    else:
+                        raise CriticalError(f"The Column {column} is not present in airtable! Please create it and try again")
+
+            if args.rename_key_column:
+                if self.missing_field_single(args.rename_key_column[1]):
+                    data['fields'][args.rename_key_column[1]] = data['fields'][args.rename_key_column[0]]
+                    del data['fields'][args.rename_key_column[0]]
                 else:
-                    raise CriticalError(f"The Column {column} is not present in airtable! Please create it and try again")
-
-        if args.rename_key_column:
-            if self.missing_field_single(args.rename_key_column[1]):
-                data['fields'][args.rename_key_column[1]] = data['fields'][args.rename_key_column[0]]
-                del data['fields'][args.rename_key_column[0]]
-            else:
-                raise CriticalError(f"The Key Column {args.rename_key_column[1]} is not present in airtable! Please create it and try again")
-
-        return data
+                    raise CriticalError(f"The Key Column {args.rename_key_column[1]} is not present in airtable! Please create it and try again")
+        return all_data
 
         
  
