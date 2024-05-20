@@ -664,6 +664,18 @@ Desktop/
 - On Windows: Utilise Powershell or `.bat` files to synchronise your local data to Airtable
 - On Linux: Utilise `.sh` scripts or to synchronise your local data to Airtable
 
+## Utilised By
+
+### Marker Data
+
+<details><summary>Marker Data's Notion Panel</summary>
+<p>
+
+<p align="center"> <img src="https://github.com/TheAcharya/MarkerData-Website/blob/main/docs/assets/md-database-settings_02.png?raw=true"> </p>
+
+</p>
+</details>
+
 ## Credits
 
 Original Idea and Workflow Architecture by [Vigneswaran Rajkumar](https://twitter.com/IAmVigneswaran)
