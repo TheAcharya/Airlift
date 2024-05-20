@@ -39,6 +39,7 @@ An automated method to upload & merge *.csv or *.json data files with attachment
 - [Examples](#examples)
 - [Use Cases](#use-cases)
 - [Future Roadmap](#future-roadmap)
+- [Utilised By](#utilised-by)
 - [Credits](#credits)
 - [License](#license)
 - [Reporting Bugs](#reporting-bugs)
