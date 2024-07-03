@@ -662,7 +662,7 @@ Desktop/
 
 ### [Marker Data](https://markerdata.theacharya.co)
 
-<details><summary>Marker Data's Notion Panel</summary>
+<details><summary>Marker Data's Airtable Panel</summary>
 <p>
 
 <p align="center"> <img src="https://github.com/TheAcharya/MarkerData-Website/blob/main/docs/assets/md-database-settings_02.png?raw=true"> </p>
