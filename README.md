@@ -4,7 +4,7 @@
 </p>
 
 
-<p align="center"><a href="https://github.com/TheAcharya/Airlift/blob/main/LICENSE"><img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="license"/></a>&nbsp;<a href="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml"><img src="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml/badge.svg" alt="release_github"/></a></p>
+<p align="center"><a href="https://github.com/TheAcharya/Airlift/blob/main/LICENSE"><img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="license"/></a>&nbsp;<a href="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml"><img src="https://github.com/TheAcharya/Airlift/actions/workflows/release_github.yml/badge.svg" alt="release_github"/></a>&nbsp;<a href="Github All Releases"><img src="https://img.shields.io/github/downloads/TheAcharya/Airlift/total.svg" alt="release_github"/></a></p>
 
 An automated method to upload & merge *.csv or *.json data files with attachments to <a href="https://www.airtable.com" target="_blank">Airtable</a> database.
 
