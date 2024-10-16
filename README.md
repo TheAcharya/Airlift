@@ -20,6 +20,7 @@ An automated method to upload & merge *.csv or *.json data files with attachment
 ## Table of contents
 
 - [Background](#background)
+- [System Requirements](#system-requirements)
 - [Installation](#installation)
   - [Pre-compiled Binary (Recommended)](#pre-compiled-binary-recommended)
   - [From Source](#from-source)
@@ -46,6 +47,23 @@ To send data to Airtable, users or applications need to write custom code using 
 Furthermore, many experienced Airtable users want to send and transfer data automatically without using [Make](https://www.make.com) or [Zapier](https://zapier.com). This is where **Airlift** comes into play.
 
 **Airlift** is free and open-source software. But you can [sponsor](https://github.com/sponsors/TheAcharya) us if you find it useful.
+
+## System Requirements
+
+### Linux (x64)
+- Operating System: Linux (64-bit)
+- Architecture: x64
+- Dependencies: None (ensure basic Linux shell tools are available)
+
+### macOS (ARM64)
+- Operating System: macOS 11 (Big Sur) or later
+- Architecture: ARM64 (Apple Silicon)
+- Dependencies: None
+
+### Windows (x64)
+- Operating System: Windows 10 or later (64-bit)
+- Architecture: x64
+- Dependencies: None
 
 ## Installation
 
