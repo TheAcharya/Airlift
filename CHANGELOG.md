@@ -3,7 +3,7 @@
 ### 1.1.4
 
 **🎉 Released:**
-- Date Pending
+- 11th November 2024
 
 **🔨 Improvements:**
 - Updated dependencies packages
