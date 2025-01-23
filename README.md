@@ -690,7 +690,7 @@ Desktop/
 
 ## Credits
 
-Original Idea and Workflow Architecture by [Vigneswaran Rajkumar](https://twitter.com/IAmVigneswaran)
+Original Idea and Workflow Architecture by [Vigneswaran Rajkumar](https://bsky.app/profile/vigneswaranrajkumar.com)
 
 Maintained by [Arjun Prakash](https://github.com/arjunprakash027) (1.0.0 ...)
 
