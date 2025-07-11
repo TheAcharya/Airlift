@@ -1,0 +1,203 @@
+# Airlift Development Rules and Guidelines
+
+## Project Context
+
+Airlift is a Python command-line tool for uploading CSV/JSON data with attachments to Airtable. The project uses a modular architecture with clear separation of concerns across data processing, API integration, and file handling components.
+
+## Code Organization
+
+### Module Structure
+- Keep each module focused on a single responsibility
+- Use clear, descriptive module names that reflect their purpose
+- Maintain consistent import patterns across modules
+- Avoid circular dependencies between modules
+
+### File Naming Conventions
+- Use snake_case for all Python files and functions
+- Use descriptive names that clearly indicate functionality
+- Follow the existing naming pattern: `airlift_*.py` for core modules
+
+## Coding Standards
+
+### Python Style
+- Follow PEP 8 style guidelines strictly
+- Use type hints for all function parameters and return values
+- Implement comprehensive docstrings for public functions and classes
+- Use logging instead of print statements for all output
+- Keep line length under 88 characters (Black formatter standard)
+
+### Error Handling
+- Use custom exception classes from `utils_exceptions.py`
+- Implement proper exception chaining with `raise ... from`
+- Provide meaningful error messages to end users
+- Log detailed error information for debugging
+- Handle both critical and non-critical errors appropriately
+
+### Data Processing
+- Validate input data before processing
+- Use UTF-8 encoding for all file operations
+- Handle missing or malformed data gracefully
+- Implement proper data type conversion and validation
+
+## API Integration Patterns
+
+### Airtable API
+- Use the `new_client` class for all Airtable operations
+- Implement proper authentication with Bearer tokens
+- Handle API rate limits and errors gracefully
+- Use structured JSON payloads for data uploads
+- Validate responses and handle error codes appropriately
+
+### Dropbox API
+- Use the `dropbox_client` class for file operations
+- Implement OAuth2 flow for authentication
+- Handle refresh token management properly
+- Create organized folder structures for uploads
+- Generate proper sharing URLs for attachments
+- Plan for migration to latest Dropbox SDK when implementing new features
+
+## CLI Development
+
+### Argument Parsing
+- Use the existing `cli_args.py` structure for argument definitions
+- Group related arguments logically
+- Provide clear help text for all options
+- Implement proper validation for required arguments
+- Use appropriate data types for argument values
+
+### User Experience
+- Provide clear progress indicators for long operations
+- Use consistent logging levels (INFO, WARNING, ERROR, DEBUG)
+- Implement verbose mode for detailed debugging output
+- Handle user interruptions gracefully (Ctrl+C)
+
+## Performance Considerations
+
+### Concurrency
+- Use ThreadPoolExecutor for parallel upload operations
+- Implement configurable worker thread counts
+- Avoid blocking operations in worker threads
+- Use proper queue management for data distribution
+
+### Memory Management
+- Process data in chunks for large files
+- Avoid loading entire datasets into memory
+- Use generators where appropriate for data iteration
+- Implement proper cleanup of resources
+
+## Testing Guidelines
+
+### Unit Testing
+- Write tests for all public functions and classes
+- Mock external API calls to avoid network dependencies
+- Test both success and error conditions
+- Use descriptive test names that explain the scenario
+
+### Integration Testing
+- Test end-to-end workflows with sample data
+- Verify proper error handling and recovery
+- Test with different file formats and sizes
+- Validate API integration points
+
+## Security Best Practices
+
+### Authentication
+- Never hardcode credentials in source code
+- Use secure token storage mechanisms
+- Implement proper OAuth2 flows for external services
+- Validate all user inputs and file paths
+
+### Data Handling
+- Sanitize all user inputs and file paths
+- Use secure file upload mechanisms
+- Implement proper error message sanitization
+- Handle sensitive data appropriately
+
+## Documentation Standards
+
+### Code Documentation
+- Write comprehensive docstrings for all public functions
+- Include parameter types, return types, and examples
+- Document any complex algorithms or business logic
+- Keep documentation up to date with code changes
+
+### User Documentation
+- Maintain clear README with usage examples
+- Document all command-line options and their effects
+- Provide troubleshooting guides for common issues
+- Keep changelog updated with all releases
+
+## Dependencies and Packaging
+
+### Dependency Management
+- Use Poetry for dependency management
+- Keep dependencies up to date and secure
+- Minimize external dependencies where possible
+- Document any version-specific requirements
+- Plan for Dropbox SDK updates to maintain API compatibility and security
+
+### Build and Distribution
+- Maintain cross-platform compatibility
+- Use PyInstaller for binary distribution
+- Implement proper versioning with semantic versioning
+- Test builds on all target platforms
+
+## Error Handling Patterns
+
+### Exception Hierarchy
+- Use `CriticalError` for fatal application errors
+- Use `AirtableError` for Airtable-specific issues
+- Use `TypeConversionError` for data type issues
+- Implement proper exception chaining
+
+### Logging Strategy
+- Use structured logging with appropriate levels
+- Include context information in log messages
+- Implement file-based logging for debugging
+- Use consistent log message formatting
+
+## Code Review Guidelines
+
+### Review Checklist
+- Verify proper error handling implementation
+- Check for security vulnerabilities
+- Ensure proper logging and debugging support
+- Validate performance implications
+- Confirm documentation updates
+
+### Quality Standards
+- Maintain high test coverage for new features
+- Ensure backward compatibility when possible
+- Follow established naming conventions
+- Implement proper type hints throughout
+
+## Maintenance and Support
+
+### Version Management
+- Use semantic versioning for releases
+- Maintain backward compatibility when possible
+- Document breaking changes clearly
+- Keep dependencies updated and secure
+- Monitor Dropbox SDK releases for security updates and new features
+
+### Monitoring and Debugging
+- Implement comprehensive logging for troubleshooting
+- Use performance timing utilities for optimization
+- Provide clear error messages for users
+- Maintain debugging capabilities in production builds
+
+## Integration Guidelines
+
+### External Services
+- Implement proper retry logic for API calls
+- Handle service outages gracefully
+- Use appropriate timeouts for network operations
+- Implement proper authentication flows
+
+### User Experience
+- Provide clear feedback for all operations
+- Implement progress tracking for long operations
+- Use intuitive error messages
+- Support both interactive and non-interactive modes
+
+This cursorrule file should be kept in sync with the AGENT.MD file to ensure consistent development practices and maintain high code quality standards across the Airlift project. 
