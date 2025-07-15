@@ -70,11 +70,14 @@ class Upload:
                             if key in self.attachment_columns:
                                 try:
                                     if self.dirname:
-                                        data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
+                                        file_path = f"{self.dirname}/{value}"
+                                        data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(file_path)}]
                                     else:
-                                        data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(f"{value}")}]
+                                        file_path = f"{value}"
+                                        data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(file_path)}]
                                     
                                 except Exception as e:
+                                    logger.error(f"Error uploading {value}: {type(e).__name__}: {str(e)}")
                                     self.write_log(self.log,f"{value} Could not be found!")
                                     tqdm.write(f"{value} Could not be found!")
                                     data['fields'][key] = ""
@@ -85,12 +88,15 @@ class Upload:
                                 if key == attachments[0]:
                                     try:
                                         if self.dirname:
+                                            file_path = f"{self.dirname}/{value}"
                                             data['fields'][attachments[1]] = [
-                                                {"url": self.dbx.upload_to_dropbox(f"{self.dirname}/{value}")}]
+                                                {"url": self.dbx.upload_to_dropbox(file_path)}]
                                         else: 
+                                            file_path = f"{value}"
                                             data['fields'][attachments[1]] = [
-                                                {"url": self.dbx.upload_to_dropbox(f"{value}")}]
+                                                {"url": self.dbx.upload_to_dropbox(file_path)}]
                                     except Exception as e:
+                                        logger.error(f"Error uploading {value}: {type(e).__name__}: {str(e)}")
                                         self.write_log(self.log,f"{value} Could not be found!")
                                         tqdm.write(f"{value} Could not be found!")
                                         data['fields'][attachments[1]] = ""
