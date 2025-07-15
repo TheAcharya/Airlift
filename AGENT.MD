@@ -90,7 +90,7 @@ The project follows a modular architecture with clear separation of concerns:
 #### Testing Considerations
 - Unit tests for individual modules
 - Integration tests for end-to-end workflows
-- Mock external API calls for testing
+- Mock external API calls to avoid network dependencies
 - Test error conditions and edge cases
 
 ### Dependencies
@@ -104,7 +104,8 @@ The project follows a modular architecture with clear separation of concerns:
 
 #### Development Dependencies
 - `poetry` - Dependency management and packaging
-- Python 3.8+ compatibility
+- Python 3.8+ compatibility (matches GitHub Actions workflow)
+- `setuptools` - Package installation utilities
 
 ### Build and Distribution
 
@@ -119,6 +120,74 @@ The project follows a modular architecture with clear separation of concerns:
 - Automated GitHub releases
 - Binary distribution for all platforms
 - Changelog maintenance
+
+## Ephemeral Build System
+
+### Local Test Build Script
+
+The project includes a comprehensive ephemeral build system (`scripts/local-test-build.sh`) that provides:
+
+#### Key Features
+- Fully ephemeral build environment in `.build/` directory
+- No system-level installations or modifications
+- Uses system Python with virtual environments
+- GitHub Actions compatible approach
+- Cross-platform support (macOS Intel and Apple Silicon)
+- Professional logging without emojis
+- Flexible dependency management options
+
+#### Build Process
+1. Creates virtual environment using system Python 3.8+
+2. Installs setuptools 69.0.0 (matches GitHub Actions)
+3. Installs Poetry 1.7.1 in the virtual environment
+4. Installs project dependencies via Poetry
+5. Installs PyInstaller separately (not in pyproject.toml)
+6. Builds application using PyInstaller
+7. Outputs binary to `test-build/` directory
+
+#### Directory Structure
+```
+Airlift/
+├── .build/                    # Ephemeral build environment (gitignored)
+│   ├── python/               # Virtual environment
+│   ├── venv/                 # Poetry virtual environment
+│   └── cache/                # Poetry cache
+├── test-build/               # Build output (gitignored)
+│   ├── airlift              # Final executable binary
+│   └── build/               # PyInstaller build artifacts
+└── scripts/
+    ├── local-test-build.sh  # Build script
+    └── README.md            # Detailed usage documentation
+```
+
+#### Usage Examples
+```bash
+# Basic build
+./scripts/local-test-build.sh
+
+# Build with dependency updates
+./scripts/local-test-build.sh --update-deps
+
+# Update specific packages
+./scripts/local-test-build.sh --update requests pytest
+
+# Clean build environment
+./scripts/local-test-build.sh --clean
+
+# Show outdated packages
+./scripts/local-test-build.sh --show-outdated
+```
+
+#### CI/CD Integration
+The build script is designed to work seamlessly with GitHub Actions and uses identical versions:
+- Python 3.8+ (matches BUILD_PYTHON_VERSION: 3.8)
+- Poetry 1.7.1 (matches BUILD_POETRY_VERSION: 1.7.1)
+- Setuptools 69.0.0 (matches setuptools==69.0.0)
+- PyInstaller latest version (matches CI workflow)
+- No PyInstaller in pyproject.toml (installed separately)
+- Same approach as CI/CD pipeline
+- Completely ephemeral and safe
+- Consistent with production build process
 
 ## API Integration Patterns
 

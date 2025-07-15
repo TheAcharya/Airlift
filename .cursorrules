@@ -134,6 +134,7 @@ Airlift is a Python command-line tool for uploading CSV/JSON data with attachmen
 - Keep dependencies up to date and secure
 - Minimize external dependencies where possible
 - Document any version-specific requirements
+- Use identical versions to GitHub Actions workflow for reproducible builds
 - Plan for Dropbox SDK updates to maintain API compatibility and security
 
 ### Build and Distribution
@@ -141,6 +142,59 @@ Airlift is a Python command-line tool for uploading CSV/JSON data with attachmen
 - Use PyInstaller for binary distribution
 - Implement proper versioning with semantic versioning
 - Test builds on all target platforms
+
+## Ephemeral Build System
+
+### Local Test Build Script
+
+The project includes a comprehensive ephemeral build system (`scripts/local-test-build.sh`) that must be used for all development and testing:
+
+#### Build System Requirements
+- Always use the ephemeral build system for development
+- Never install dependencies globally or modify system Python
+- Keep PyInstaller out of pyproject.toml (install separately during build)
+- Maintain consistency with GitHub Actions workflow
+- Use system Python 3.8+ with virtual environments for isolation
+- Use identical versions to GitHub Actions workflow for reproducible builds
+
+#### Build Process Standards
+- Create virtual environment in `.build/python/` directory using system Python 3.8+
+- Install setuptools 69.0.0 in the virtual environment (matches GitHub Actions)
+- Install Poetry 1.7.1 in the virtual environment using pip
+- Install project dependencies via Poetry in `.build/venv/`
+- Install PyInstaller separately in Poetry virtual environment
+- Output build artifacts to `test-build/` directory
+- Clean up build environment when needed
+
+#### Directory Structure Compliance
+```
+Airlift/
+├── .build/                    # Ephemeral build environment (gitignored)
+├── test-build/               # Build output (gitignored)
+├── scripts/
+│   ├── local-test-build.sh  # Build script
+│   └── README.md            # Usage documentation
+└── ... (other project files)
+```
+
+#### Build Script Usage
+- Always run from project root directory
+- Use `--clean` when switching branches or after dependency changes
+- Test built binary with `./test-build/airlift --help`
+- Use `--update-deps` for dependency updates
+- Use `--show-outdated` to check for package updates
+
+#### CI/CD Integration Standards
+- Build script must work identically in local and CI environments
+- Use identical versions to GitHub Actions workflow:
+  - Python 3.8+ (matches BUILD_PYTHON_VERSION: 3.8)
+  - Poetry 1.7.1 (matches BUILD_POETRY_VERSION: 1.7.1)
+  - Setuptools 69.0.0 (matches setuptools==69.0.0)
+  - PyInstaller latest version (matches CI workflow)
+- No system-level installations or modifications
+- PyInstaller installed separately (not in pyproject.toml)
+- Completely ephemeral and safe for any environment
+- Consistent with production build process
 
 ## Error Handling Patterns
 
@@ -164,12 +218,15 @@ Airlift is a Python command-line tool for uploading CSV/JSON data with attachmen
 - Ensure proper logging and debugging support
 - Validate performance implications
 - Confirm documentation updates
+- Verify build script compatibility
 
 ### Quality Standards
 - Maintain high test coverage for new features
 - Ensure backward compatibility when possible
 - Follow established naming conventions
 - Implement proper type hints throughout
+- Test builds using the ephemeral build system
+- Ensure version consistency between local and CI environments
 
 ## Maintenance and Support
 
