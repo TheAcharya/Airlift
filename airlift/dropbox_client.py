@@ -23,12 +23,9 @@ def _configure_ssl_environment():
             # Set environment variable for requests to use certifi certificates
             os.environ['REQUESTS_CA_BUNDLE'] = cert_path
             os.environ['SSL_CERT_FILE'] = cert_path
-            logger.debug(f"Using SSL certificates from: {cert_path}")
         else:
             # Fallback to system certificates
             logger.warning("certifi certificate file not found, using system certificates")
-            
-        logger.info("SSL environment configured with basic certificate handling")
         
     except Exception as e:
         logger.warning(f"SSL environment configuration failed: {e}, using default")
@@ -189,9 +186,7 @@ def change_refresh_access_token(access_token):
     try:
         
         # Configure SSL environment before creating OAuth flow
-        logger.info("Configuring SSL environment...")
         _configure_ssl_environment()
-        logger.info("SSL environment configured")
         
         # Create OAuth flow (SSL is handled at environment level)
         logger.info("Creating DropboxOAuth2FlowNoRedirect...")
