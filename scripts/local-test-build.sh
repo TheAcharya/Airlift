@@ -121,9 +121,30 @@ setup_python() {
     fi
 }
 
+# Function to update pip to latest version
+update_pip() {
+    local pip_bin="$BUILD_DIR/python/bin/pip"
+    local python_bin="$BUILD_DIR/python/bin/python3"
+    
+    print_status "Updating pip to latest version..."
+    
+    # Update pip using python -m pip to ensure we get the latest version
+    if ! "$python_bin" -m pip install --upgrade pip; then
+        print_error "pip update failed"
+        exit 1
+    fi
+    
+    # Verify the update
+    local pip_version=$("$pip_bin" --version 2>&1 | cut -d' ' -f2)
+    print_success "pip updated to version $pip_version"
+}
+
 # Function to install setuptools
 install_setuptools() {
     local pip_bin="$BUILD_DIR/python/bin/pip"
+    
+    # First update pip to latest version
+    update_pip
     
     print_status "Installing setuptools $SETUPTOOLS_VERSION..."
     
