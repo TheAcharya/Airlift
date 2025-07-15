@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
     paths-ignore:
       - 'Docs/**'       # Docs folder in root of repo
       - '**/*.md'       # .md files anywhere in the repo
@@ -10,7 +10,7 @@ on:
       - '**/.gitignore' # .gitignore files anywhere in the repo
       
   pull_request:
-    branches: [main]
+    branches: [main, dev]
     paths-ignore:
       - 'Docs/**'       # Docs folder in root of repo
       - '**/*.md'       # .md files anywhere in the repo
@@ -23,7 +23,7 @@ on:
     - cron: '0 0 * * 6' # Runs at 8 AM Singapore time (00:00 UTC) every Saturday
 
 env:
-  BUILD_PYTHON_VERSION: 3.8
+  BUILD_PYTHON_VERSION: 3.9
   BUILD_POETRY_VERSION: 1.7.1
   PACKAGE_NAME: airlift
 
