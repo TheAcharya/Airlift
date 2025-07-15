@@ -3,6 +3,8 @@ import dropbox
 import logging
 import json
 import sys
+import certifi
+import ssl
 from datetime import datetime
 from airlift.utils_exceptions import CriticalError
 from dropbox import DropboxOAuth2FlowNoRedirect
@@ -10,15 +12,43 @@ from typing import Dict
 
 
 logger = logging.getLogger(__name__)
+
+def _configure_ssl_context():
+    """Configure SSL context with proper certificate handling for PyInstaller"""
+    try:
+        # Try to use certifi's certificate bundle
+        cert_path = certifi.where()
+        if os.path.exists(cert_path):
+            ssl_context = ssl.create_default_context(cafile=cert_path)
+            logger.debug(f"Using SSL certificates from: {cert_path}")
+        else:
+            # Fallback to system certificates
+            ssl_context = ssl.create_default_context()
+            logger.warning("certifi certificate file not found, using system certificates")
+        
+        return ssl_context
+    except Exception as e:
+        logger.warning(f"SSL context configuration failed: {e}, using default")
+        return ssl.create_default_context()
+
 class dropbox_client:
     def __init__(self,access_token,md:bool):
     
         try:
+            # Configure SSL context before creating Dropbox client
+            ssl_context = _configure_ssl_context()
+            
             try:
                 creds = self._get_tokens(access_token)
-                self.dbx = dropbox.Dropbox(oauth2_refresh_token=creds[1],app_key=creds[0])
+                # Create Dropbox client with custom SSL context
+                self.dbx = dropbox.Dropbox(
+                    oauth2_refresh_token=creds[1],
+                    app_key=creds[0],
+                    ssl_context=ssl_context
+                )
                 logger.info("Created a Dropbox Client")
-            except:
+            except Exception as e:
+                logger.error(f"Dropbox client creation failed: {e}")
                 raise CriticalError('Failed to create the Dropbox client')
 
             if md:
