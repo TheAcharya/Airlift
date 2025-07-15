@@ -333,21 +333,24 @@ files = [
 
 [[package]]
 name = "pyairtable"
-version = "2.3.7"
+version = "3.1.1"
 description = "Python Client for the Airtable API"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyairtable-2.3.7-py2.py3-none-any.whl", hash = "sha256:cd1651355774c1212e618f3407b3b3bf51640438f5db22f436f689898011d71c"},
-    {file = "pyairtable-2.3.7.tar.gz", hash = "sha256:2afd6f095bce99f1114c36bf729e80ced3d3f4235325db0d32f53a87078ba04b"},
+    {file = "pyairtable-3.1.1-py2.py3-none-any.whl", hash = "sha256:3849def274f714f53b4ea73bf5a43a6f6360ede7472a7b69b018967e338d7e88"},
+    {file = "pyairtable-3.1.1.tar.gz", hash = "sha256:b185fef12119f249e0e704ab4e4b15a29080fc892ad4d551a1053a1bb609ef2e"},
 ]
 
 [package.dependencies]
 inflection = "*"
-pydantic = "*"
+pydantic = ">=2,<3"
 requests = ">=2.22.0"
-typing-extensions = "*"
+typing_extensions = "*"
 urllib3 = ">=1.26"
+
+[package.extras]
+cli = ["click"]
 
 [[package]]
 name = "pydantic"
@@ -610,4 +613,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "ba8073fbbff44483e1bf398f3a55568ba652497c31e82e17e250bd9e185952ee"
+content-hash = "b51632e075d7f7ef7e3ce86ef3d849d1b7b6f0ad4590829f2adc26fb33a4bc61"
