@@ -17,8 +17,8 @@ NC='\033[0m' # No Color
 BUILD_DIR=".build"
 TEST_BUILD_DIR="test-build"
 PYTHON_VERSION="3.9"
-POETRY_VERSION="1.7.1"
-SETUPTOOLS_VERSION="69.0.0"
+POETRY_VERSION="2.1.3"
+SETUPTOOLS_VERSION="80.9.0"
 PROJECT_NAME="airlift"
 
 # Function to print colored output

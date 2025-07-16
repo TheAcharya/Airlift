@@ -24,7 +24,7 @@ on:
 
 env:
   BUILD_PYTHON_VERSION: 3.9
-  BUILD_POETRY_VERSION: 1.7.1
+  BUILD_POETRY_VERSION: 2.1.3
   PACKAGE_NAME: airlift
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
           python-version: ${{ env.BUILD_PYTHON_VERSION }}
 
       - name: Install setuptools
-        run: pip install setuptools==69.0.0
+        run: pip install setuptools==80.9.0
 
       - name: Set up Poetry ${{ env.BUILD_POETRY_VERSION }}
         uses: abatilo/actions-poetry@v2.0.0
