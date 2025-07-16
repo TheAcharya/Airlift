@@ -99,7 +99,16 @@ class dropbox_client:
         except KeyError:
             logger.info("No refresh token found, starting OAuth flow...")
             try:
-                auth_flow = DropboxOAuth2FlowNoRedirect(app_key, use_pkce=True, token_access_type='offline')
+                # Use explicit scopes for better security and clarity
+                # files.content.write - for uploading files
+                # files.content.read - for reading files (if needed)
+                # sharing.write - for creating shared links
+                auth_flow = DropboxOAuth2FlowNoRedirect(
+                    app_key, 
+                    use_pkce=True, 
+                    token_access_type='offline',
+                    scope=['files.content.write', 'sharing.write']
+                )
                 authorize_url = auth_flow.start()
                 
                 logger.warning("1. Go to: " + authorize_url)
@@ -190,10 +199,14 @@ def change_refresh_access_token(access_token):
         
         # Create OAuth flow (SSL is handled at environment level)
         logger.info("Creating DropboxOAuth2FlowNoRedirect...")
+        # Use explicit scopes for better security and clarity
+        # files.content.write - for uploading files
+        # sharing.write - for creating shared links
         auth_flow = DropboxOAuth2FlowNoRedirect(
             app_key, 
             use_pkce=True, 
-            token_access_type='offline'
+            token_access_type='offline',
+            scope=['files.content.write', 'sharing.write']
         )
         logger.info("OAuth flow created successfully")
 
