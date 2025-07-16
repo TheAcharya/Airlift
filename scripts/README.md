@@ -9,15 +9,15 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 - Fully Ephemeral: Everything is contained in project directories
 - No System Installation: Uses system Python with virtual environments
 - GitHub Actions Compatible: Same approach as CI/CD pipeline
-- Cross-Platform: Works on macOS (Apple Silicon)
+- Cross-Platform: Works on macOS
 - Clean Output: Professional logging without emojis
 - Flexible Updates: Multiple dependency management options
 
 ## Prerequisites
 
 ### System Requirements
-- macOS (Apple Silicon)
-- System Python 3.8+ installed (matches GitHub Actions workflow)
+- macOS
+- System Python 3.9+ installed (matches GitHub Actions workflow)
 - Basic tools: `curl`, `xar`, `cpio` (usually pre-installed on macOS)
 
 ## Quick Start
@@ -30,8 +30,8 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 
 This will:
 1. Create a virtual environment in `.build/python/`
-2. Install setuptools 69.0.0 (matches GitHub Actions)
-3. Install Poetry 1.7.1 in the virtual environment
+2. Install setuptools 80.9.0 (matches GitHub Actions)
+3. Install Poetry 2.1.3 in the virtual environment
 4. Install project dependencies via Poetry
 5. Install PyInstaller for building
 6. Build the application
@@ -155,24 +155,24 @@ The script is designed to work seamlessly with GitHub Actions and uses identical
 ```
 
 **Version Alignment with GitHub Actions:**
-- Python: 3.8+ (matches `BUILD_PYTHON_VERSION: 3.8`)
-- Poetry: 1.7.1 (matches `BUILD_POETRY_VERSION: 1.7.1`)
-- Setuptools: 69.0.0 (matches `setuptools==69.0.0`)
+- Python: 3.9+ (matches `BUILD_PYTHON_VERSION: 3.9`)
+- Poetry: 2.1.3 (matches `BUILD_POETRY_VERSION: 2.1.3`)
+- Setuptools: 80.9.0 (matches `setuptools==80.9.0`)
 - PyInstaller: Latest version (matches CI workflow)
 
 ## Environment Details
 
 ### Virtual Environment
 - Location: `.build/python/`
-- Python: Uses system Python 3.8+ with `python3 -m venv`
-- Setuptools: 69.0.0 (installed before Poetry)
-- Poetry: 1.7.1 (installed via pip in the virtual environment)
+- Python: Uses system Python 3.9+ with `python3 -m venv`
+- Setuptools: 80.9.0 (installed before Poetry)
+- Poetry: 2.1.3 (installed via pip in the virtual environment)
 - Dependencies: Managed by Poetry in `.build/venv/`
 
 ### Build Output
 - Binary: `test-build/airlift`
 - Size: ~8.3MB (typical)
-- Architecture: Native to your system (Intel/Apple Silicon)
+- Architecture: Native to your system
 - Dependencies: Self-contained (no external dependencies)
 
 ### PyInstaller Configuration
@@ -191,25 +191,43 @@ The script is designed to work seamlessly with GitHub Actions and uses identical
    brew install python
    ```
 
-2. "Missing required tools"
+2. "Python 3.9 or higher is required"
+   ```bash
+   # Check current Python version
+   python3 --version
+   
+   # Install Python 3.9+ if needed
+   brew install python@3.9
+   ```
+
+3. "Missing required tools"
    ```bash
    # Install curl if missing
    brew install curl
    # xar and cpio are usually pre-installed on macOS
    ```
 
-3. Build fails with PyInstaller errors
+4. Build fails with PyInstaller errors
    ```bash
    # Clean and rebuild
    ./scripts/local-test-build.sh --clean
    ./scripts/local-test-build.sh
    ```
 
-4. Permission denied
+5. Permission denied
    ```bash
    # Make script executable
    chmod +x scripts/local-test-build.sh
    ```
+
+6. SSL Warning during build
+   ```
+   urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, 
+   currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'
+   ```
+   This warning is normal on macOS when building locally due to different SSL library versions 
+   between the build environment and system. It doesn't affect the functionality of the built binary 
+   and can be safely ignored.
 
 ### Debug Mode
 
@@ -272,9 +290,9 @@ The script uses these configuration variables (aligned with GitHub Actions):
 ```bash
 BUILD_DIR=".build"           # Ephemeral build environment
 TEST_BUILD_DIR="test-build"  # Build output directory
-PYTHON_VERSION="3.8"         # Target Python version (matches CI)
-POETRY_VERSION="1.7.1"       # Poetry version (matches CI)
-SETUPTOOLS_VERSION="69.0.0"  # Setuptools version (matches CI)
+PYTHON_VERSION="3.9"         # Target Python version (matches CI)
+POETRY_VERSION="2.1.3"       # Poetry version (matches CI)
+SETUPTOOLS_VERSION="80.9.0"  # Setuptools version (matches CI)
 ```
 
 ### Customization
@@ -310,9 +328,9 @@ If you encounter issues with the build script:
 
 This build script is designed to produce identical builds to the GitHub Actions workflow:
 
-- **Python**: 3.8+ (matches `BUILD_PYTHON_VERSION: 3.8`)
-- **Poetry**: 1.7.1 (matches `BUILD_POETRY_VERSION: 1.7.1`)
-- **Setuptools**: 69.0.0 (matches `setuptools==69.0.0`)
+- **Python**: 3.9+ (matches `BUILD_PYTHON_VERSION: 3.9`)
+- **Poetry**: 2.1.3 (matches `BUILD_POETRY_VERSION: 2.1.3`)
+- **Setuptools**: 80.9.0 (matches `setuptools==80.9.0`)
 - **PyInstaller**: Latest version (matches CI workflow)
 
 This ensures that local development builds are identical to production releases, eliminating any potential issues caused by version mismatches.
