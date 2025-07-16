@@ -36,12 +36,15 @@ class dropbox_client:
         _configure_ssl_environment()
         
         try:
-            creds = self._get_tokens(access_token)
-            # Create Dropbox client (SSL is handled at requests level)
-            self.dbx = dropbox.Dropbox(
-                oauth2_refresh_token=creds[1],
-                app_key=creds[0]
-            )
+            try:
+                creds = self._get_tokens(access_token)
+                self.dbx = dropbox.Dropbox(
+                    oauth2_refresh_token=creds[1],
+                    app_key=creds[0]
+                )
+                logger.info("Created a Dropbox Client")
+            except:
+                raise CriticalError('Failed to create the Dropbox client')
             
             # Set up folder structure
             if md:
@@ -66,9 +69,7 @@ class dropbox_client:
                 logger.warning(f"The folder {self.sub_folder} already exists.")
                 
         except Exception as e:
-            logger.error(f"Dropbox client creation failed: {type(e).__name__}: {str(e)}")
-            logger.error(f"Full error details: {e}")
-            raise CriticalError(f'Failed to create the Dropbox client: {str(e)}')
+            raise CriticalError("Error during Dropbox client creation",e)
 
 
     def _get_tokens(self,access_token):
@@ -87,22 +88,14 @@ class dropbox_client:
         
         try:
             app_key = creds['app_key']
-        except KeyError:
-            logger.error("app_key not found in credentials JSON")
+        except:
+            logger.warning("app_key not present in json file")
             raise CriticalError("app_key not present in the json file, please check!")
-        except Exception as e:
-            logger.error(f"Error extracting app_key: {type(e).__name__}: {str(e)}")
-            raise CriticalError(f"Error extracting app_key: {str(e)}")
         
         try:
             refresh_token = creds['refresh_token']
-        except KeyError:
-            logger.info("No refresh token found, starting OAuth flow...")
+        except:
             try:
-                # Use explicit scopes for better security and clarity
-                # files.content.write - for uploading files
-                # files.content.read - for reading files (if needed)
-                # sharing.write - for creating shared links
                 auth_flow = DropboxOAuth2FlowNoRedirect(
                     app_key, 
                     use_pkce=True, 
@@ -110,31 +103,25 @@ class dropbox_client:
                     scope=['files.content.write', 'sharing.write']
                 )
                 authorize_url = auth_flow.start()
-                
-                logger.warning("1. Go to: " + authorize_url)
-                logger.warning("2. Click \"Allow\" (you might have to log in first)")
-                logger.warning("3. Copy the authorization code")
+                print("1. Go to: " + authorize_url)
+                print("2. Click \"Allow\" (you might have to log in first).")
+                print("3. Copy the authorization code.")
                 auth_code = input("Enter the authorization code here: ").strip()
-                
                 try:
                     oauth_result = auth_flow.finish(auth_code)
                     refresh_token = oauth_result.refresh_token
-                except Exception as oauth_error:
-                    logger.error(f"OAuth flow finish failed: {type(oauth_error).__name__}: {str(oauth_error)}")
-                    raise CriticalError(f"OAuth flow failed: {str(oauth_error)}")
-                    
+                except Exception as e:
+                    logger.warning("error during retreival of refresh token")
+                    raise CriticalError("error during retreival of refresh token")
                 # Save the refresh token to file
                 with open(access_token,'r') as file:
                     creds_data = json.load(file)
-                
                 creds_data['refresh_token'] = refresh_token
-
                 with open(access_token,'w') as file:
                     json.dump(creds_data,file,indent=2)
-                     
-            except Exception as flow_error:
-                logger.error(f"OAuth flow creation failed: {type(flow_error).__name__}: {str(flow_error)}")
-                raise CriticalError(f"Failed to create OAuth flow: {str(flow_error)}")
+            except Exception as e:
+                logger.warning("error during retreival of refresh token")
+                raise CriticalError("error during retreival of refresh token")
         
         return (app_key,refresh_token)
         
@@ -185,20 +172,14 @@ def change_refresh_access_token(access_token):
         
     try:
         app_key = creds['app_key']
-    except KeyError:
-        logger.error("app_key not found in credentials JSON")
+    except:
+        logger.warning("app_key not present in json file")
         raise CriticalError("app_key not present in the json file, please check!")
-    except Exception as e:
-        logger.error(f"Error extracting app_key: {type(e).__name__}: {str(e)}")
-        raise CriticalError(f"Error extracting app_key: {str(e)}")
     
     try:
-        
         # Configure SSL environment before creating OAuth flow
         _configure_ssl_environment()
-        
         # Create OAuth flow (SSL is handled at environment level)
-        logger.info("Creating DropboxOAuth2FlowNoRedirect...")
         # Use explicit scopes for better security and clarity
         # files.content.write - for uploading files
         # sharing.write - for creating shared links
@@ -208,41 +189,23 @@ def change_refresh_access_token(access_token):
             token_access_type='offline',
             scope=['files.content.write', 'sharing.write']
         )
-        logger.info("OAuth flow created successfully")
-
-        logger.info("Starting OAuth authorization...")
         authorize_url = auth_flow.start()
-        logger.info(f"Authorization URL generated successfully: {authorize_url[:50]}...")
-        
         print("STEP 1. Go to: " + authorize_url)
         print("STEP 2. Click \"Allow\" (you might have to log in first).")
         print("STEP 3. Copy the authorization code.")
         auth_code = input("Enter the authorization code here: ").strip()
-        
-        logger.info("Attempting to finish OAuth flow with authorization code...")
         try:
             oauth_result = auth_flow.finish(auth_code)
-            logger.info("OAuth flow finished successfully")
             refresh_token = oauth_result.refresh_token
-            logger.info("Successfully obtained refresh token")
-            
-            logger.info("Saving refresh token to file...")
             with open(access_token,'r') as file:
                 creds_data = json.load(file)
-            
             creds_data['refresh_token'] = refresh_token
-
             with open(access_token,'w') as file:
                 json.dump(creds_data,file,indent=2)
-            
             logger.info("Refresh Token updated in the json file!")
-            
-        except Exception as oauth_error:
-            logger.error(f"OAuth flow finish failed: {type(oauth_error).__name__}: {str(oauth_error)}")
-            logger.error(f"Full OAuth error details: {oauth_error}")
-            raise CriticalError(f"OAuth flow failed: {str(oauth_error)}")
-            
-    except Exception as flow_error:
-        logger.error(f"OAuth flow creation failed: {type(flow_error).__name__}: {str(flow_error)}")
-        logger.error(f"Full flow error details: {flow_error}")
-        raise CriticalError(f"Failed to create OAuth flow: {str(flow_error)}")
+        except Exception as e:
+            logger.warning("error during retreival of refresh token")
+            raise CriticalError("error during retreival of refresh token")
+    except Exception as e:
+        logger.warning("error during retreival of refresh token")
+        raise CriticalError("error during retreival of refresh token")
