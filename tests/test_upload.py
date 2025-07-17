@@ -1,4 +1,5 @@
 import pytest
+import warnings
 from dataclasses import dataclass
 import pathlib
 from pathlib import Path
@@ -11,6 +12,11 @@ from airlift.json_data import json_read
 from airlift.airtable_client import new_client
 from airlift.dropbox_client import dropbox_client,change_refresh_access_token
 from icecream import ic
+
+# Suppress deprecation warnings from external libraries
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="dropbox")
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="pyairtable")
+warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
 
 @dataclass
 class AirliftArgs:
