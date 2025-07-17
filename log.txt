@@ -1,0 +1,257 @@
+2025-07-16 16:51:21,629 [INFO    ] Airlift version 1.1.4
+2025-07-16 16:51:21,629 [ERROR   ] Access token file not found: /mnt/d/projects/large_projects/freelancing/TheAcharya/airlift-project/testing/Airlift/dropbox_token.json
+2025-07-16 16:51:21,629 [ERROR   ] Error at division
+Traceback (most recent call last):
+  File "/app/airlift/dropbox_client.py", line 77, in _get_tokens
+    with open(access_token,'r') as file:
+         ^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/mnt/d/projects/large_projects/freelancing/TheAcharya/airlift-project/testing/Airlift/dropbox_token.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/airlift/dropbox_client.py", line 40, in __init__
+    creds = self._get_tokens(access_token)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/dropbox_client.py", line 81, in _get_tokens
+    raise CriticalError(f"Access token file not found: {access_token}")
+airlift.utils_exceptions.CriticalError: Access token file not found: /mnt/d/projects/large_projects/freelancing/TheAcharya/airlift-project/testing/Airlift/dropbox_token.json
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/airlift/dropbox_client.py", line 47, in __init__
+    raise CriticalError('Failed to create the Dropbox client')
+airlift.utils_exceptions.CriticalError: Failed to create the Dropbox client
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/airlift/cli.py", line 38, in cli
+    dbx = dropbox_client(args.dropbox_token,args.md)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/dropbox_client.py", line 72, in __init__
+    raise CriticalError("Error during Dropbox client creation",e)
+airlift.utils_exceptions.CriticalError: ('Error during Dropbox client creation', CriticalError('Failed to create the Dropbox client'))
+2025-07-16 16:59:41,875 [INFO    ] Airlift version 1.1.4
+2025-07-16 16:59:41,875 [INFO    ] Created a Dropbox Client
+2025-07-16 16:59:43,430 [WARNING ] The folder Marker Data already exists.
+2025-07-16 16:59:43,961 [DEBUG   ] Airtable Client Created
+2025-07-16 16:59:43,961 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-16 16:59:43,961 [DEBUG   ] error : [Errno 2] No such file or directory: 'big_cats.csv'
+2025-07-16 16:59:43,961 [ERROR   ] Error at division
+Traceback (most recent call last):
+  File "/app/airlift/csv_data.py", line 18, in csv_read
+    with open(file_path,"r",encoding="utf-8-sig") as csv_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'big_cats.csv'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/airlift/cli.py", line 51, in cli
+    data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/csv_data.py", line 22, in csv_read
+    raise CriticalError(f"File {file_path} not found") from e
+airlift.utils_exceptions.CriticalError: File big_cats.csv not found
+2025-07-16 16:59:59,548 [INFO    ] Airlift version 1.1.4
+2025-07-16 16:59:59,548 [INFO    ] Created a Dropbox Client
+2025-07-16 17:00:00,242 [WARNING ] The folder Marker Data already exists.
+2025-07-16 17:00:00,766 [DEBUG   ] Airtable Client Created
+2025-07-16 17:00:00,767 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-16 17:00:00,768 [INFO    ] Validation done!
+2025-07-16 17:00:01,824 [WARNING ] Error retrieving tables: ('401 Client Error: Unauthorized for url: https://api.airtable.com/v0/meta/bases/app67rwhB6dfVbSrC/tables?include=visibleFieldIds', "{'type': 'UNAUTHORIZED', 'message': 'Invalid authentication token'}")
+2025-07-16 17:00:01,824 [ERROR   ] Error at division
+Traceback (most recent call last):
+  File "/app/airlift/airtable_client.py", line 85, in _retreive_table
+    schema = self.base.schema()
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/utils.py", line 240, in _inner
+    setattr(self, attr, func(self, **kwargs))
+                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/base.py", line 212, in schema
+    data = self.api.get(url, params=params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/api.py", line 302, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/api.py", line 295, in request
+    return self._process_response(response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/api.py", line 337, in _process_response
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/api.py", line 327, in _process_response
+    response.raise_for_status()
+  File "/usr/local/lib/python3.11/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: ('401 Client Error: Unauthorized for url: https://api.airtable.com/v0/meta/bases/app67rwhB6dfVbSrC/tables?include=visibleFieldIds', "{'type': 'UNAUTHORIZED', 'message': 'Invalid authentication token'}")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/airlift/cli.py", line 63, in cli
+    data = airtable_client.create_uploadable_data(data=data,args=args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/airtable_client.py", line 114, in create_uploadable_data
+    data = self._missing_fields_check(data, args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/airtable_client.py", line 56, in _missing_fields_check
+    tables = self._retreive_table()
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/airtable_client.py", line 89, in _retreive_table
+    raise AirtableError(f"Error retrieving tables: {str(e)}") from e
+airlift.utils_exceptions.AirtableError: Error retrieving tables: ('401 Client Error: Unauthorized for url: https://api.airtable.com/v0/meta/bases/app67rwhB6dfVbSrC/tables?include=visibleFieldIds', "{'type': 'UNAUTHORIZED', 'message': 'Invalid authentication token'}")
+2025-07-16 17:03:05,053 [INFO    ] Airlift version 1.1.4
+2025-07-16 17:03:05,054 [INFO    ] Created a Dropbox Client
+2025-07-16 17:03:05,779 [WARNING ] The folder Marker Data already exists.
+2025-07-16 17:03:06,273 [DEBUG   ] Airtable Client Created
+2025-07-16 17:03:06,274 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-16 17:03:06,275 [INFO    ] Validation done!
+2025-07-16 17:03:07,378 [WARNING ] Error retrieving tables: ('401 Client Error: Unauthorized for url: https://api.airtable.com/v0/meta/bases/app67rwhB6dfVbSrC/tables?include=visibleFieldIds', "{'type': 'UNAUTHORIZED', 'message': 'Invalid authentication token'}")
+2025-07-16 17:03:07,378 [ERROR   ] Error at division
+Traceback (most recent call last):
+  File "/app/airlift/airtable_client.py", line 85, in _retreive_table
+    schema = self.base.schema()
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/utils.py", line 240, in _inner
+    setattr(self, attr, func(self, **kwargs))
+                        ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/base.py", line 212, in schema
+    data = self.api.get(url, params=params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/api.py", line 302, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/api.py", line 295, in request
+    return self._process_response(response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/api.py", line 337, in _process_response
+    raise exc
+  File "/usr/local/lib/python3.11/site-packages/pyairtable/api/api.py", line 327, in _process_response
+    response.raise_for_status()
+  File "/usr/local/lib/python3.11/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: ('401 Client Error: Unauthorized for url: https://api.airtable.com/v0/meta/bases/app67rwhB6dfVbSrC/tables?include=visibleFieldIds', "{'type': 'UNAUTHORIZED', 'message': 'Invalid authentication token'}")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/airlift/cli.py", line 63, in cli
+    data = airtable_client.create_uploadable_data(data=data,args=args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/airtable_client.py", line 114, in create_uploadable_data
+    data = self._missing_fields_check(data, args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/airtable_client.py", line 56, in _missing_fields_check
+    tables = self._retreive_table()
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/airtable_client.py", line 89, in _retreive_table
+    raise AirtableError(f"Error retrieving tables: {str(e)}") from e
+airlift.utils_exceptions.AirtableError: Error retrieving tables: ('401 Client Error: Unauthorized for url: https://api.airtable.com/v0/meta/bases/app67rwhB6dfVbSrC/tables?include=visibleFieldIds', "{'type': 'UNAUTHORIZED', 'message': 'Invalid authentication token'}")
+2025-07-17 03:26:06,915 [INFO    ] Airlift version 1.1.4
+2025-07-17 03:26:06,915 [INFO    ] Created a Dropbox Client
+2025-07-17 03:26:07,777 [WARNING ] The folder Marker Data already exists.
+2025-07-17 03:26:08,322 [DEBUG   ] Airtable Client Created
+2025-07-17 03:26:08,322 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-17 03:26:08,323 [INFO    ] Validation done!
+2025-07-17 03:26:09,514 [WARNING ] Column Location would be skipped!
+2025-07-17 03:26:09,514 [WARNING ] Column Animal Name would be skipped!
+2025-07-17 03:26:09,514 [WARNING ] Column Cat ID would be skipped!
+2025-07-17 03:26:09,514 [WARNING ] Column Image Filename would be skipped!
+2025-07-17 03:26:09,514 [INFO    ] Creating airtable compatible data! Please wait
+2025-07-17 03:26:09,514 [INFO    ] Uploding data now!
+2025-07-17 03:26:11,487 [INFO    ] Done!
+2025-07-17 03:32:55,753 [INFO    ] Airlift version 1.1.4
+2025-07-17 03:32:55,753 [INFO    ] Created a Dropbox Client
+2025-07-17 03:32:57,414 [DEBUG   ] Airtable Client Created
+2025-07-17 03:32:57,414 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-17 03:32:57,415 [INFO    ] Validation done!
+2025-07-17 03:32:58,590 [WARNING ] Column Cat ID would be skipped!
+2025-07-17 03:32:58,590 [WARNING ] Column Location would be skipped!
+2025-07-17 03:32:58,590 [WARNING ] Column Image Filename would be skipped!
+2025-07-17 03:32:58,590 [WARNING ] Column Animal Name would be skipped!
+2025-07-17 03:32:58,590 [INFO    ] Creating airtable compatible data! Please wait
+2025-07-17 03:32:58,590 [INFO    ] Uploding data now!
+2025-07-17 03:33:00,510 [INFO    ] Done!
+2025-07-17 03:35:24,189 [INFO    ] Airlift version 1.1.4
+2025-07-17 03:35:24,189 [INFO    ] Created a Dropbox Client
+2025-07-17 03:35:25,845 [WARNING ] The folder Marker Data already exists.
+2025-07-17 03:35:26,362 [DEBUG   ] Airtable Client Created
+2025-07-17 03:35:26,363 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-17 03:35:26,363 [INFO    ] Validation done!
+2025-07-17 03:35:27,905 [INFO    ] Created new column Image Filename in Airtable
+2025-07-17 03:35:28,269 [INFO    ] Created new column Cat ID in Airtable
+2025-07-17 03:35:28,634 [INFO    ] Created new column Animal Name in Airtable
+2025-07-17 03:35:29,008 [INFO    ] Created new column Location in Airtable
+2025-07-17 03:35:29,008 [INFO    ] Creating airtable compatible data! Please wait
+2025-07-17 03:35:29,008 [INFO    ] Uploding data now!
+2025-07-17 03:35:29,013 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+2025-07-17 03:35:29,013 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+2025-07-17 03:35:29,014 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+2025-07-17 03:35:29,014 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+ Could not be found!
+2025-07-17 03:35:29,016 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+2025-07-17 03:35:30,442 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+2025-07-17 03:35:30,537 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+2025-07-17 03:35:31,037 [INFO    ] Done!
+2025-07-17 03:37:08,133 [INFO    ] Airlift version 1.1.4
+2025-07-17 03:37:08,133 [INFO    ] Created a Dropbox Client
+2025-07-17 03:37:09,045 [WARNING ] The folder Marker Data already exists.
+2025-07-17 03:37:09,642 [DEBUG   ] Airtable Client Created
+2025-07-17 03:37:09,643 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-17 03:37:09,643 [DEBUG   ] error : [Errno 2] No such file or directory: 'big_cats.csv'
+2025-07-17 03:37:09,643 [ERROR   ] Error at division
+Traceback (most recent call last):
+  File "/app/airlift/csv_data.py", line 18, in csv_read
+    with open(file_path,"r",encoding="utf-8-sig") as csv_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'big_cats.csv'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/app/airlift/cli.py", line 51, in cli
+    data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/airlift/csv_data.py", line 22, in csv_read
+    raise CriticalError(f"File {file_path} not found") from e
+airlift.utils_exceptions.CriticalError: File big_cats.csv not found
+2025-07-17 03:37:28,163 [INFO    ] Airlift version 1.1.4
+2025-07-17 03:37:28,163 [INFO    ] Created a Dropbox Client
+2025-07-17 03:37:28,827 [WARNING ] The folder Marker Data already exists.
+2025-07-17 03:37:29,361 [DEBUG   ] Airtable Client Created
+2025-07-17 03:37:29,361 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-17 03:37:29,361 [INFO    ] Validation done!
+2025-07-17 03:37:30,919 [INFO    ] Created new column Image Filename in Airtable
+2025-07-17 03:37:31,321 [INFO    ] Created new column Cat ID in Airtable
+2025-07-17 03:37:31,671 [INFO    ] Created new column Animal Name in Airtable
+2025-07-17 03:37:32,035 [INFO    ] Created new column Location in Airtable
+2025-07-17 03:37:32,035 [INFO    ] Creating airtable compatible data! Please wait
+2025-07-17 03:37:32,035 [INFO    ] Uploding data now!
+2025-07-17 03:37:32,040 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+2025-07-17 03:37:32,040 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+2025-07-17 03:37:32,042 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+2025-07-17 03:37:32,042 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+2025-07-17 03:37:32,043 [ERROR   ] Error uploading : IsADirectoryError: [Errno 21] Is a directory: 'Demo/'
+ Could not be found!
+ Could not be found!
+2025-07-17 03:41:59,750 [INFO    ] Airlift version 1.1.4
+2025-07-17 03:41:59,751 [INFO    ] Created a Dropbox Client
+2025-07-17 03:42:00,433 [WARNING ] The folder Marker Data already exists.
+2025-07-17 03:42:00,951 [DEBUG   ] Airtable Client Created
+2025-07-17 03:42:00,951 [INFO    ] Validating big_cats.csv and Airtable Schema
+2025-07-17 03:42:00,952 [INFO    ] Validation done!
+2025-07-17 03:42:02,960 [INFO    ] All the columns are verified and present in both the file and Airtable!
+2025-07-17 03:42:02,960 [INFO    ] Creating airtable compatible data! Please wait
+2025-07-17 03:42:02,960 [INFO    ] Uploding data now!
+2025-07-17 03:42:08,694 [INFO    ] Done!

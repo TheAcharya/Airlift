@@ -96,16 +96,16 @@ The project follows a modular architecture with clear separation of concerns:
 ### Dependencies
 
 #### Core Dependencies
-- `pyairtable` - Airtable API client
+- `pyairtable` 3.1.1 - Airtable API client with latest 3.x APIs
 - `requests` - HTTP client for API calls
-- `dropbox` - Dropbox API client
+- `dropbox` 12.0.2 - Dropbox API client with latest APIs and explicit OAuth2 scopes
 - `tqdm` - Progress bar implementation
 - `icecream` - Debug logging utility
 
 #### Development Dependencies
-- `poetry` - Dependency management and packaging
-- Python 3.8+ compatibility (matches GitHub Actions workflow)
-- `setuptools` - Package installation utilities
+- `poetry` 2.1.3 - Dependency management and packaging
+- Python 3.9+ compatibility (matches GitHub Actions workflow)
+- `setuptools` 80.9.0 - Package installation utilities
 
 ### Build and Distribution
 
@@ -132,14 +132,14 @@ The project includes a comprehensive ephemeral build system (`scripts/local-test
 - No system-level installations or modifications
 - Uses system Python with virtual environments
 - GitHub Actions compatible approach
-- Cross-platform support (macOS Intel and Apple Silicon)
+- Cross-platform support
 - Professional logging without emojis
 - Flexible dependency management options
 
 #### Build Process
-1. Creates virtual environment using system Python 3.8+
-2. Installs setuptools 69.0.0 (matches GitHub Actions)
-3. Installs Poetry 1.7.1 in the virtual environment
+1. Creates virtual environment using system Python 3.9+
+2. Installs setuptools 80.9.0 (matches GitHub Actions)
+3. Installs Poetry 2.1.3 in the virtual environment
 4. Installs project dependencies via Poetry
 5. Installs PyInstaller separately (not in pyproject.toml)
 6. Builds application using PyInstaller
@@ -180,10 +180,11 @@ Airlift/
 
 #### CI/CD Integration
 The build script is designed to work seamlessly with GitHub Actions and uses identical versions:
-- Python 3.8+ (matches BUILD_PYTHON_VERSION: 3.8)
-- Poetry 1.7.1 (matches BUILD_POETRY_VERSION: 1.7.1)
-- Setuptools 69.0.0 (matches setuptools==69.0.0)
+- Python 3.9+ (matches BUILD_PYTHON_VERSION: 3.9)
+- Poetry 2.1.3 (matches BUILD_POETRY_VERSION: 2.1.3)
+- Setuptools 80.9.0 (matches setuptools==80.9.0)
 - PyInstaller latest version (matches CI workflow)
+- poetry-plugin-export for requirements.txt generation
 - No PyInstaller in pyproject.toml (installed separately)
 - Same approach as CI/CD pipeline
 - Completely ephemeral and safe
@@ -192,25 +193,26 @@ The build script is designed to work seamlessly with GitHub Actions and uses ide
 ## API Integration Patterns
 
 ### Airtable API
-- RESTful API communication
+- RESTful API communication using pyairtable 3.x
 - Bearer token authentication
 - JSON payload formatting
 - Rate limiting consideration
 - Error response handling
+- Automatic field creation with pyairtable 3.x APIs
 
 ### Dropbox API
-- OAuth2 authentication flow
+- OAuth2 authentication flow with explicit scopes
 - Refresh token management
 - File upload and sharing
 - URL generation for attachments
 - Folder structure management
-- Future: Migration to latest Dropbox SDK for enhanced features and security
+- Latest Dropbox SDK 12.x with enhanced security features
 
 ## Security Considerations
 
 ### Authentication
 - Secure token storage in JSON files
-- OAuth2 flow for Dropbox integration
+- OAuth2 flow for Dropbox integration with explicit scopes
 - Personal access token for Airtable
 - No hardcoded credentials
 
@@ -255,14 +257,14 @@ The build script is designed to work seamlessly with GitHub Actions and uses ide
 - Enhanced error recovery mechanisms
 - Performance optimizations
 - Extended Airtable field type support
-- Update to latest Dropbox SDK for improved API compatibility and security
+- Continued Dropbox SDK updates for improved API compatibility
 
 ### Architecture Evolution
 - Plugin system for custom data processors
 - Configuration file support
 - Web interface for non-technical users
 - API server mode for integration
-- Modernized Dropbox integration with latest SDK features
+- Modernized integration patterns with latest SDK features
 
 ## Integration Guidelines
 

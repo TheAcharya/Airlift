@@ -16,9 +16,9 @@ NC='\033[0m' # No Color
 # Configuration
 BUILD_DIR=".build"
 TEST_BUILD_DIR="test-build"
-PYTHON_VERSION="3.8"
-POETRY_VERSION="1.7.1"
-SETUPTOOLS_VERSION="69.0.0"
+PYTHON_VERSION="3.9"
+POETRY_VERSION="2.1.3"
+SETUPTOOLS_VERSION="80.9.0"
 PROJECT_NAME="airlift"
 
 # Function to print colored output
@@ -95,13 +95,13 @@ setup_python() {
     local system_python_version=$(python3 --version 2>&1 | cut -d' ' -f2)
     print_status "Using system Python: $system_python_version"
     
-    # Check if Python version is compatible (3.8 or higher)
+    # Check if Python version is compatible (3.9 or higher)
     local major_version=$(echo "$system_python_version" | cut -d'.' -f1)
     local minor_version=$(echo "$system_python_version" | cut -d'.' -f2)
     
-    if [ "$major_version" -lt 3 ] || ([ "$major_version" -eq 3 ] && [ "$minor_version" -lt 8 ]); then
-        print_error "Python 3.8 or higher is required. Current version: $system_python_version"
-        print_error "Please upgrade Python to version 3.8 or higher."
+    if [ "$major_version" -lt 3 ] || ([ "$major_version" -eq 3 ] && [ "$minor_version" -lt 9 ]); then
+        print_error "Python 3.9 or higher is required. Current version: $system_python_version"
+        print_error "Please upgrade Python to version 3.9 or higher."
         exit 1
     fi
     
@@ -121,9 +121,30 @@ setup_python() {
     fi
 }
 
+# Function to update pip to latest version
+update_pip() {
+    local pip_bin="$BUILD_DIR/python/bin/pip"
+    local python_bin="$BUILD_DIR/python/bin/python3"
+    
+    print_status "Updating pip to latest version..."
+    
+    # Update pip using python -m pip to ensure we get the latest version
+    if ! "$python_bin" -m pip install --upgrade pip; then
+        print_error "pip update failed"
+        exit 1
+    fi
+    
+    # Verify the update
+    local pip_version=$("$pip_bin" --version 2>&1 | cut -d' ' -f2)
+    print_success "pip updated to version $pip_version"
+}
+
 # Function to install setuptools
 install_setuptools() {
     local pip_bin="$BUILD_DIR/python/bin/pip"
+    
+    # First update pip to latest version
+    update_pip
     
     print_status "Installing setuptools $SETUPTOOLS_VERSION..."
     

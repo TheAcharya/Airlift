@@ -1,0 +1,57 @@
+name: test_upload
+on:
+  workflow_dispatch:
+  
+  schedule:
+    - cron: '0 0 * * 6' # Runs at 8 AM Singapore time (00:00 UTC) every Saturday
+      
+env:
+  BUILD_PYTHON_VERSION: 3.11
+  BUILD_POETRY_VERSION: 1.7.1
+  PACKAGE_NAME: airlift
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.BUILD_PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.BUILD_PYTHON_VERSION }}
+
+      - name: Install setuptools
+        run: pip install setuptools==69.0.0
+
+      - name: Set up Poetry ${{ env.BUILD_POETRY_VERSION }}
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ env.BUILD_POETRY_VERSION }}
+      
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v3
+        with: 
+          path: |
+            .venv
+            ~/.cache/pypoetry
+          key: ${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-
+              
+      - name: Install the neccessary libraries to run airlift
+        run: |
+          poetry config virtualenvs.create false
+          poetry install --no-root
+
+      - name: Run tests
+        env:
+          AIRTABLE_TOKEN: ${{secrets.AIRTABLE_TOKEN}}
+          AIRTABLE_BASE: ${{secrets.AIRTABLE_BASE}}
+          AIRTABLE_TABLE: ${{secrets.AIRTABLE_TABLE}}
+          DROPBOX_APP_KEY: ${{secrets.DROPBOX_APP_KEY}}
+          DROPBOX_REFRESH_TOKEN: ${{secrets.DROPBOX_REFRESH_TOKEN}}
+          
+        run: pytest -v -s
+        

@@ -1,15 +1,19 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+import os
+import certifi
 
 block_cipher = None
 
 spec_root = os.path.abspath(SPECPATH)
 
+# Get the path to certifi's certificate file
+certifi_cert_path = certifi.where()
+
 a = Analysis(['airlift/__main__.py'],
              pathex=[spec_root],
              binaries=[],
-             datas=[],
-             hiddenimports=[],
+             datas=[(certifi_cert_path, '.')],  # Include certifi certificates
+             hiddenimports=['certifi'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
