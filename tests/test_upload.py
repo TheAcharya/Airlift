@@ -17,6 +17,8 @@ from icecream import ic
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="dropbox")
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="pyairtable")
 warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="pydantic")
+warnings.filterwarnings("ignore", message=".*PydanticDeprecatedSince211.*")
 
 @dataclass
 class AirliftArgs:
