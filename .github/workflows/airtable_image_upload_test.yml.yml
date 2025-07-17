@@ -1,4 +1,4 @@
-name: test_upload
+name: airtable_image_upload_test
 on:
   workflow_dispatch:
   

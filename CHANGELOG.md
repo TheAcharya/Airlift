@@ -6,13 +6,14 @@
 - TBD
 
 **🔨 Improvements:**
-- Upgraded from Python 3.8 to Python 3.9 for enhanced performance and security
+- Upgraded from Python 3.8 to Python 3.9
 - Updated to the latest `pyairtable` library
 - Updated to the latest Dropbox API (#42)
 - Updated to latest security patches across all dependencies (#41)
 - Improved code maintainability and modern Python practices
 - Improved build reproducibility across environments
 - Enhanced ephemeral build `local-test-build.sh` reliability
+- Added Airtable Upload Test
 
 ---
 
