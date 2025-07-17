@@ -2,12 +2,13 @@
 Pytest configuration and fixtures for Airlift tests.
 """
 
-import os
 import json
+import os
 import tempfile
-import pytest
 import warnings
 from pathlib import Path
+
+import pytest
 from dotenv import load_dotenv
 
 # Suppress all warnings at the earliest possible point

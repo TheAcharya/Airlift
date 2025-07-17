@@ -1,17 +1,18 @@
-import pytest
+import pathlib
 import warnings
 from dataclasses import dataclass
-import pathlib
 from pathlib import Path
-from airlift.version import __version__
-from airlift.utils_exceptions import CriticalError,AirtableError 
-from airlift.cli_args import parse_args
-from airlift.csv_data import csv_read
-from airlift.airtable_upload import Upload
-from airlift.json_data import json_read
-from airlift.airtable_client import new_client
-from airlift.dropbox_client import dropbox_client,change_refresh_access_token
+
+import pytest
 from icecream import ic
+
+from airlift.airtable_client import new_client
+from airlift.airtable_upload import Upload
+from airlift.csv_data import csv_read
+from airlift.dropbox_client import change_refresh_access_token, dropbox_client
+from airlift.json_data import json_read
+from airlift.utils_exceptions import AirtableError, CriticalError
+from airlift.version import __version__
 
 # Suppress all warnings from external libraries
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -35,7 +36,7 @@ class AirliftArgs:
     base: str
     table: str
     dropbox_token: str
-    attachment_columns: list
+    attachment_columns: str
     workers: int
     verbose: bool
     md: bool
@@ -98,24 +99,24 @@ class TestAirlift:
 
         workers = args.workers if args.workers else 5
 
-        #creating drop box client
+        # Creating dropbox client
         if args.dropbox_token:
-            dbx = dropbox_client(args.dropbox_token,args.md)
+            dbx = dropbox_client(args.dropbox_token, args.md)
         else:
             dbx = None
 
-        #creating airtable client
-        airtable_client = new_client(token=args.token,base=args.base,table=args.table)
+        # Creating airtable client
+        airtable_client = new_client(token=args.token, base=args.base, table=args.table)
 
         print(f"Validating {args.csv_file} and Airtable Schema")
 
         suffix = pathlib.Path(args.csv_file).suffix
 
-        #converting data into airtable supported format
+        # Converting data into airtable supported format
         if "csv" in suffix:
-            data = csv_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+            data = csv_read(args.csv_file, args.fail_on_duplicate_csv_columns)
         elif "json" in suffix:
-            data = json_read(args.csv_file,args.fail_on_duplicate_csv_columns)
+            data = json_read(args.csv_file, args.fail_on_duplicate_csv_columns)
         else:
             raise CriticalError("File type not supported!")
 
@@ -124,11 +125,11 @@ class TestAirlift:
         if not data:
             raise CriticalError("File is empty!")
 
-        #validating data and creating an uploadable data
-        data = airtable_client.create_uploadable_data(data=data,args=args)
+        # Validating data and creating an uploadable data
+        data = airtable_client.create_uploadable_data(data=data, args=args)
     
-        #uploading the data
-        upload_instance = Upload(client=airtable_client, new_data=data,dbx=dbx,args=args)
+        # Uploading the data
+        upload_instance = Upload(client=airtable_client, new_data=data, dbx=dbx, args=args)
         upload_instance.upload_data()
 
         assert 1 == 1
