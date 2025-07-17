@@ -18,7 +18,7 @@ class new_client:
         self.base_id = base
         self.table_id = table
         self.api_client = Api(self.api)
-        self.table = Table(self.api, self.base_id, self.table_id)
+        self.table = self.api_client.table(self.base_id, self.table_id)
         self.base = self.api_client.base(self.base_id)
         # Store headers for direct API calls (same as original)
         self.headers = {

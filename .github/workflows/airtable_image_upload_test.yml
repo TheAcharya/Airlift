@@ -56,5 +56,5 @@ jobs:
           DROPBOX_APP_KEY: ${{secrets.DROPBOX_APP_KEY}}
           DROPBOX_REFRESH_TOKEN: ${{secrets.DROPBOX_REFRESH_TOKEN}}
           
-        run: pytest -v -s
+        run: pytest -v -s --disable-warnings
         

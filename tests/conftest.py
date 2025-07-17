@@ -2,15 +2,34 @@
 Pytest configuration and fixtures for Airlift tests.
 """
 
-import os
 import json
+import os
 import tempfile
-import pytest
+import warnings
 from pathlib import Path
+
+import pytest
 from dotenv import load_dotenv
+
+# Suppress all warnings at the earliest possible point
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
+warnings.filterwarnings("ignore", message=".*PydanticDeprecatedSince211.*")
+warnings.filterwarnings("ignore", message=".*model_fields.*deprecated.*")
 
 # Load environment variables from .env file
 load_dotenv()
+
+@pytest.fixture(scope="session", autouse=True)
+def suppress_warnings():
+    """Suppress all warnings for the entire test session."""
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    warnings.filterwarnings("ignore", category=UserWarning)
+    warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
+    warnings.filterwarnings("ignore", message=".*PydanticDeprecatedSince211.*")
+    warnings.filterwarnings("ignore", message=".*model_fields.*deprecated.*")
+    yield
 
 @pytest.fixture(scope="session")
 def test_config():
