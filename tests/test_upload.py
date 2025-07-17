@@ -13,12 +13,19 @@ from airlift.airtable_client import new_client
 from airlift.dropbox_client import dropbox_client,change_refresh_access_token
 from icecream import ic
 
+# Suppress all warnings from external libraries
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
+
 # Suppress deprecation warnings from external libraries
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="dropbox")
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="pyairtable")
 warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="pydantic")
 warnings.filterwarnings("ignore", message=".*PydanticDeprecatedSince211.*")
+warnings.filterwarnings("ignore", message=".*model_fields.*deprecated.*")
+warnings.filterwarnings("ignore", message=".*Accessing the 'model_fields' attribute.*")
 
 @dataclass
 class AirliftArgs:
