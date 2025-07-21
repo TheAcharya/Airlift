@@ -3,7 +3,7 @@
 ### 1.2.0
 
 **🎉 Released:**
-- TBD
+- 21st July 2025
 
 **🔨 Improvements:**
 - Upgraded from Python 3.8 to Python 3.9
