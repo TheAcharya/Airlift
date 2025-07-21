@@ -50,13 +50,13 @@ class dropbox_client:
             if md:
                 self.main_folder = "/Marker Data"
                 try:
-                    self.dbx.files_create_folder("/Marker Data")
+                    self.dbx.files_create_folder_v2("/Marker Data")
                 except Exception as e:
                     logger.warning(f"The folder Marker Data already exists.")
             else:
                 self.main_folder = "/Airlift"
                 try:
-                    self.dbx.files_create_folder("/Airlift")
+                    self.dbx.files_create_folder_v2("/Airlift")
                 except Exception as e:
                     logger.warning(f"The folder Airlift already exists.")
 
@@ -64,7 +64,7 @@ class dropbox_client:
             self.sub_folder = f"{self.main_folder}{self.main_folder} {c.strftime('%Y-%m-%d')} {c.strftime('%H-%M-%S')}"
 
             try:
-                self.dbx.files_create_folder(self.sub_folder)
+                self.dbx.files_create_folder_v2(self.sub_folder)
             except dropbox.exceptions.ApiError as e:
                 logger.warning(f"The folder {self.sub_folder} already exists.")
                 
@@ -149,7 +149,7 @@ class dropbox_client:
         dropbox_path = f"{self.sub_folder}/{final_path}"
         self.dbx.files_upload(image_data, dropbox_path)
 
-        shared_link_metadata = self.dbx.sharing_create_shared_link(path=dropbox_path)
+        shared_link_metadata = self.dbx.sharing_create_shared_link_with_settings(path=dropbox_path)
         shared_url = shared_link_metadata.url
 
         direct_download_url = shared_url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '?dl=1')
