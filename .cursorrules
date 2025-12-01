@@ -4,6 +4,50 @@
 
 Airlift is a Python command-line tool for uploading CSV/JSON data with attachments to Airtable. The project uses a modular architecture with clear separation of concerns across data processing, API integration, and file handling components.
 
+## Quick Reference Commands
+
+### Building and Testing
+```bash
+# Build the project using the ephemeral build system (recommended)
+./scripts/local-test-build.sh
+
+# Test the built binary
+./test-build/airlift --help
+
+# Clean build environment
+./scripts/local-test-build.sh --clean
+
+# Build with dependency updates
+./scripts/local-test-build.sh --update-deps
+
+# Run comprehensive tests (no API tokens required)
+./scripts/local-test-build.sh --comprehensive-test
+
+# Install dependencies for development
+poetry install
+
+# Run the application in development
+poetry run airlift --help
+```
+
+### Dependency Management
+```bash
+# Update poetry.lock file
+poetry lock
+
+# Update specific packages
+./scripts/local-test-build.sh --update requests dropbox
+
+# Show outdated packages
+./scripts/local-test-build.sh --show-outdated
+
+# Install new dependency
+poetry add <package-name>
+
+# Install development dependency
+poetry add --group dev <package-name>
+```
+
 ## Code Organization
 
 ### Module Structure
@@ -48,6 +92,7 @@ Airlift is a Python command-line tool for uploading CSV/JSON data with attachmen
 - Use structured JSON payloads for data uploads
 - Validate responses and handle error codes appropriately
 - Use pyairtable 3.x APIs for field creation and schema management
+- Use batch operations for delete (10 records per API call)
 
 ### Dropbox API
 - Use the `dropbox_client` class for file operations
@@ -61,22 +106,36 @@ Airlift is a Python command-line tool for uploading CSV/JSON data with attachmen
 
 ### Argument Parsing
 - Use the existing `cli_args.py` structure for argument definitions
-- Group related arguments logically
+- Group related arguments logically (general, dropbox, column, validation, database options)
 - Provide clear help text for all options
-- Implement proper validation for required arguments
+- Implement proper validation for required arguments in `_validate_required_args()`
 - Use appropriate data types for argument values
 
+### CLI Arguments Structure
+```python
+schema: ArgSchema = {
+    "POSITIONAL": { ... },
+    "general_options": { ... },
+    "dropbox options": { ... },
+    "column_options": { ... },
+    "custom application options": { ... },
+    "validation_options": { ... },
+    "database_options": { ... },  # For --delete-all-database-entries
+}
+```
+
 ### User Experience
-- Provide clear progress indicators for long operations
+- Provide clear progress indicators for long operations (tqdm)
 - Use consistent logging levels (INFO, WARNING, ERROR, DEBUG)
 - Implement verbose mode for detailed debugging output
 - Handle user interruptions gracefully (Ctrl+C)
+- Show helpful error messages for missing required arguments
 
 ## Performance Considerations
 
 ### Concurrency
 - Use ThreadPoolExecutor for parallel upload operations
-- Implement configurable worker thread counts
+- Implement configurable worker thread counts (default: 5)
 - Avoid blocking operations in worker threads
 - Use proper queue management for data distribution
 
@@ -88,17 +147,43 @@ Airlift is a Python command-line tool for uploading CSV/JSON data with attachmen
 
 ## Testing Guidelines
 
+### Test Structure
+```
+tests/
+├── __init__.py                      # Test suite module
+├── input_command.py                 # Args configuration and environment variables
+├── test_upload.py                   # Upload tests (requires API tokens)
+├── test_delete_database_entries.py  # Delete tests (requires API tokens)
+├── test_comprehensive.py            # Comprehensive tests (no API tokens required)
+├── README.md                        # Test documentation
+└── assets/                          # Test data files
+```
+
 ### Unit Testing
 - Write tests for all public functions and classes
 - Mock external API calls to avoid network dependencies
 - Test both success and error conditions
 - Use descriptive test names that explain the scenario
+- Add tests for new CLI arguments in `test_comprehensive.py`
 
 ### Integration Testing
 - Test end-to-end workflows with sample data
 - Verify proper error handling and recovery
 - Test with different file formats and sizes
 - Validate API integration points
+
+### Running Tests
+```bash
+# Comprehensive tests (no API tokens required)
+./scripts/local-test-build.sh --comprehensive-test
+
+# Or directly with pytest
+pytest tests/test_comprehensive.py -v
+
+# Integration tests (requires API tokens)
+pytest tests/test_upload.py -v -s
+pytest tests/test_delete_database_entries.py -v -s
+```
 
 ## Security Best Practices
 
@@ -138,6 +223,16 @@ Airlift is a Python command-line tool for uploading CSV/JSON data with attachmen
 - Use identical versions to GitHub Actions workflow for reproducible builds
 - Maintain Dropbox SDK 12.x for API compatibility and security
 
+### Core Dependencies
+| Package | Version | Description |
+|---------|---------|-------------|
+| `pyairtable` | ^3.3.0 | Airtable API client with latest 3.x APIs |
+| `dropbox` | ^12.0.2 | Dropbox API client with OAuth2 scopes |
+| `requests` | ^2.32.4 | HTTP client for API calls |
+| `tqdm` | ^4.66.4 | Progress bar implementation |
+| `pydantic` | ^2.11.7 | Data validation and serialization |
+| `icecream` | ^2.1.3 | Debug logging utility |
+
 ### Build and Distribution
 - Maintain cross-platform compatibility
 - Use PyInstaller for binary distribution
@@ -175,15 +270,36 @@ Airlift/
 ├── scripts/
 │   ├── local-test-build.sh  # Build script
 │   └── README.md            # Usage documentation
+├── tests/
+│   ├── test_comprehensive.py        # Comprehensive tests (no API tokens)
+│   ├── test_upload.py               # Upload tests (requires API tokens)
+│   └── test_delete_database_entries.py  # Delete tests (requires API tokens)
 └── ... (other project files)
 ```
 
 #### Build Script Usage
-- Always run from project root directory
-- Use `--clean` when switching branches or after dependency changes
-- Test built binary with `./test-build/airlift --help`
-- Use `--update-deps` for dependency updates
-- Use `--show-outdated` to check for package updates
+```bash
+# Basic build
+./scripts/local-test-build.sh
+
+# Clean build environment
+./scripts/local-test-build.sh --clean
+
+# Build with dependency updates
+./scripts/local-test-build.sh --update-deps
+
+# Update specific packages
+./scripts/local-test-build.sh --update requests pytest
+
+# Show outdated packages
+./scripts/local-test-build.sh --show-outdated
+
+# Run comprehensive tests
+./scripts/local-test-build.sh --comprehensive-test
+
+# Test built binary
+./test-build/airlift --help
+```
 
 #### CI/CD Integration Standards
 - Build script must work identically in local and CI environments
@@ -197,6 +313,17 @@ Airlift/
 - PyInstaller installed separately (not in pyproject.toml)
 - Completely ephemeral and safe for any environment
 - Consistent with production build process
+
+## GitHub Actions Workflows
+
+### Workflow Files
+| Workflow | Trigger | Description |
+|----------|---------|-------------|
+| `unit_tests.yml` | Push/PR to master/dev | Comprehensive tests (no API tokens) |
+| `airtable_image_upload_test.yml` | Weekly/Manual | Upload integration test |
+| `airtable_delete_database_entries_test.yml` | Weekly/Manual | Delete entries test |
+| `build.yml` | Push/PR | Build verification |
+| `release_github.yml` | Release | Binary distribution |
 
 ## Error Handling Patterns
 
@@ -221,6 +348,7 @@ Airlift/
 - Validate performance implications
 - Confirm documentation updates
 - Verify build script compatibility
+- Add tests for new features
 
 ### Quality Standards
 - Maintain high test coverage for new features
@@ -255,8 +383,23 @@ Airlift/
 
 ### User Experience
 - Provide clear feedback for all operations
-- Implement progress tracking for long operations
+- Implement progress tracking for long operations (tqdm)
 - Use intuitive error messages
 - Support both interactive and non-interactive modes
 
-This cursorrule file should be kept in sync with the AGENT.MD file to ensure consistent development practices and maintain high code quality standards across the Airlift project. 
+## Adding New Features Checklist
+
+When adding new CLI features:
+1. Add argument definition in `cli_args.py` schema
+2. Handle the argument in `cli.py`
+3. Add validation in `_validate_required_args()` if required
+4. Implement the feature in appropriate module
+5. Add tests in `test_comprehensive.py`
+6. Update `AGENT.MD` documentation
+7. Update `README.md` if user-facing
+8. Run comprehensive tests: `./scripts/local-test-build.sh --comprehensive-test`
+9. Build and test binary: `./scripts/local-test-build.sh`
+
+---
+
+This cursorrule file should be kept in sync with the AGENT.MD file to ensure consistent development practices and maintain high code quality standards across the Airlift project.
