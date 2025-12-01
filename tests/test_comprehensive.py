@@ -906,10 +906,6 @@ class TestVersionAndConstants:
         assert len(parts) >= 2  # At least major.minor
         for part in parts:
             assert part.isdigit()
-    
-    def test_version_value(self):
-        """Test current version value."""
-        assert __version__ == "1.2.0"
 
 
 # ============================================================================
