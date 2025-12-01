@@ -1,5 +1,20 @@
 # Changelog
 
+### 1.3.0
+
+**🎉 Released:**
+- 1st December 2025
+
+**🔨 Improvements:**
+- Added `--delete-all-database-entries` to delete all entries from the specified Airtable table
+- Added `--empty-dropbox-folder` to empty the contents of the Dropbox folder
+- Updated `pyairtable` to version 3.3.0
+- Added comprehensive test suite (`test_comprehensive.py`) for local testing
+- Added `--comprehensive-test` option to `local-test-build.sh`
+- Added new GitHub Actions workflow for unit tests (`unit_tests.yml`)
+- Added new GitHub Actions workflow for delete database entries test (`airtable_delete_database_entries_test.yml`)
+- Improved CLI argument validation with user-friendly error messages
+
 ### 1.2.0
 
 **🎉 Released:**
