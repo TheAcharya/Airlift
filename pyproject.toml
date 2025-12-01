@@ -30,7 +30,7 @@ airlift = "airlift.cli:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-pyairtable = "^3.1.1"
+pyairtable = "^3.3.0"
 requests = "^2.32.4"
 tqdm = "^4.66.4"
 dropbox = "^12.0.2"
