@@ -16,7 +16,7 @@ load_dotenv()
 @dataclass
 class AirliftArgs:
     """Args structure for Airlift tool."""
-    payload_file: str
+    csv_file: str  # Named csv_file to match actual CLI args
     token: str
     base: str
     table: str
@@ -34,7 +34,7 @@ class AirliftArgs:
 
 
 ARGS_DICT = {
-    "payload_file": PosixPath("tests/assets/airtable-upload-test.json"),
+    "csv_file": PosixPath("tests/assets/airtable-upload-test.json"),
     "token": os.getenv("CI_AIRTABLE_TOKEN"),
     "base": os.getenv("CI_AIRTABLE_BASE"),
     "table": os.getenv("CI_AIRTABLE_TABLE"),

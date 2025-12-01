@@ -92,16 +92,16 @@ def test_upload_rows(load_client_and_data) -> None:
     args, airtable_client, dbx = load_client_and_data
     
     print(f"Airlift version {__version__}")
-    print(f"Payload file: {args.payload_file}")
+    print(f"Payload file: {args.csv_file}")
     print(f"Attachment columns map: {args.attachment_columns_map}")
     
-    suffix = pathlib.Path(args.payload_file).suffix
+    suffix = pathlib.Path(args.csv_file).suffix
     
     # Converting data into airtable supported format
     if "csv" in suffix:
-        data = csv_read(args.payload_file, args.fail_on_duplicate_csv_columns)
+        data = csv_read(args.csv_file, args.fail_on_duplicate_csv_columns)
     elif "json" in suffix:
-        data = json_read(args.payload_file, args.fail_on_duplicate_csv_columns)
+        data = json_read(args.csv_file, args.fail_on_duplicate_csv_columns)
     else:
         raise CriticalError("File type not supported!")
     
