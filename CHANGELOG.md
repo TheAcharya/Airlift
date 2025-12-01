@@ -15,6 +15,8 @@
 - Added new GitHub Actions workflow for delete database entries test (`airtable_delete_database_entries_test.yml`)
 - Improved CLI argument validation with user-friendly error messages
 
+---
+
 ### 1.2.0
 
 **🎉 Released:**
