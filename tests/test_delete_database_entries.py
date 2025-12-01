@@ -1,11 +1,10 @@
 """
-Upload tests for Airlift.
-Tests the complete upload workflow to Airtable with Dropbox attachments.
+Delete database entries tests for Airlift.
+Tests the delete all database entries workflow for Airtable.
 """
 
 import json
 import os
-import pathlib
 import tempfile
 import warnings
 from typing import Generator, Union
@@ -13,11 +12,7 @@ from typing import Generator, Union
 import pytest
 
 from airlift.airtable_client import new_client
-from airlift.airtable_upload import Upload
-from airlift.csv_data import csv_read
 from airlift.dropbox_client import dropbox_client
-from airlift.json_data import json_read
-from airlift.utils_exceptions import CriticalError
 from airlift.version import __version__
 
 from .input_command import ARGS_DICT, AirliftArgs
@@ -87,34 +82,27 @@ def load_client_and_data(dropbox_token_file) -> Generator[Union[AirliftArgs, new
         pytest.skip(f"Failed to connect to API: {e}")
 
 
-def test_upload_rows(load_client_and_data) -> None:
-    """Test uploading rows to Airtable with attachments."""
+def test_delete_database_entries(load_client_and_data) -> None:
+    """Test deleting all entries from Airtable database."""
     args, airtable_client, dbx = load_client_and_data
     
     print(f"Airlift version {__version__}")
-    print(f"Payload file: {args.csv_file}")
-    print(f"Attachment columns map: {args.attachment_columns_map}")
+    print(f"Target Base: {args.base}")
+    print(f"Target Table: {args.table}")
     
-    suffix = pathlib.Path(args.csv_file).suffix
+    print("WARNING: Deleting ALL entries from the specified Airtable table!")
     
-    # Converting data into airtable supported format
-    if "csv" in suffix:
-        data = csv_read(args.csv_file, args.fail_on_duplicate_csv_columns)
-    elif "json" in suffix:
-        data = json_read(args.csv_file, args.fail_on_duplicate_csv_columns)
-    else:
-        raise CriticalError("File type not supported!")
+    # Delete all records from the table
+    deleted_count = airtable_client.delete_all_records()
     
-    print("Validation done!")
+    print(f"Operation complete. Deleted {deleted_count} records.")
     
-    if not data:
-        raise CriticalError("File is empty!")
+    # Verify deletion was successful (count should be >= 0)
+    assert deleted_count >= 0
     
-    # Validating data and creating an uploadable data
-    data = airtable_client.create_uploadable_data(data=data, args=args)
+    # Verify table is now empty
+    remaining_records = airtable_client.table.all()
+    assert len(remaining_records) == 0, f"Expected 0 records, but found {len(remaining_records)}"
     
-    # Uploading the data
-    upload_instance = Upload(client=airtable_client, new_data=data, dbx=dbx, args=args)
-    upload_instance.upload_data()
-    
-    assert 1 == 1
+    print("All entries successfully deleted from the database.")
+

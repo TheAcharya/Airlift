@@ -156,6 +156,148 @@ class dropbox_client:
 
         return direct_download_url
 
+    def empty_folder_contents(self) -> int:
+        """Empty all contents from the main Dropbox folder without deleting the folder itself.
+        
+        Returns:
+            int: Number of items deleted
+        """
+        from tqdm import tqdm
+        
+        deleted_count = 0
+        
+        try:
+            logger.info(f"Fetching contents of folder: {self.main_folder}")
+            
+            # List all contents in the main folder
+            result = self.dbx.files_list_folder(self.main_folder)
+            entries = result.entries
+            
+            # Handle pagination if there are more entries
+            while result.has_more:
+                result = self.dbx.files_list_folder_continue(result.cursor)
+                entries.extend(result.entries)
+            
+            if not entries:
+                logger.info(f"No contents found in {self.main_folder}")
+                return 0
+            
+            total_items = len(entries)
+            logger.info(f"Found {total_items} items to delete in {self.main_folder}")
+            
+            # Create progress bar
+            progress_bar = tqdm(total=total_items, desc="Emptying folder", leave=False)
+            
+            # Delete each entry (files and folders)
+            for entry in entries:
+                try:
+                    self.dbx.files_delete_v2(entry.path_display)
+                    deleted_count += 1
+                    progress_bar.update(1)
+                except dropbox.exceptions.ApiError as e:
+                    logger.warning(f"Failed to delete {entry.path_display}: {e}")
+            
+            progress_bar.close()
+            logger.info(f"Successfully deleted {deleted_count} items from {self.main_folder}")
+            return deleted_count
+            
+        except dropbox.exceptions.ApiError as e:
+            if "not_found" in str(e):
+                logger.info(f"Folder {self.main_folder} does not exist or is empty")
+                return 0
+            logger.error(f"Error emptying folder: {e}")
+            raise CriticalError(f"Failed to empty Dropbox folder: {e}")
+
+
+def empty_dropbox_folder(access_token, md: bool) -> int:
+    """Empty the contents of the Dropbox folder without creating subfolders.
+    
+    Args:
+        access_token: Path to the JSON file with Dropbox credentials
+        md: If True, use 'Marker Data' folder, otherwise use 'Airlift' folder
+        
+    Returns:
+        int: Number of items deleted
+    """
+    from tqdm import tqdm
+    
+    # Configure SSL environment
+    _configure_ssl_environment()
+    
+    try:
+        # Load credentials
+        with open(access_token, 'r') as file:
+            creds = json.load(file)
+        
+        app_key = creds.get('app_key')
+        refresh_token = creds.get('refresh_token')
+        
+        if not app_key:
+            raise CriticalError("app_key not present in the json file")
+        if not refresh_token:
+            raise CriticalError("refresh_token not present in the json file")
+        
+        # Create Dropbox client
+        dbx = dropbox.Dropbox(
+            oauth2_refresh_token=refresh_token,
+            app_key=app_key
+        )
+        
+        # Determine folder path
+        main_folder = "/Marker Data" if md else "/Airlift"
+        
+        logger.info(f"Fetching contents of folder: {main_folder}")
+        
+        # List all contents in the main folder
+        try:
+            result = dbx.files_list_folder(main_folder)
+        except dropbox.exceptions.ApiError as e:
+            if "not_found" in str(e):
+                logger.info(f"Folder {main_folder} does not exist or is empty")
+                return 0
+            raise
+        
+        entries = result.entries
+        
+        # Handle pagination if there are more entries
+        while result.has_more:
+            result = dbx.files_list_folder_continue(result.cursor)
+            entries.extend(result.entries)
+        
+        if not entries:
+            logger.info(f"No contents found in {main_folder}")
+            return 0
+        
+        total_items = len(entries)
+        logger.info(f"Found {total_items} items to delete in {main_folder}")
+        
+        # Create progress bar
+        progress_bar = tqdm(total=total_items, desc="Emptying folder", leave=False)
+        
+        deleted_count = 0
+        
+        # Delete each entry (files and folders)
+        for entry in entries:
+            try:
+                dbx.files_delete_v2(entry.path_display)
+                deleted_count += 1
+                progress_bar.update(1)
+            except dropbox.exceptions.ApiError as e:
+                logger.warning(f"Failed to delete {entry.path_display}: {e}")
+        
+        progress_bar.close()
+        logger.info(f"Successfully deleted {deleted_count} items from {main_folder}")
+        return deleted_count
+        
+    except FileNotFoundError:
+        raise CriticalError(f"Access token file not found: {access_token}")
+    except json.JSONDecodeError as e:
+        raise CriticalError(f"Invalid JSON in access token file: {e}")
+    except Exception as e:
+        logger.error(f"Error emptying Dropbox folder: {e}")
+        raise CriticalError(f"Failed to empty Dropbox folder: {e}")
+
+
 def change_refresh_access_token(access_token):
     try:
         with open(access_token,'r') as file:

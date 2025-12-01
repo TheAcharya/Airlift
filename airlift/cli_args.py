@@ -116,10 +116,17 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         "validation_options": {
             "--fail-on-duplicate-csv-columns": {
                 "action": "store_true",
-                "help": (
-                    "fail if CSV has duplicate columns"
-                    "\notherwise first column will be used"
-                ),
+                "help": "fail if CSV has duplicate columns, otherwise first column will be used",
+            },
+        },
+        "database_options": {
+            "--delete-all-database-entries": {
+                "action": "store_true",
+                "help": "delete all entries from the specified Airtable table",
+            },
+            "--empty-dropbox-folder": {
+                "action": "store_true",
+                "help": "empty the contents of the Dropbox folder",
             },
         },
     }

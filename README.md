@@ -126,8 +126,11 @@ column options:
   --rename-key-column                rename the key column in the file to a different key column in Airtable
 
 validation options:
-  --fail-on-duplicate-csv-columns    fail if CSV has duplicate columns;
-                                     otherwise last column will be used
+  --fail-on-duplicate-csv-columns    fail if CSV has duplicate columns, otherwise first column will be used
+
+database_options:
+  --delete-all-database-entries      delete all entries from the specified Airtable table
+  --empty-dropbox-folder             empty the contents of the Dropbox folder
 ```
 
 ### macOS Release

@@ -377,14 +377,14 @@ files = [
 
 [[package]]
 name = "pyairtable"
-version = "3.1.1"
+version = "3.3.0"
 description = "Python Client for the Airtable API"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "pyairtable-3.1.1-py2.py3-none-any.whl", hash = "sha256:3849def274f714f53b4ea73bf5a43a6f6360ede7472a7b69b018967e338d7e88"},
-    {file = "pyairtable-3.1.1.tar.gz", hash = "sha256:b185fef12119f249e0e704ab4e4b15a29080fc892ad4d551a1053a1bb609ef2e"},
+    {file = "pyairtable-3.3.0-py2.py3-none-any.whl", hash = "sha256:38af09c18659918b96539ac4d9730c9656f6ce2088cdff692dd311fa16802acf"},
+    {file = "pyairtable-3.3.0.tar.gz", hash = "sha256:d6d3b77f6feb7a02a84779c2235d37a46605f36030cf20ed99b08bab73108a8c"},
 ]
 
 [package.dependencies]
@@ -749,4 +749,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "1834298afb9d28999dd050d65947c712cd01062082833529d59f7e33e66ae5c8"
+content-hash = "a0dd38d11b0e614c21b0c84068a45f4dfeda47beb65bffedc844809cfaebaa8f"

@@ -1,9 +1,26 @@
-name: airtable_image_upload_test
+name: unit_tests
+
 on:
+  push:
+    branches: [master, dev]
+    paths-ignore:
+      - 'Docs/**'           # Docs folder in root of repo
+      - '**/*.md'           # .md files anywhere in the repo
+      - '**/LICENSE'        # LICENSE files anywhere in the repo
+      - '**/.gitignore'     # .gitignore files anywhere in the repo
+      - '**/*.cursorrules'  # .cursorrules files anywhere in the repo
+      - '**/.cursorrules'   # .cursorrules files anywhere in the repo
+      
+  pull_request:
+    branches: [master, dev]
+    paths-ignore:
+      - 'Docs/**'           # Docs folder in root of repo
+      - '**/*.md'           # .md files anywhere in the repo
+      - '**/LICENSE'        # LICENSE files anywhere in the repo
+      - '**/.gitignore'     # .gitignore files anywhere in the repo
+      - '**/.cursorrules'   # .cursorrules files anywhere in the repo
+      
   workflow_dispatch:
-  
-  schedule:
-    - cron: '0 0 * * 6' # Runs at 8 AM Singapore time (00:00 UTC) every Saturday
       
 env:
   BUILD_PYTHON_VERSION: 3.9
@@ -29,7 +46,7 @@ jobs:
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: ${{ env.BUILD_POETRY_VERSION }}
-
+      
       - name: Install poetry-plugin-export
         run: poetry self add poetry-plugin-export
       
@@ -43,18 +60,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
               
-      - name: Install the neccessary libraries to run airlift
+      - name: Install the necessary libraries to run airlift
         run: |
           poetry config virtualenvs.create false
           poetry install --no-root
 
-      - name: Run tests
-        env:
-          CI_AIRTABLE_TOKEN: ${{secrets.CI_AIRTABLE_TOKEN}}
-          CI_AIRTABLE_BASE: ${{secrets.CI_AIRTABLE_BASE}}
-          CI_AIRTABLE_TABLE: ${{secrets.CI_AIRTABLE_TABLE}}
-          CI_DROPBOX_APP_KEY: ${{secrets.CI_DROPBOX_APP_KEY}}
-          CI_DROPBOX_REFRESH_TOKEN: ${{secrets.CI_DROPBOX_REFRESH_TOKEN}}
-          
-        run: pytest tests/test_upload.py -v -s --disable-warnings
-        
+      - name: Run comprehensive tests
+        run: pytest tests/test_comprehensive.py -v -s --tb=long
+

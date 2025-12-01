@@ -1,0 +1,147 @@
+[
+  {
+    "Scene" : "",
+    "Clip Type" : "Video",
+    "Marker Position" : "00:00:08:06",
+    "Image Filename" : "airtable-upload-test_00-00-08-06.gif",
+    "Checked" : "false",
+    "Audio Role & Subrole" : [
+      "Not Assigned"
+    ],
+    "Clip Keywords" : [
+
+    ],
+    "Video Role & Subrole" : "Video",
+    "Clip In" : "00:00:00:00",
+    "Marker Type" : "To Do",
+    "Palette Filename" : "airtable-upload-test_00-00-08-06-Palette.jpg",
+    "Notes" : "",
+    "Reel" : "",
+    "Marker Name" : "Marker 1",
+    "Clip Name" : "Atom",
+    "Clip Duration" : "00:01:31:18",
+    "Take" : "",
+    "Project Name" : "airtable-upload-test",
+    "Status" : "In Progress",
+    "Library Name" : "Markers",
+    "Event Name" : "Demo 1",
+    "Clip Out" : "00:01:31:18",
+    "Marker ID" : "airtable-upload-test_00:00:08:06"
+  },
+  {
+    "Notes" : "",
+    "Clip Out" : "00:01:31:18",
+    "Marker Type" : "To Do",
+    "Clip In" : "00:00:00:00",
+    "Marker Name" : "Marker 2",
+    "Scene" : "",
+    "Library Name" : "Markers",
+    "Clip Duration" : "00:01:31:18",
+    "Clip Name" : "Atom",
+    "Audio Role & Subrole" : [
+      "Not Assigned"
+    ],
+    "Event Name" : "Demo 1",
+    "Reel" : "",
+    "Image Filename" : "airtable-upload-test_00-00-22-07.gif",
+    "Clip Type" : "Video",
+    "Status" : "Done",
+    "Checked" : "true",
+    "Palette Filename" : "airtable-upload-test_00-00-22-07-Palette.jpg",
+    "Video Role & Subrole" : "Video",
+    "Take" : "",
+    "Clip Keywords" : [
+
+    ],
+    "Marker Position" : "00:00:22:07",
+    "Project Name" : "airtable-upload-test",
+    "Marker ID" : "airtable-upload-test_00:00:22:07"
+  },
+  {
+    "Scene" : "",
+    "Marker Name" : "Chapter 2",
+    "Event Name" : "Demo 1",
+    "Take" : "",
+    "Notes" : "",
+    "Audio Role & Subrole" : [
+      "Not Assigned"
+    ],
+    "Clip Type" : "Video",
+    "Marker Type" : "Chapter",
+    "Marker Position" : "00:00:50:08",
+    "Marker ID" : "airtable-upload-test_00:00:50:08",
+    "Clip Duration" : "00:01:31:18",
+    "Reel" : "",
+    "Project Name" : "airtable-upload-test",
+    "Clip Out" : "00:01:31:18",
+    "Clip In" : "00:00:00:00",
+    "Status" : "Not Started",
+    "Clip Keywords" : [
+
+    ],
+    "Checked" : "false",
+    "Video Role & Subrole" : "Video",
+    "Library Name" : "Markers",
+    "Image Filename" : "airtable-upload-test_00-00-50-08.gif",
+    "Palette Filename" : "airtable-upload-test_00-00-50-08-Palette.jpg",
+    "Clip Name" : "Atom"
+  },
+  {
+    "Project Name" : "airtable-upload-test",
+    "Audio Role & Subrole" : [
+      "Not Assigned"
+    ],
+    "Clip Duration" : "00:01:31:18",
+    "Marker ID" : "airtable-upload-test_00:01:09:10",
+    "Marker Name" : "Marker 4",
+    "Checked" : "false",
+    "Clip Out" : "00:01:31:18",
+    "Clip Name" : "Atom",
+    "Video Role & Subrole" : "Video",
+    "Marker Type" : "Standard",
+    "Image Filename" : "airtable-upload-test_00-01-09-10.gif",
+    "Library Name" : "Markers",
+    "Clip In" : "00:00:00:00",
+    "Palette Filename" : "airtable-upload-test_00-01-09-10-Palette.jpg",
+    "Clip Keywords" : [
+
+    ],
+    "Marker Position" : "00:01:09:10",
+    "Reel" : "",
+    "Notes" : "",
+    "Take" : "",
+    "Event Name" : "Demo 1",
+    "Scene" : "",
+    "Clip Type" : "Video",
+    "Status" : "Not Started"
+  },
+  {
+    "Clip Type" : "Video",
+    "Clip Name" : "Atom",
+    "Marker Type" : "Standard",
+    "Event Name" : "Demo 1",
+    "Library Name" : "Markers",
+    "Status" : "Not Started",
+    "Clip In" : "00:00:00:00",
+    "Checked" : "false",
+    "Marker Position" : "00:01:21:01",
+    "Video Role & Subrole" : "Video",
+    "Clip Out" : "00:01:31:18",
+    "Reel" : "",
+    "Image Filename" : "airtable-upload-test_00-01-21-01.gif",
+    "Marker ID" : "airtable-upload-test_00:01:21:01",
+    "Marker Name" : "Marker 5",
+    "Clip Duration" : "00:01:31:18",
+    "Scene" : "",
+    "Notes" : "",
+    "Project Name" : "airtable-upload-test",
+    "Clip Keywords" : [
+
+    ],
+    "Palette Filename" : "airtable-upload-test_00-01-21-01-Palette.jpg",
+    "Take" : "",
+    "Audio Role & Subrole" : [
+      "Not Assigned"
+    ]
+  }
+]

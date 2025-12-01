@@ -1,1 +1,3 @@
-# Tests package for Airlift
+"""
+Test suite for Airlift.
+"""

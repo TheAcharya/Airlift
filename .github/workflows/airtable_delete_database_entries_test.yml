@@ -1,9 +1,15 @@
-name: airtable_image_upload_test
+name: airtable_delete_database_entries_test
 on:
+  push:
+    branches: [master, dev]
+    
+  pull_request:
+    branches: [master, dev]
+    
   workflow_dispatch:
   
   schedule:
-    - cron: '0 0 * * 6' # Runs at 8 AM Singapore time (00:00 UTC) every Saturday
+    - cron: '30 0 * * 6' # Runs at 8:30 AM Singapore time (00:30 UTC) every Saturday (after upload test)
       
 env:
   BUILD_PYTHON_VERSION: 3.9
@@ -48,7 +54,7 @@ jobs:
           poetry config virtualenvs.create false
           poetry install --no-root
 
-      - name: Run tests
+      - name: Run delete database entries test
         env:
           CI_AIRTABLE_TOKEN: ${{secrets.CI_AIRTABLE_TOKEN}}
           CI_AIRTABLE_BASE: ${{secrets.CI_AIRTABLE_BASE}}
@@ -56,5 +62,12 @@ jobs:
           CI_DROPBOX_APP_KEY: ${{secrets.CI_DROPBOX_APP_KEY}}
           CI_DROPBOX_REFRESH_TOKEN: ${{secrets.CI_DROPBOX_REFRESH_TOKEN}}
           
-        run: pytest tests/test_upload.py -v -s --disable-warnings
-        
+        run: pytest tests/test_delete_database_entries.py -v -s --disable-warnings
+
+      - name: Run empty Dropbox folder test
+        env:
+          CI_DROPBOX_APP_KEY: ${{secrets.CI_DROPBOX_APP_KEY}}
+          CI_DROPBOX_REFRESH_TOKEN: ${{secrets.CI_DROPBOX_REFRESH_TOKEN}}
+          
+        run: pytest tests/test_empty_dropbox_folder.py -v -s --disable-warnings
+

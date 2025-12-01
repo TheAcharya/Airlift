@@ -14,44 +14,57 @@ This directory contains real API tests for Airlift that actually interact with A
    - Fill in your real Airtable and Dropbox credentials
 
 3. **Verify assets:**
-   - Ensure `tests/assets/` contains the CSV and image files
-   - CSV should reference the image files correctly
+   - Ensure `tests/assets/` contains the JSON and image files
+   - JSON should reference the image files correctly
 
 ## Running Tests
 
-### All tests:
+### Comprehensive Tests (No API Tokens Required):
 ```bash
-pytest tests/
+# Run comprehensive tests locally
+pytest tests/test_comprehensive.py -v
+
+# Or use the build script
+./scripts/local-test-build.sh --comprehensive-test
 ```
 
-### Specific test classes:
+### Upload Tests (Requires API Tokens):
 ```bash
-# Test CSV processing only
-pytest tests/test_upload.py::TestCSVProcessing -v
-
-# Test Dropbox integration
-pytest tests/test_upload.py::TestDropboxIntegration -v
-
-# Test Airtable integration  
-pytest tests/test_upload.py::TestAirtableIntegration -v
-
-# Test actual uploads (careful - this uploads real data!)
-pytest tests/test_upload.py::TestDataUpload -v
+pytest tests/test_upload.py -v -s
 ```
 
-### With output:
+### Delete Database Entries Tests (Requires API Tokens):
 ```bash
-pytest tests/ -v -s
+pytest tests/test_delete_database_entries.py -v -s
+```
+
+### All Tests:
+```bash
+pytest tests/ -v -s --disable-warnings
 ```
 
 ## Test Structure
 
-- **TestCSVProcessing**: Tests CSV file parsing and validation
-- **TestDropboxIntegration**: Tests real Dropbox file uploads
-- **TestAirtableIntegration**: Tests Airtable connection and client
-- **TestDataUpload**: Tests actual data upload to Airtable (with/without attachments)
-- **TestErrorHandling**: Tests error scenarios with invalid data
-- **TestAssetFiles**: Validates test assets are present and correct
+```
+tests/
+├── __init__.py                      # Test suite module
+├── input_command.py                 # Args configuration and environment variables
+├── test_upload.py                   # Upload tests with fixtures (requires API tokens)
+├── test_delete_database_entries.py  # Delete database entries test (requires API tokens)
+├── test_comprehensive.py            # Comprehensive tests (no API tokens required)
+├── README.md                        # This file
+└── assets/                          # Test data files
+    ├── airtable-upload-test.json
+    ├── *.gif                        # Image attachments
+    └── *-Palette.jpg                # Palette attachments
+```
+
+### File Descriptions
+
+- **`input_command.py`**: Contains `AirliftArgs` dataclass and `ARGS_DICT` configuration loaded from environment variables
+- **`test_upload.py`**: Main upload test with fixtures that tests the complete upload workflow (requires API tokens)
+- **`test_delete_database_entries.py`**: Tests the delete all database entries functionality (requires API tokens)
+- **`test_comprehensive.py`**: Comprehensive test suite that validates all CLI arguments, data processing, and mocked functionality without requiring API tokens
 
 ## Important Notes
 
@@ -66,22 +79,29 @@ pytest tests/ -v -s
 
 Required in `.env`:
 ```bash
-AIRTABLE_TOKEN=your_token
-AIRTABLE_BASE=your_base_id  
-AIRTABLE_TABLE=your_table_id
-DROPBOX_APP_KEY=your_dropbox_app_key
-DROPBOX_REFRESH_TOKEN=your_refresh_token
+CI_AIRTABLE_TOKEN=your_token
+CI_AIRTABLE_BASE=your_base_id  
+CI_AIRTABLE_TABLE=your_table_id
+CI_DROPBOX_APP_KEY=your_dropbox_app_key
+CI_DROPBOX_REFRESH_TOKEN=your_refresh_token
 ```
 
 ## Assets
 
 The `tests/assets/` directory should contain:
-- `big_cats.csv` - Test data file
-- `*.jpg` files - Test images referenced in CSV
+- `airtable-upload-test.json` - Test data file (JSON format)
+- `*.gif` files - Test images referenced in JSON (Image Filename)
+- `*-Palette.jpg` files - Test palette images referenced in JSON (Palette Filename)
 
 ## Cleanup
 
 After running tests, you may want to:
 - Delete uploaded files from Dropbox
-- Remove test records from Airtable
+- Remove test records from Airtable (or run `test_delete_database_entries.py`)
 - Check API usage in both services
+
+**Quick Cleanup:**
+```bash
+# Delete all entries from the test Airtable table
+pytest tests/test_delete_database_entries.py -v -s
+```
