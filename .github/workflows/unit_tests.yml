@@ -21,6 +21,10 @@ on:
       - '**/.cursorrules'   # .cursorrules files anywhere in the repo
       
   workflow_dispatch:
+  
+  workflow_run:
+    workflows: ["build"]
+    types: [completed]
       
 env:
   BUILD_PYTHON_VERSION: 3.9

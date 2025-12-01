@@ -1,15 +1,10 @@
 name: airtable_delete_database_entries_test
+
 on:
-  push:
-    branches: [master, dev]
-    
-  pull_request:
-    branches: [master, dev]
-    
   workflow_dispatch:
   
   schedule:
-    - cron: '30 0 * * 6' # Runs at 8:30 AM Singapore time (00:30 UTC) every Saturday (after upload test)
+    - cron: '0 0 * * *' # Runs at 8 AM Singapore time (00:00 UTC) daily
       
 env:
   BUILD_PYTHON_VERSION: 3.9
