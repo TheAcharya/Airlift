@@ -10,7 +10,7 @@
 - Added `--empty-dropbox-folder` to empty the contents of the Dropbox folder
 - Updated `pyairtable` to version 3.3.0
 - Added comprehensive test suite (`test_comprehensive.py`) for local testing
-- Added `--comprehensive-test` option to `local-test-build.sh`
+- Added `--comprehensive-test` option to `local-test-build.sh` (#23)
 - Added new GitHub Actions workflow for unit tests (`unit_tests.yml`)
 - Added new GitHub Actions workflow for delete database entries test (`airtable_delete_database_entries_test.yml`)
 - Improved CLI argument validation with user-friendly error messages
