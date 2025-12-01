@@ -128,6 +128,8 @@ column options:
 validation options:
   --fail-on-duplicate-csv-columns    fail if CSV has duplicate columns;
                                      otherwise last column will be used
+database_options:
+  --delete-all-database-entries      delete all entries from the specified Airtable table
 ```
 
 ### macOS Release

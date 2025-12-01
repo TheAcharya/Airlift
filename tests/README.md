@@ -33,6 +33,11 @@ pytest tests/test_comprehensive.py -v
 pytest tests/test_upload.py -v -s
 ```
 
+### Delete Database Entries Tests (Requires API Tokens):
+```bash
+pytest tests/test_delete_database_entries.py -v -s
+```
+
 ### All Tests:
 ```bash
 pytest tests/ -v -s --disable-warnings
@@ -42,21 +47,23 @@ pytest tests/ -v -s --disable-warnings
 
 ```
 tests/
-├── __init__.py          # Test suite module
-├── input_command.py     # Args configuration and environment variables
-├── test_upload.py       # Upload tests with fixtures (requires API tokens)
-├── test_comprehensive.py # Comprehensive tests (no API tokens required)
-├── README.md            # This file
-└── assets/              # Test data files
+├── __init__.py                      # Test suite module
+├── input_command.py                 # Args configuration and environment variables
+├── test_upload.py                   # Upload tests with fixtures (requires API tokens)
+├── test_delete_database_entries.py  # Delete database entries test (requires API tokens)
+├── test_comprehensive.py            # Comprehensive tests (no API tokens required)
+├── README.md                        # This file
+└── assets/                          # Test data files
     ├── airtable-upload-test.json
-    ├── *.gif            # Image attachments
-    └── *-Palette.jpg    # Palette attachments
+    ├── *.gif                        # Image attachments
+    └── *-Palette.jpg                # Palette attachments
 ```
 
 ### File Descriptions
 
 - **`input_command.py`**: Contains `AirliftArgs` dataclass and `ARGS_DICT` configuration loaded from environment variables
-- **`test_upload.py`**: Main upload test with fixtures that tests the complete workflow (requires API tokens)
+- **`test_upload.py`**: Main upload test with fixtures that tests the complete upload workflow (requires API tokens)
+- **`test_delete_database_entries.py`**: Tests the delete all database entries functionality (requires API tokens)
 - **`test_comprehensive.py`**: Comprehensive test suite that validates all CLI arguments, data processing, and mocked functionality without requiring API tokens
 
 ## Important Notes
@@ -90,5 +97,11 @@ The `tests/assets/` directory should contain:
 
 After running tests, you may want to:
 - Delete uploaded files from Dropbox
-- Remove test records from Airtable
+- Remove test records from Airtable (or run `test_delete_database_entries.py`)
 - Check API usage in both services
+
+**Quick Cleanup:**
+```bash
+# Delete all entries from the test Airtable table
+pytest tests/test_delete_database_entries.py -v -s
+```
