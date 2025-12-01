@@ -7,6 +7,7 @@ from airlift.airtable_error_handling import ClientError
 from airlift.utils_exceptions import CriticalError, AirtableError
 from airlift.csv_data import CSVRowType
 from icecream import ic
+from tqdm import tqdm
 
 ATDATATYPE = Dict[str, Dict[str, str]]
 
@@ -35,6 +36,48 @@ class new_client:
         except Exception as e:
             logger.warning(f"Error creating records: {str(e)}")
             raise AirtableError("Unable to upload data!") from e
+
+    def delete_all_records(self) -> int:
+        """Delete all records from the Airtable table.
+        
+        Returns:
+            int: Number of records deleted
+        """
+        try:
+            # Get all record IDs from the table
+            logger.info("Fetching all records from the table...")
+            all_records = self.table.all()
+            
+            if not all_records:
+                logger.info("No records found in the table.")
+                return 0
+            
+            total_records = len(all_records)
+            logger.info(f"Found {total_records} records to delete.")
+            
+            # Extract record IDs
+            record_ids = [record["id"] for record in all_records]
+            
+            # Delete records in batches (Airtable API limit is 10 per request)
+            deleted_count = 0
+            batch_size = 10
+            
+            # Create progress bar
+            progress_bar = tqdm(total=total_records, desc="Deleting records", leave=False)
+            
+            for i in range(0, len(record_ids), batch_size):
+                batch = record_ids[i:i + batch_size]
+                self.table.batch_delete(batch)
+                deleted_count += len(batch)
+                progress_bar.update(len(batch))
+            
+            progress_bar.close()
+            logger.info(f"Successfully deleted {deleted_count} records from the table.")
+            return deleted_count
+            
+        except Exception as e:
+            logger.error(f"Error deleting records: {str(e)}")
+            raise AirtableError(f"Failed to delete records: {str(e)}") from e
 
     def missing_field_single(self, field: str):
         airtable_table_fields = []

@@ -122,6 +122,12 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
                 ),
             },
         },
+        "database_options": {
+            "--delete-all-database-entries": {
+                "action": "store_true",
+                "help": "delete all entries from the specified Airtable table",
+            },
+        },
     }
     
     _parse_schema(parser, schema)

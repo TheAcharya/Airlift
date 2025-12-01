@@ -240,6 +240,28 @@ class TestCLIArgumentParsing:
         ])
         
         assert args.md is True
+    
+    def test_delete_all_database_entries_flag(self):
+        """Test --delete-all-database-entries flag."""
+        args = parse_args([
+            "--token", "pat_test_token_12345",
+            "--base", "appTestBaseId123",
+            "--table", "tblTestTableId456",
+            "--delete-all-database-entries"
+        ])
+        
+        assert args.delete_all_database_entries is True
+    
+    def test_delete_all_database_entries_default(self):
+        """Test --delete-all-database-entries is False by default."""
+        args = parse_args([
+            "--token", "pat_test_token_12345",
+            "--base", "appTestBaseId123",
+            "--table", "tblTestTableId456",
+            "test.csv"
+        ])
+        
+        assert args.delete_all_database_entries is False
 
 
 # ============================================================================
@@ -503,6 +525,59 @@ class TestAirtableClient:
             
             with pytest.raises(CriticalError, match="same column name"):
                 client._rename_key_column_check(mock_args)
+    
+    @patch('airlift.airtable_client.Api')
+    def test_delete_all_records_empty_table(self, mock_api):
+        """Test delete_all_records with empty table."""
+        from airlift.airtable_client import new_client
+        
+        mock_table = MagicMock()
+        mock_table.all.return_value = []
+        
+        mock_api_instance = MagicMock()
+        mock_api_instance.table.return_value = mock_table
+        mock_api.return_value = mock_api_instance
+        
+        client = new_client(
+            token="pat_test_token",
+            base="appTestBase",
+            table="tblTestTable"
+        )
+        client.table = mock_table
+        
+        deleted_count = client.delete_all_records()
+        assert deleted_count == 0
+    
+    @patch('airlift.airtable_client.Api')
+    def test_delete_all_records_with_records(self, mock_api):
+        """Test delete_all_records with existing records."""
+        from airlift.airtable_client import new_client
+        
+        # Mock records
+        mock_records = [
+            {"id": "rec1", "fields": {"Name": "Test1"}},
+            {"id": "rec2", "fields": {"Name": "Test2"}},
+            {"id": "rec3", "fields": {"Name": "Test3"}},
+        ]
+        
+        mock_table = MagicMock()
+        mock_table.all.return_value = mock_records
+        mock_table.batch_delete.return_value = None
+        
+        mock_api_instance = MagicMock()
+        mock_api_instance.table.return_value = mock_table
+        mock_api.return_value = mock_api_instance
+        
+        client = new_client(
+            token="pat_test_token",
+            base="appTestBase",
+            table="tblTestTable"
+        )
+        client.table = mock_table
+        
+        deleted_count = client.delete_all_records()
+        assert deleted_count == 3
+        mock_table.batch_delete.assert_called_once_with(["rec1", "rec2", "rec3"])
 
 
 # ============================================================================
@@ -843,6 +918,22 @@ class TestComprehensiveScenarios:
         
         assert args.md is True
         assert args.attachment_columns_map == [["Image Filename", "Attachments"]]
+    
+    def test_delete_all_database_entries_scenario(self):
+        """Test delete all database entries scenario."""
+        args = parse_args([
+            "--token", "pat_test_token_12345",
+            "--base", "appTestBaseId123",
+            "--table", "tblTestTableId456",
+            "--delete-all-database-entries",
+            "--verbose"
+        ])
+        
+        assert args.delete_all_database_entries is True
+        assert args.token == "pat_test_token_12345"
+        assert args.base == "appTestBaseId123"
+        assert args.table == "tblTestTableId456"
+        assert args.verbose is True
 
 
 # ============================================================================
