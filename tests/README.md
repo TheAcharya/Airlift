@@ -19,14 +19,23 @@ This directory contains real API tests for Airlift that actually interact with A
 
 ## Running Tests
 
-### All tests:
+### Comprehensive Tests (No API Tokens Required):
+```bash
+# Run comprehensive tests locally
+pytest tests/test_comprehensive.py -v
+
+# Or use the build script
+./scripts/local-test-build.sh --comprehensive-test
+```
+
+### Upload Tests (Requires API Tokens):
 ```bash
 pytest tests/test_upload.py -v -s
 ```
 
-### With output:
+### All Tests:
 ```bash
-pytest tests/test_upload.py -v -s --disable-warnings
+pytest tests/ -v -s --disable-warnings
 ```
 
 ## Test Structure
@@ -35,7 +44,8 @@ pytest tests/test_upload.py -v -s --disable-warnings
 tests/
 ├── __init__.py          # Test suite module
 ├── input_command.py     # Args configuration and environment variables
-├── test_upload.py       # Upload tests with fixtures
+├── test_upload.py       # Upload tests with fixtures (requires API tokens)
+├── test_comprehensive.py # Comprehensive tests (no API tokens required)
 ├── README.md            # This file
 └── assets/              # Test data files
     ├── airtable-upload-test.json
@@ -46,7 +56,8 @@ tests/
 ### File Descriptions
 
 - **`input_command.py`**: Contains `AirliftArgs` dataclass and `ARGS_DICT` configuration loaded from environment variables
-- **`test_upload.py`**: Main upload test with fixtures that tests the complete workflow
+- **`test_upload.py`**: Main upload test with fixtures that tests the complete workflow (requires API tokens)
+- **`test_comprehensive.py`**: Comprehensive test suite that validates all CLI arguments, data processing, and mocked functionality without requiring API tokens
 
 ## Important Notes
 
