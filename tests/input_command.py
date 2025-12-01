@@ -6,6 +6,7 @@ Contains the arguments dictionary loaded from environment variables.
 import os
 from dataclasses import dataclass
 from pathlib import PosixPath
+from typing import List, Optional
 
 from dotenv import load_dotenv
 
@@ -20,16 +21,16 @@ class AirliftArgs:
     base: str
     table: str
     dropbox_token: str
-    attachment_columns: list | None
+    attachment_columns: Optional[List]
     workers: int
     verbose: bool
     md: bool
     disable_bypass_column_creation: bool
     fail_on_duplicate_csv_columns: bool
-    rename_key_column: list | None
-    attachment_columns_map: list | None
-    columns_copy: list | None
-    log: str | None
+    rename_key_column: Optional[List]
+    attachment_columns_map: Optional[List]
+    columns_copy: Optional[List]
+    log: Optional[str]
 
 
 ARGS_DICT = {
