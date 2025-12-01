@@ -130,6 +130,7 @@ validation options:
                                      otherwise last column will be used
 database_options:
   --delete-all-database-entries      delete all entries from the specified Airtable table
+  --empty-dropbox-folder             empty the contents of the Dropbox folder
 ```
 
 ### macOS Release

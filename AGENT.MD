@@ -97,6 +97,11 @@ The project follows a modular architecture with clear separation of concerns:
 - Column renaming and copying capabilities
 - Delete all database entries functionality
 
+### Dropbox Operations
+- Empty folder contents without deleting the folder itself
+- Works with both `/Airlift` and `/Marker Data` folders (via `--md` flag)
+- Progress bar for deletion operations
+
 ### Attachment Handling
 - Dropbox integration for file storage
 - Multiple attachment column support
@@ -156,7 +161,7 @@ schema: ArgSchema = {
     "column_options": { ... },
     "custom application options": { ... },
     "validation_options": { ... },
-    "database_options": { ... },  # For --delete-all-database-entries
+    "database_options": { ... },  # --delete-all-database-entries, --empty-dropbox-folder
 }
 ```
 
@@ -174,6 +179,7 @@ tests/
 ├── input_command.py                 # Args configuration and environment variables
 ├── test_upload.py                   # Upload tests (requires API tokens)
 ├── test_delete_database_entries.py  # Delete tests (requires API tokens)
+├── test_empty_dropbox_folder.py     # Dropbox folder tests (requires Dropbox tokens)
 ├── test_comprehensive.py            # Comprehensive tests (no API tokens required)
 ├── README.md                        # Test documentation
 └── assets/                          # Test data files
@@ -190,6 +196,7 @@ pytest tests/test_comprehensive.py -v
 # Integration tests (requires API tokens)
 pytest tests/test_upload.py -v -s
 pytest tests/test_delete_database_entries.py -v -s
+pytest tests/test_empty_dropbox_folder.py -v -s
 ```
 
 ### Security Considerations
@@ -238,7 +245,8 @@ Airlift/
 └── tests/
     ├── test_comprehensive.py        # Comprehensive tests (no API tokens)
     ├── test_upload.py               # Upload tests (requires API tokens)
-    └── test_delete_database_entries.py  # Delete tests (requires API tokens)
+    ├── test_delete_database_entries.py  # Delete tests (requires API tokens)
+    └── test_empty_dropbox_folder.py     # Dropbox folder tests (requires Dropbox tokens)
 ```
 
 #### Usage Examples
@@ -434,7 +442,7 @@ When adding new CLI features:
 |----------|---------|-------------|
 | `unit_tests.yml` | Push/PR to master/dev | Comprehensive tests (no API tokens) |
 | `airtable_image_upload_test.yml` | Weekly/Manual | Upload integration test |
-| `airtable_delete_database_entries_test.yml` | Weekly/Manual | Delete entries test |
+| `airtable_delete_database_entries_test.yml` | Weekly/Manual | Delete entries + Empty Dropbox folder tests |
 | `build.yml` | Push/PR | Build verification |
 | `release_github.yml` | Release | Binary distribution |
 

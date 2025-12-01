@@ -13,7 +13,7 @@ from airlift.csv_data import csv_read
 from airlift.airtable_upload import Upload
 from airlift.json_data import json_read
 from airlift.airtable_client import new_client
-from airlift.dropbox_client import dropbox_client,change_refresh_access_token
+from airlift.dropbox_client import dropbox_client, change_refresh_access_token, empty_dropbox_folder
 from icecream import ic
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,14 @@ def _validate_required_args(args) -> None:
     
     # Dropbox refresh token mode only needs dropbox-token
     if args.dropbox_refresh_token:
+        if not args.dropbox_token:
+            missing_args.append("--dropbox-token")
+        if missing_args:
+            _print_missing_args_error(missing_args)
+        return
+    
+    # Empty Dropbox folder mode only needs dropbox-token
+    if args.empty_dropbox_folder:
         if not args.dropbox_token:
             missing_args.append("--dropbox-token")
         if missing_args:
@@ -87,6 +95,16 @@ def cli(*argv: str) -> None:
             airtable_client = new_client(token=args.token, base=args.base, table=args.table)
             deleted_count = airtable_client.delete_all_records()
             logger.info(f"Operation complete. Deleted {deleted_count} records.")
+
+        # Handle empty Dropbox folder operation
+        elif args.empty_dropbox_folder:
+            folder_name = "Marker Data" if args.md else "Airlift"
+            logger.warning(f"WARNING: This will delete ALL contents from the Dropbox folder '/{folder_name}'!")
+            logger.info(f"The folder itself will NOT be deleted.")
+            
+            # Empty the Dropbox folder contents
+            deleted_count = empty_dropbox_folder(args.dropbox_token, args.md)
+            logger.info(f"Operation complete. Deleted {deleted_count} items from '/{folder_name}'.")
 
         elif not args.dropbox_refresh_token: #if dropbox-refresh-token flag is not present, continue normal procedure
 

@@ -262,6 +262,37 @@ class TestCLIArgumentParsing:
         ])
         
         assert args.delete_all_database_entries is False
+    
+    def test_empty_dropbox_folder_flag(self):
+        """Test --empty-dropbox-folder flag."""
+        args = parse_args([
+            "--dropbox-token", "dropbox-token.json",
+            "--empty-dropbox-folder"
+        ])
+        
+        assert args.empty_dropbox_folder is True
+    
+    def test_empty_dropbox_folder_with_md_flag(self):
+        """Test --empty-dropbox-folder with --md flag."""
+        args = parse_args([
+            "--dropbox-token", "dropbox-token.json",
+            "--empty-dropbox-folder",
+            "--md"
+        ])
+        
+        assert args.empty_dropbox_folder is True
+        assert args.md is True
+    
+    def test_empty_dropbox_folder_default(self):
+        """Test --empty-dropbox-folder is False by default."""
+        args = parse_args([
+            "--token", "pat_test_token_12345",
+            "--base", "appTestBaseId123",
+            "--table", "tblTestTableId456",
+            "test.csv"
+        ])
+        
+        assert args.empty_dropbox_folder is False
 
 
 # ============================================================================
@@ -713,6 +744,59 @@ class TestDropboxClient:
         
         # Verify environment variables may be set
         # (actual values depend on certifi installation)
+    
+    def test_empty_dropbox_folder_missing_token_file(self):
+        """Test empty_dropbox_folder with missing token file."""
+        from airlift.dropbox_client import empty_dropbox_folder
+        
+        with pytest.raises(CriticalError, match="not found"):
+            empty_dropbox_folder("/nonexistent/path/token.json", md=False)
+    
+    def test_empty_dropbox_folder_invalid_json(self):
+        """Test empty_dropbox_folder with invalid JSON file."""
+        from airlift.dropbox_client import empty_dropbox_folder
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            f.write("invalid json content")
+            temp_path = f.name
+        
+        try:
+            with pytest.raises(CriticalError, match="Invalid JSON"):
+                empty_dropbox_folder(temp_path, md=False)
+        finally:
+            os.unlink(temp_path)
+    
+    def test_empty_dropbox_folder_missing_app_key(self):
+        """Test empty_dropbox_folder with missing app_key."""
+        from airlift.dropbox_client import empty_dropbox_folder
+        
+        token_data = {"refresh_token": "test_token"}
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            json.dump(token_data, f)
+            temp_path = f.name
+        
+        try:
+            with pytest.raises(CriticalError, match="app_key"):
+                empty_dropbox_folder(temp_path, md=False)
+        finally:
+            os.unlink(temp_path)
+    
+    def test_empty_dropbox_folder_missing_refresh_token(self):
+        """Test empty_dropbox_folder with missing refresh_token."""
+        from airlift.dropbox_client import empty_dropbox_folder
+        
+        token_data = {"app_key": "test_app_key"}
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            json.dump(token_data, f)
+            temp_path = f.name
+        
+        try:
+            with pytest.raises(CriticalError, match="refresh_token"):
+                empty_dropbox_folder(temp_path, md=False)
+        finally:
+            os.unlink(temp_path)
 
 
 # ============================================================================
@@ -933,6 +1017,33 @@ class TestComprehensiveScenarios:
         assert args.token == "pat_test_token_12345"
         assert args.base == "appTestBaseId123"
         assert args.table == "tblTestTableId456"
+        assert args.verbose is True
+    
+    def test_empty_dropbox_folder_scenario(self):
+        """Test empty Dropbox folder scenario without --md flag."""
+        args = parse_args([
+            "--dropbox-token", "dropbox-token.json",
+            "--empty-dropbox-folder",
+            "--verbose"
+        ])
+        
+        assert args.empty_dropbox_folder is True
+        assert args.dropbox_token == Path("dropbox-token.json")
+        assert args.verbose is True
+        assert args.md is False
+    
+    def test_empty_dropbox_folder_with_md_scenario(self):
+        """Test empty Dropbox folder scenario with --md flag (Marker Data)."""
+        args = parse_args([
+            "--dropbox-token", "dropbox-token.json",
+            "--empty-dropbox-folder",
+            "--md",
+            "--verbose"
+        ])
+        
+        assert args.empty_dropbox_folder is True
+        assert args.dropbox_token == Path("dropbox-token.json")
+        assert args.md is True
         assert args.verbose is True
 
 
