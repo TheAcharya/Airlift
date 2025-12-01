@@ -50,11 +50,11 @@ jobs:
 
       - name: Run tests
         env:
-          AIRTABLE_TOKEN: ${{secrets.AIRTABLE_TOKEN}}
-          AIRTABLE_BASE: ${{secrets.AIRTABLE_BASE}}
-          AIRTABLE_TABLE: ${{secrets.AIRTABLE_TABLE}}
-          DROPBOX_APP_KEY: ${{secrets.DROPBOX_APP_KEY}}
-          DROPBOX_REFRESH_TOKEN: ${{secrets.DROPBOX_REFRESH_TOKEN}}
+          CI_AIRTABLE_TOKEN: ${{secrets.CI_AIRTABLE_TOKEN}}
+          CI_AIRTABLE_BASE: ${{secrets.CI_AIRTABLE_BASE}}
+          CI_AIRTABLE_TABLE: ${{secrets.CI_AIRTABLE_TABLE}}
+          CI_DROPBOX_APP_KEY: ${{secrets.CI_DROPBOX_APP_KEY}}
+          CI_DROPBOX_REFRESH_TOKEN: ${{secrets.CI_DROPBOX_REFRESH_TOKEN}}
           
-        run: pytest -v -s --disable-warnings
+        run: pytest tests/test_upload.py -v -s --disable-warnings
         
