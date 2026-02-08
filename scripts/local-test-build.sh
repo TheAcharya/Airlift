@@ -208,6 +208,17 @@ configure_poetry() {
     print_success "Poetry configured for local development"
 }
 
+# Function to install poetry-plugin-export (matches GitHub Actions build.yml)
+install_poetry_plugin_export() {
+    local poetry_bin="$BUILD_DIR/python/bin/poetry"
+    print_status "Installing poetry-plugin-export 1.9.0..."
+    if ! "$poetry_bin" self add poetry-plugin-export==1.9.0; then
+        print_error "poetry-plugin-export installation failed"
+        exit 1
+    fi
+    print_success "poetry-plugin-export installed successfully"
+}
+
 # Function to install dependencies
 install_dependencies() {
     local poetry_bin="$BUILD_DIR/python/bin/poetry"
@@ -522,6 +533,7 @@ main() {
             install_setuptools
             setup_poetry
             configure_poetry
+            install_poetry_plugin_export
             
             # Install dependencies
             export PATH="$(pwd)/$BUILD_DIR/python/bin:$PATH"
@@ -556,6 +568,7 @@ main() {
     install_setuptools
     setup_poetry
     configure_poetry
+    install_poetry_plugin_export
     
     # Handle lock-only mode
     if [ "$LOCK_ONLY" = true ]; then
