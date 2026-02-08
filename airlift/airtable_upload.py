@@ -1,5 +1,6 @@
 import logging
 import concurrent.futures
+import threading
 from airlift.airtable_client import new_client
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 from queue import Queue, Empty
@@ -27,6 +28,7 @@ class Upload:
         self.rename_key_column=args.rename_key_column
         self.workers = args.workers if args.workers else 5
         self.log = args.log
+        self.stop_event = threading.Event()
 
     def write_log(self,file_path, line):
         with open(file_path, 'a') as file:
@@ -62,6 +64,8 @@ class Upload:
 
     def _worker(self,data_queue: Queue, progress_bar) -> None:
         while True:
+            if self.stop_event.is_set():
+                break
             try:
                 data = data_queue.get_nowait()
                 for key, value in data['fields'].items():

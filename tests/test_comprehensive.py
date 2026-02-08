@@ -58,6 +58,7 @@ TABLE OF CONTENTS:
    - test_upload_initialization
    - test_worker_thread_count
    - test_attachment_column_handling
+   - test_upload_has_stop_event
 
 7. TestDropboxClient
    - test_token_loading
@@ -689,6 +690,31 @@ class TestUploadFunctionality:
         
         assert upload.workers == 10
 
+    def test_upload_has_stop_event(self):
+        """Test Upload has stop_event for worker coordination (regression for CriticalError stop)."""
+        from airlift.airtable_upload import Upload
+        import threading
+
+        mock_client = MagicMock()
+        mock_args = MagicMock()
+        mock_args.csv_file = Path("tests/assets/test.csv")
+        mock_args.attachment_columns = None
+        mock_args.attachment_columns_map = None
+        mock_args.columns_copy = None
+        mock_args.rename_key_column = None
+        mock_args.workers = 5
+        mock_args.log = None
+
+        upload = Upload(
+            client=mock_client,
+            new_data=[],
+            dbx=None,
+            args=mock_args
+        )
+        assert hasattr(upload, "stop_event")
+        assert isinstance(upload.stop_event, threading.Event)
+        assert upload.stop_event.is_set() is False
+
 
 # ============================================================================
 # 7. TestDropboxClient - Dropbox Client Operations (Mocked)
@@ -1205,15 +1231,23 @@ class TestCLIIntegration:
     def test_setup_logging_with_file(self):
         """Test logging setup with log file."""
         from airlift.cli import setup_logging
-        
+
         with tempfile.NamedTemporaryFile(mode='w', suffix='.log', delete=False) as f:
             temp_path = f.name
-        
+
         try:
             setup_logging(is_verbose=True, log_file=Path(temp_path))
             # Logging setup should not raise any errors
         finally:
             os.unlink(temp_path)
+
+    def test_cli_exception_handler_when_args_not_set(self):
+        """Test CLI exception handler does not raise when args is never set (e.g. parse_args raises)."""
+        from airlift.cli import cli
+
+        with patch("airlift.cli.parse_args", side_effect=ValueError("test parse error")):
+            cli([])
+        # No NameError: getattr(args, "verbose", False) is used when args may be None
 
 
 # ============================================================================

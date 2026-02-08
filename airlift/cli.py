@@ -74,6 +74,7 @@ def _print_missing_args_error(missing_args: list) -> None:
 
 
 def cli(*argv: str) -> None:
+    args = None
     try:
         ic.disable()
         args = parse_args(argv)
@@ -162,8 +163,8 @@ def cli(*argv: str) -> None:
         logger.info("Done!")
 
     except Exception as e:
-        if args.verbose:
-            logger.error('Error at %s', 'division', exc_info=e)
+        if getattr(args, "verbose", False):
+            logger.error("Error", exc_info=e)
         else:
             logger.error(e)
 

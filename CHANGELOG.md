@@ -1,5 +1,19 @@
 # Changelog
 
+### 1.3.1
+
+**🎉 Released:**
+- 8th February 2026
+
+**🔨 Improvements:**
+- Added comprehensive test coverage for upload worker stop signal and CLI exception handler with 78 total test methods
+
+**🐞 Bug Fix:**
+- Fixed upload worker stop signal — add `stop_event` so workers exit when one raises CriticalError
+- Fixed CLI exception handler referencing `args` before it may be set (e.g. when parse_args fails)
+
+---
+
 ### 1.3.0
 
 **🎉 Released:**

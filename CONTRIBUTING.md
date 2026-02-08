@@ -21,7 +21,7 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 6. Issue that pull request!
 
 ## Joining Our Team
-If this project is in the area of your interest and you would like to join the team, please get in touch with [me](https://twitter.com/IAmVigneswaran).
+If this project is in the area of your interest and you would like to join the team, please get in touch with [me](https://bsky.app/profile/vigneswaranrajkumar.com).
 
 ## Software License
 When you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
