@@ -3,6 +3,7 @@ Upload tests for Airlift.
 Tests the complete upload workflow to Airtable with Dropbox attachments.
 """
 
+import contextlib
 import json
 import os
 import pathlib
@@ -53,11 +54,9 @@ def dropbox_token_file():
     
     yield temp_path
     
-    # Cleanup
-    try:
+    # Cleanup (ignore OSError if file already removed)
+    with contextlib.suppress(OSError):
         os.unlink(temp_path)
-    except OSError:
-        pass
 
 
 @pytest.fixture(scope="function")

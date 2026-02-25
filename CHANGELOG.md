@@ -1,5 +1,17 @@
 # Changelog
 
+### 1.3.2
+
+**🎉 Released:**
+- 25th February 2026
+
+**🔨 Improvements:**
+- Replaced bare `except:` with specific exceptions (`KeyError`, `Exception`) in dropbox_client and cli so KeyboardInterrupt and SystemExit are not caught
+- Replaced empty `except OSError: pass` with `contextlib.suppress(OSError)` in test fixture cleanup (test_upload, test_delete_database_entries, test_empty_dropbox_folder)
+- Removed unused imports and unused local variables across the codebase (CodeQL clean-up)
+
+---
+
 ### 1.3.1
 
 **🎉 Released:**

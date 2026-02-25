@@ -3,6 +3,7 @@ Delete database entries tests for Airlift.
 Tests the delete all database entries workflow for Airtable.
 """
 
+import contextlib
 import json
 import os
 import tempfile
@@ -48,11 +49,9 @@ def dropbox_token_file():
     
     yield temp_path
     
-    # Cleanup
-    try:
+    # Cleanup (ignore OSError if file already removed)
+    with contextlib.suppress(OSError):
         os.unlink(temp_path)
-    except OSError:
-        pass
 
 
 @pytest.fixture(scope="function")

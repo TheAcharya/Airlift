@@ -1,14 +1,9 @@
 import json
 import logging
-import datetime
-import email
-from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, Iterable, Iterator, List, Optional
+from typing import Any, Dict, Iterable, List
 
 from airlift.utils_exceptions import CriticalError
-from airlift.airlift_data_guesser import guess_data_type
-from icecream import ic
 
 CSVRowType = Dict[str, Any]
 
