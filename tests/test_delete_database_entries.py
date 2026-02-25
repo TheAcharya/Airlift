@@ -55,10 +55,9 @@ def dropbox_token_file():
 
 
 @pytest.fixture(scope="function")
-def load_client_and_data(dropbox_token_file) -> Generator[Tuple[AirliftArgs, new_client, Optional[dropbox_client]], None, None]:
+def load_clients(dropbox_token_file) -> Generator[Tuple[AirliftArgs, new_client, Optional[dropbox_client]], None, None]:
     """
-    Load Airlift clients and data.
-    Yields args, airtable_client, and dropbox_client.
+    Set up and yield Airlift args, Airtable client, and optional Dropbox client.
     """
     # Create args with dropbox token file
     args_dict = ARGS_DICT.copy()
@@ -81,9 +80,9 @@ def load_client_and_data(dropbox_token_file) -> Generator[Tuple[AirliftArgs, new
         pytest.skip(f"Failed to connect to API: {e}")
 
 
-def test_delete_database_entries(load_client_and_data) -> None:
+def test_delete_database_entries(load_clients) -> None:
     """Test deleting all entries from Airtable database."""
-    args, airtable_client, dbx = load_client_and_data
+    args, airtable_client, dbx = load_clients
     
     print(f"Airlift version {__version__}")
     print(f"Target Base: {args.base}")

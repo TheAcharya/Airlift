@@ -97,7 +97,7 @@ import os
 import tempfile
 import warnings
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -105,7 +105,7 @@ import pytest
 from airlift.cli_args import parse_args
 from airlift.utils_exceptions import CriticalError, AirtableError, TypeConversionError
 from airlift.version import __version__
-from airlift.csv_data import csv_read, _csv_read_rows, _list_duplicates, _remove_duplicates
+from airlift.csv_data import csv_read, _list_duplicates, _remove_duplicates
 from airlift.json_data import json_read
 from airlift.airlift_data_guesser import guess_data_type
 from airlift.utils import timer_wrapper, get_all_timings
