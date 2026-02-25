@@ -2,7 +2,7 @@ import logging
 import concurrent.futures
 import threading
 from airlift.airtable_client import new_client
-from typing import Any, Dict, List, Optional
+from typing import Dict, List
 from queue import Queue
 from airlift.dropbox_client import dropbox_client
 import os
