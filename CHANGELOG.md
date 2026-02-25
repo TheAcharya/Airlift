@@ -7,8 +7,11 @@
 
 **🔨 Improvements:**
 - Replaced bare `except:` with specific exceptions (`KeyError`, `Exception`) in dropbox_client and cli so KeyboardInterrupt and SystemExit are not caught
-- Replaced empty `except OSError: pass` with `contextlib.suppress(OSError)` in test fixture cleanup (test_upload, test_delete_database_entries, test_empty_dropbox_folder)
-- Removed unused imports and unused local variables across the codebase (CodeQL clean-up)
+- Replaced empty `except OSError: pass` with `contextlib.suppress(OSError)` in test fixture teardown (test_upload, test_delete_database_entries, test_empty_dropbox_folder)
+- Removed unused imports and unused local variables across the codebase (airtable_upload, airtable_client, json_data, dropbox_client, csv_data, cli_args, test_comprehensive); removed unused `CSVRowType` from airtable_client and redundant typing (e.g. `Any`, `Optional` where unused)
+- Corrected fixture return type from `Union[...]` to `Tuple[AirliftArgs, Any, Optional[Any]]` in test_upload and test_delete_database_entries; renamed fixture `load_client_and_data` to `load_clients` in test_delete_database_entries with updated docstring
+- test_upload: replaced placeholder `assert 1 == 1` with assertions that the upload instance has `new_data` and that its length matches the prepared data
+- test_delete_database_entries: removed weak `assert deleted_count >= 0`; added `test_delete_database_entries_api_error` (monkeypatch) for API error handling; used `_` for unused unpacked values; annotated helper `_failing_delete_all_records` with `-> NoReturn`
 
 ---
 
