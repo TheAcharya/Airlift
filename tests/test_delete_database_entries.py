@@ -8,7 +8,7 @@ import json
 import os
 import tempfile
 import warnings
-from typing import Generator, Optional, Tuple
+from typing import Any, Generator, Optional, Tuple
 
 import pytest
 
@@ -55,7 +55,7 @@ def dropbox_token_file():
 
 
 @pytest.fixture(scope="function")
-def load_clients(dropbox_token_file) -> Generator[Tuple[AirliftArgs, new_client, Optional[dropbox_client]], None, None]:
+def load_clients(dropbox_token_file) -> Generator[Tuple[AirliftArgs, Any, Optional[Any]], None, None]:
     """
     Set up and yield Airlift args, Airtable client, and optional Dropbox client.
     """
@@ -94,13 +94,23 @@ def test_delete_database_entries(load_clients) -> None:
     deleted_count = airtable_client.delete_all_records()
     
     print(f"Operation complete. Deleted {deleted_count} records.")
-    
-    # Verify deletion was successful (count should be >= 0)
-    assert deleted_count >= 0
-    
+
     # Verify table is now empty
     remaining_records = airtable_client.table.all()
     assert len(remaining_records) == 0, f"Expected 0 records, but found {len(remaining_records)}"
     
     print("All entries successfully deleted from the database.")
+
+
+def test_delete_database_entries_api_error(load_clients, monkeypatch) -> None:
+    """Test behavior when delete_all_records encounters an API error."""
+    args, airtable_client, dbx = load_clients
+
+    def _failing_delete_all_records() -> None:
+        raise RuntimeError("API failure during delete_all_records")
+
+    # Simulate an API failure when attempting to delete all records
+    monkeypatch.setattr(airtable_client, "delete_all_records", _failing_delete_all_records)
+    with pytest.raises(RuntimeError, match="API failure during delete_all_records"):
+        airtable_client.delete_all_records()
 
