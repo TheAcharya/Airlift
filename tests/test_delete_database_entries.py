@@ -8,7 +8,7 @@ import json
 import os
 import tempfile
 import warnings
-from typing import Generator, Union
+from typing import Generator, Optional, Tuple
 
 import pytest
 
@@ -55,7 +55,7 @@ def dropbox_token_file():
 
 
 @pytest.fixture(scope="function")
-def load_client_and_data(dropbox_token_file) -> Generator[Union[AirliftArgs, new_client, dropbox_client], None, None]:
+def load_client_and_data(dropbox_token_file) -> Generator[Tuple[AirliftArgs, new_client, Optional[dropbox_client]], None, None]:
     """
     Load Airlift clients and data.
     Yields args, airtable_client, and dropbox_client.
