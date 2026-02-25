@@ -11,6 +11,9 @@ env:
   BUILD_POETRY_VERSION: 2.1.3
   PACKAGE_NAME: airlift
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
