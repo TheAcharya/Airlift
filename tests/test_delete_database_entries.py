@@ -8,7 +8,7 @@ import json
 import os
 import tempfile
 import warnings
-from typing import Any, Generator, Optional, Tuple
+from typing import Any, Generator, NoReturn, Optional, Tuple
 
 import pytest
 
@@ -82,7 +82,7 @@ def load_clients(dropbox_token_file) -> Generator[Tuple[AirliftArgs, Any, Option
 
 def test_delete_database_entries(load_clients) -> None:
     """Test deleting all entries from Airtable database."""
-    args, airtable_client, dbx = load_clients
+    args, airtable_client, _ = load_clients
     
     print(f"Airlift version {__version__}")
     print(f"Target Base: {args.base}")
@@ -104,9 +104,9 @@ def test_delete_database_entries(load_clients) -> None:
 
 def test_delete_database_entries_api_error(load_clients, monkeypatch) -> None:
     """Test behavior when delete_all_records encounters an API error."""
-    args, airtable_client, dbx = load_clients
+    _, airtable_client, _ = load_clients
 
-    def _failing_delete_all_records() -> None:
+    def _failing_delete_all_records() -> NoReturn:
         raise RuntimeError("API failure during delete_all_records")
 
     # Simulate an API failure when attempting to delete all records
