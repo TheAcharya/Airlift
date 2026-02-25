@@ -1,12 +1,9 @@
 import logging
 import json
 from typing import Any, Dict, List
-from pyairtable import Api, Table, Base
-from pyairtable.orm import Model, fields
-from airlift.airtable_error_handling import ClientError
+from pyairtable import Api
 from airlift.utils_exceptions import CriticalError, AirtableError
 from airlift.csv_data import CSVRowType
-from icecream import ic
 from tqdm import tqdm
 
 ATDATATYPE = Dict[str, Dict[str, str]]

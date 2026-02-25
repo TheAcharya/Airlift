@@ -1,15 +1,11 @@
-import os 
+import os
 import dropbox
 import logging
 import json
-import sys
 import certifi
-import ssl
-import requests
 from datetime import datetime
 from airlift.utils_exceptions import CriticalError
 from dropbox import DropboxOAuth2FlowNoRedirect
-from typing import Dict
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +39,7 @@ class dropbox_client:
                     app_key=creds[0]
                 )
                 logger.info("Created a Dropbox Client")
-            except:
+            except Exception:
                 raise CriticalError('Failed to create the Dropbox client')
             
             # Set up folder structure
@@ -88,13 +84,13 @@ class dropbox_client:
         
         try:
             app_key = creds['app_key']
-        except:
+        except KeyError:
             logger.warning("app_key not present in json file")
             raise CriticalError("app_key not present in the json file, please check!")
         
         try:
             refresh_token = creds['refresh_token']
-        except:
+        except KeyError:
             try:
                 auth_flow = DropboxOAuth2FlowNoRedirect(
                     app_key, 
@@ -314,7 +310,7 @@ def change_refresh_access_token(access_token):
         
     try:
         app_key = creds['app_key']
-    except:
+    except KeyError:
         logger.warning("app_key not present in json file")
         raise CriticalError("app_key not present in the json file, please check!")
     

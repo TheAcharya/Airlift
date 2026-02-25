@@ -3,6 +3,7 @@ Empty Dropbox folder tests for Airlift.
 Tests the empty Dropbox folder workflow.
 """
 
+import contextlib
 import json
 import os
 import tempfile
@@ -45,11 +46,9 @@ def dropbox_token_file() -> Generator[str, None, None]:
     
     yield temp_path
     
-    # Cleanup
-    try:
+    # Cleanup (ignore OSError if file already removed)
+    with contextlib.suppress(OSError):
         os.unlink(temp_path)
-    except OSError:
-        pass
 
 
 def test_empty_dropbox_folder_airlift(dropbox_token_file) -> None:

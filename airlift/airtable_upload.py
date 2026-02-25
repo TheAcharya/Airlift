@@ -2,13 +2,11 @@ import logging
 import concurrent.futures
 import threading
 from airlift.airtable_client import new_client
-from typing import Any, Dict, Iterable, Iterator, List, Optional
-from queue import Queue, Empty
+from typing import Dict, List
+from queue import Queue
 from airlift.dropbox_client import dropbox_client
 import os
 from tqdm import tqdm
-from icecream import ic
-from airlift.dropbox_client import dropbox_client
 from airlift.utils_exceptions import CriticalError
 
 logger = logging.getLogger(__name__)

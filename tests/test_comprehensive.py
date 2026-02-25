@@ -98,7 +98,6 @@ import tempfile
 import warnings
 from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock
-from argparse import Namespace
 
 import pytest
 

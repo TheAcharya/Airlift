@@ -85,8 +85,6 @@ def cli(*argv: str) -> None:
         setup_logging(is_verbose=args.verbose,log_file=args.log)
         logger.info(f"Airlift version {__version__}")
 
-        workers = args.workers if args.workers else 5
-
         # Handle delete all database entries operation
         if args.delete_all_database_entries:
             logger.warning("WARNING: This will delete ALL entries from the specified Airtable table!")
@@ -148,7 +146,7 @@ def cli(*argv: str) -> None:
                 try:
                     change_refresh_access_token(args.dropbox_token)
                     get_token = False
-                except:
+                except Exception:
                     print("Error during retreival of token! Do you want to try again? (y/n)")
                     user_choice = input("(y/n)->")
 

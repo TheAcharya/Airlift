@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from typing import Any, Dict, List, Sequence, Tuple, Union
+from typing import Any, Dict, Sequence, Tuple, Union
 from airlift.version import __version__
 
 ArgToken = Union[str, Tuple[str, str]]

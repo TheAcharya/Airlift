@@ -1,9 +1,8 @@
 import csv
 import logging
-import os
 from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, Iterable, Iterator, List, Optional
+from typing import Any, Dict, Iterable, List
 
 from airlift.utils_exceptions import CriticalError
 
@@ -13,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 def csv_read(file_path: Path,fail_on_dup:bool) -> List[CSVRowType]:
-    dirname = os.path.dirname(file_path)
     try:
         with open(file_path,"r",encoding="utf-8-sig") as csv_file:
             return _csv_read_rows(csv_file,fail_on_dup)
