@@ -62,9 +62,7 @@ The project follows a modular architecture with clear separation of concerns:
 | `airtable_client.py` + `airtable_upload.py` | Airtable API integration using pyairtable 3.x |
 | `dropbox_client.py` | Dropbox API integration for file storage using SDK 12.x |
 | `csv_data.py` + `json_data.py` | Data file parsing and validation |
-| `utils.py` + `utils_exceptions.py` | Utility functions and custom exceptions |
-| `airtable_error_handling.py` | Centralized error management |
-| `airlift_data_guesser.py` | Data type inference and column mapping |
+| `utils_exceptions.py` | Shared custom exception hierarchy |
 
 ### Data Flow Architecture
 
@@ -304,7 +302,7 @@ The build script is designed to work seamlessly with GitHub Actions and uses ide
 
 ### Adding New Data Format Support
 1. Create new parser module following `csv_data.py` pattern
-2. Add format detection to `airlift_data_guesser.py`
+2. Add format detection routing in `cli.py`
 3. Update CLI arguments in `cli_args.py`
 4. Test with sample files and various edge cases
 
@@ -316,9 +314,8 @@ The build script is designed to work seamlessly with GitHub Actions and uses ide
 
 ### Error Handling Enhancement
 1. Add new exception types to `utils_exceptions.py`
-2. Update `airtable_error_handling.py` for centralized handling
-3. Ensure proper error propagation and user-friendly messages
-4. Test error scenarios and recovery mechanisms
+2. Ensure proper error propagation and user-friendly messages
+3. Test error scenarios and recovery mechanisms
 
 ### Adding New Features Checklist
 
@@ -434,7 +431,6 @@ When adding new CLI features:
 - Progress bar for user feedback
 - Verbose mode for detailed output
 - Error categorization and reporting
-- Performance timing utilities
 
 ## GitHub Actions Workflows
 

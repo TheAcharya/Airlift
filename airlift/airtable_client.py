@@ -1,3 +1,10 @@
+"""
+Airtable API client wrapper for Airlift.
+
+This module handles Airtable table access, schema checks, optional field
+creation, record upload, and bulk delete operations.
+"""
+
 import logging
 import json
 from typing import Dict

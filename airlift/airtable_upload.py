@@ -1,3 +1,10 @@
+"""
+Concurrent upload worker pipeline for Airlift.
+
+This module coordinates threaded row uploads and attachment handling between
+Dropbox and Airtable clients.
+"""
+
 import logging
 import concurrent.futures
 import threading

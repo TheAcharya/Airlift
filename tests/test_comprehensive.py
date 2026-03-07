@@ -10,7 +10,6 @@ Test Coverage:
 - Argument parsing and type conversion
 - Error handling for invalid arguments
 - CSV and JSON data processing
-- Data type detection and guessing
 - Mock testing of core functionality
 - Edge cases and boundary conditions
 - Airtable client operations (mocked)
@@ -41,51 +40,39 @@ TABLE OF CONTENTS:
    - test_json_read_file_not_found
    - test_json_empty_file
 
-4. TestDataTypeGuesser
-   - test_guess_number_type
-   - test_guess_date_type
-   - test_guess_email_type
-   - test_guess_bool_type
-   - test_guess_unknown_type
-
-5. TestAirtableClient
+4. TestAirtableClient
    - test_client_initialization
    - test_missing_field_check
    - test_rename_key_column_validation
    - test_create_uploadable_data
 
-6. TestUploadFunctionality
+5. TestUploadFunctionality
    - test_upload_initialization
    - test_worker_thread_count
    - test_attachment_column_handling
    - test_upload_has_stop_event
 
-7. TestDropboxClient
+6. TestDropboxClient
    - test_token_loading
    - test_ssl_configuration
    - test_folder_creation
 
-8. TestErrorHandling
+7. TestErrorHandling
    - test_critical_error
    - test_airtable_error
    - test_type_conversion_error
-   - test_client_error_codes
 
-9. TestUtilities
-   - test_timer_wrapper
-   - test_get_all_timings
-
-10. TestVersionAndConstants
+8. TestVersionAndConstants
     - test_version_exists
     - test_version_format
 
-11. TestComprehensiveScenarios
+9. TestComprehensiveScenarios
     - test_full_upload_scenario_args
     - test_attachment_mapping_scenario
     - test_column_copy_scenario
     - test_rename_key_column_scenario
 
-12. TestEdgeCases
+10. TestEdgeCases
     - test_empty_arguments
     - test_whitespace_handling
     - test_special_characters_in_paths
@@ -107,9 +94,6 @@ from airlift.utils_exceptions import CriticalError, AirtableError, TypeConversio
 from airlift.version import __version__
 from airlift.csv_data import csv_read, _list_duplicates, _remove_duplicates
 from airlift.json_data import json_read
-from airlift.airlift_data_guesser import guess_data_type
-from airlift.utils import timer_wrapper, get_all_timings
-from airlift.airtable_error_handling import ClientError
 
 # Suppress warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -443,47 +427,7 @@ class TestJSONDataProcessing:
 
 
 # ============================================================================
-# 4. TestDataTypeGuesser - Data Type Detection
-# ============================================================================
-class TestDataTypeGuesser:
-    """Test data type guessing functionality."""
-    
-    def test_guess_number_type(self):
-        """Test number type detection."""
-        assert guess_data_type("123") == "number"
-        assert guess_data_type("123.45") == "number"
-        assert guess_data_type("0") == "number"
-        assert guess_data_type("999999") == "number"
-    
-    def test_guess_date_type(self):
-        """Test date type detection."""
-        assert guess_data_type("2024-01-15") == "date"
-        assert guess_data_type("2023-12-31") == "date"
-        assert guess_data_type("1990-05-20") == "date"
-    
-    def test_guess_email_type(self):
-        """Test email type detection."""
-        assert guess_data_type("test@example.com") == "email"
-        assert guess_data_type("user.name@domain.org") == "email"
-        assert guess_data_type("admin+tag@company.co.uk") == "email"
-    
-    def test_guess_bool_type(self):
-        """Test boolean type detection."""
-        assert guess_data_type("true") == "bool"
-        assert guess_data_type("false") == "bool"
-        assert guess_data_type("True") == "bool"
-        assert guess_data_type("False") == "bool"
-    
-    def test_guess_unknown_type(self):
-        """Test unknown type detection."""
-        assert guess_data_type("hello world") == "unknown"
-        assert guess_data_type("random text") == "unknown"
-        assert guess_data_type("") == "unknown"
-        assert guess_data_type("abc123") == "unknown"
-
-
-# ============================================================================
-# 5. TestAirtableClient - Airtable Client Operations (Mocked)
+# 4. TestAirtableClient - Airtable Client Operations (Mocked)
 # ============================================================================
 class TestAirtableClient:
     """Test Airtable client functionality with mocks."""
@@ -612,7 +556,7 @@ class TestAirtableClient:
 
 
 # ============================================================================
-# 6. TestUploadFunctionality - Upload Operations (Mocked)
+# 5. TestUploadFunctionality - Upload Operations (Mocked)
 # ============================================================================
 class TestUploadFunctionality:
     """Test upload functionality with mocks."""
@@ -716,7 +660,7 @@ class TestUploadFunctionality:
 
 
 # ============================================================================
-# 7. TestDropboxClient - Dropbox Client Operations (Mocked)
+# 6. TestDropboxClient - Dropbox Client Operations (Mocked)
 # ============================================================================
 class TestDropboxClient:
     """Test Dropbox client functionality with mocks."""
@@ -825,7 +769,7 @@ class TestDropboxClient:
 
 
 # ============================================================================
-# 8. TestErrorHandling - Error Handling and Exceptions
+# 7. TestErrorHandling - Error Handling and Exceptions
 # ============================================================================
 class TestErrorHandling:
     """Test error handling and exception classes."""
@@ -852,70 +796,8 @@ class TestErrorHandling:
         with pytest.raises(TypeConversionError):
             raise TypeConversionError("Test type conversion error")
     
-    def test_client_error_403(self):
-        """Test ClientError handling for 403 status."""
-        mock_response = MagicMock()
-        mock_response.status_code = 403
-        
-        mock_error = MagicMock()
-        mock_error.response = mock_response
-        
-        with pytest.raises(AirtableError, match="protected resource"):
-            ClientError(mock_error)
-    
-    def test_client_error_401(self):
-        """Test ClientError handling for 401 status."""
-        mock_response = MagicMock()
-        mock_response.status_code = 401
-        
-        mock_error = MagicMock()
-        mock_error.response = mock_response
-        
-        with pytest.raises(AirtableError, match="invalid credentials"):
-            ClientError(mock_error)
-    
-    def test_client_error_422(self):
-        """Test ClientError handling for 422 status."""
-        mock_response = MagicMock()
-        mock_response.status_code = 422
-        
-        mock_error = MagicMock()
-        mock_error.response = mock_response
-        
-        with pytest.raises(CriticalError, match="invalid"):
-            ClientError(mock_error)
-
-
 # ============================================================================
-# 9. TestUtilities - Utility Functions
-# ============================================================================
-class TestUtilities:
-    """Test utility functions."""
-    
-    def test_timer_wrapper(self):
-        """Test timer wrapper decorator."""
-        import time
-        
-        @timer_wrapper
-        def slow_function():
-            time.sleep(0.01)
-            return "result"
-        
-        result = slow_function()
-        assert result == "result"
-        
-        timings = get_all_timings()
-        assert "slow_function" in timings
-        assert timings["slow_function"] >= 0.01
-    
-    def test_get_all_timings(self):
-        """Test getting all function timings."""
-        timings = get_all_timings()
-        assert isinstance(timings, dict)
-
-
-# ============================================================================
-# 10. TestVersionAndConstants - Version and Constants
+# 8. TestVersionAndConstants - Version and Constants
 # ============================================================================
 class TestVersionAndConstants:
     """Test version and constant values."""
@@ -934,7 +816,7 @@ class TestVersionAndConstants:
 
 
 # ============================================================================
-# 11. TestComprehensiveScenarios - Complex Multi-Feature Scenarios
+# 9. TestComprehensiveScenarios - Complex Multi-Feature Scenarios
 # ============================================================================
 class TestComprehensiveScenarios:
     """Test comprehensive scenarios combining multiple features."""
@@ -1069,7 +951,7 @@ class TestComprehensiveScenarios:
 
 
 # ============================================================================
-# 12. TestEdgeCases - Edge Cases and Boundary Conditions
+# 10. TestEdgeCases - Edge Cases and Boundary Conditions
 # ============================================================================
 class TestEdgeCases:
     """Test edge cases and boundary conditions."""
@@ -1194,7 +1076,7 @@ class TestEdgeCases:
 
 
 # ============================================================================
-# 13. TestCLIIntegration - CLI Integration Tests
+# 11. TestCLIIntegration - CLI Integration Tests
 # ============================================================================
 class TestCLIIntegration:
     """Test CLI integration scenarios."""

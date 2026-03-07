@@ -1,3 +1,10 @@
+"""
+CSV ingestion utilities for Airlift.
+
+This module reads CSV input into Airtable-compatible records and handles
+duplicate-column behavior based on CLI validation settings.
+"""
+
 import csv
 import logging
 from collections import Counter

@@ -1,5 +1,18 @@
 # Changelog
 
+### 1.3.3
+
+**🎉 Released:**
+- 7th March 2026
+
+**🔨 Improvements:**
+- Removed unused modules (`utils.py`, `airlift_data_guesser.py`, `airtable_error_handling.py`) and cleaned stale references from tests and agent guidance docs
+- Added module-level header docstrings across `airlift/*.py` to clarify each file purpose and responsibility
+
+**🐞 Bug Fix:**
+- Improved `test_upload.py` to verify Airtable records are actually created after upload by asserting table count growth (with short retry window for eventual consistency)
+
+
 ### 1.3.2
 
 **🎉 Released:**
@@ -120,10 +133,10 @@
 - 26th April 2024
 
 **🔨 Improvements:**
-- Added support for multiple attachemnt columns mapping
+- Added support for multiple attachment columns mapping
 
 **🐞 Bug Fix:**
-- Improved handling of multiple attachemnt columns (#36)
+- Improved handling of multiple attachment columns (#36)
 
 ---
 

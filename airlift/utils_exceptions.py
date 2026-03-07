@@ -1,3 +1,7 @@
+"""
+Shared exception types used across Airlift modules.
+"""
+
 class CriticalError(Exception):
     """Exception raised when a generic critical error occurs."""
 

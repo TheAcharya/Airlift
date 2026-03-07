@@ -1,1 +1,5 @@
+"""
+Application version constant for Airlift.
+"""
+
 __version__ = "1.3.2"

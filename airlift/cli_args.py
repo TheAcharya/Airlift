@@ -1,3 +1,10 @@
+"""
+Airlift command line argument parser.
+
+This module defines the CLI schema and builds argparse groups/options used by
+the Airlift entrypoint.
+"""
+
 import argparse
 from pathlib import Path
 from typing import Any, Dict, Sequence, Tuple, Union
