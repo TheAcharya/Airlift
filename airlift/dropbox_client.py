@@ -1,3 +1,10 @@
+"""
+Dropbox integration layer for Airlift.
+
+This module manages Dropbox authentication, file uploads for attachments,
+refresh-token updates, and folder cleanup operations.
+"""
+
 import os
 import dropbox
 import logging

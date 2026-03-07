@@ -1,3 +1,10 @@
+"""
+JSON ingestion utilities for Airlift.
+
+This module reads JSON array payloads and converts each object into
+Airtable-compatible record dictionaries.
+"""
+
 import json
 import logging
 from pathlib import Path

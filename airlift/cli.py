@@ -1,3 +1,10 @@
+"""
+Airlift CLI runtime orchestration.
+
+This module validates required arguments, dispatches operation modes, configures
+logging, and coordinates the end-to-end upload/delete flows.
+"""
+
 import logging
 import os
 import signal
