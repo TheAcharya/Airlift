@@ -120,10 +120,10 @@
 - 26th April 2024
 
 **🔨 Improvements:**
-- Added support for multiple attachemnt columns mapping
+- Added support for multiple attachment columns mapping
 
 **🐞 Bug Fix:**
-- Improved handling of multiple attachemnt columns (#36)
+- Improved handling of multiple attachment columns (#36)
 
 ---
 

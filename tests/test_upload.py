@@ -8,6 +8,7 @@ import json
 import os
 import pathlib
 import tempfile
+import time
 import warnings
 from typing import Generator, Optional, Tuple
 
@@ -112,9 +113,27 @@ def test_upload_rows(load_client_and_data) -> None:
     # Validating data and creating an uploadable data
     data = airtable_client.create_uploadable_data(data=data, args=args)
     
+    # Track record count before upload to verify table growth.
+    before_records = airtable_client.table.all()
+    before_count = len(before_records)
+
     # Uploading the data
     upload_instance = Upload(client=airtable_client, new_data=data, dbx=dbx, args=args)
     upload_instance.upload_data()
+
+    # Verify records were uploaded by checking table count increase.
+    # Airtable can be briefly eventually consistent; retry a few times.
+    expected_min_after = before_count + len(data)
+    after_count = before_count
+    for _ in range(5):
+        after_count = len(airtable_client.table.all())
+        if after_count >= expected_min_after:
+            break
+        time.sleep(1)
+    assert after_count >= expected_min_after, (
+        f"Expected at least {expected_min_after} records after upload, "
+        f"found {after_count}."
+    )
 
     # Verify upload instance was initialized with expected data and upload completed
     assert hasattr(upload_instance, "new_data")

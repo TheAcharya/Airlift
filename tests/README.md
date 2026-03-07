@@ -33,6 +33,11 @@ pytest tests/test_comprehensive.py -v
 pytest tests/test_upload.py -v -s
 ```
 
+What `test_upload.py` verifies:
+- Loads JSON/CSV payload and validates it through Airlift preprocessing
+- Uploads rows (and attachments when configured) to Airtable/Dropbox
+- Confirms Airtable record count increases after upload (with short retry window for eventual consistency)
+
 ### Delete Database Entries Tests (Requires API Tokens):
 ```bash
 pytest tests/test_delete_database_entries.py -v -s
@@ -70,6 +75,7 @@ tests/
 - **`input_command.py`**: Contains `AirliftArgs` dataclass and `ARGS_DICT` configuration loaded from environment variables
 - **`test_comprehensive.py`**: Comprehensive test suite that validates all CLI arguments, data processing, and mocked functionality without requiring API tokens
 - **`test_upload.py`**: Main upload test with fixtures that tests the complete upload workflow (requires API tokens)
+- **`test_upload.py` behavior**: If required credentials are missing, the test is skipped instead of failed
 - **`test_delete_database_entries.py`**: Tests the `--delete-all-database-entries` functionality (requires API tokens)
 - **`test_empty_dropbox_folder.py`**: Tests the `--empty-dropbox-folder` functionality (requires Dropbox tokens)
 
@@ -81,6 +87,7 @@ tests/
 - **Airtable**: Will add/delete records in your specified table
 - **Costs**: May incur API usage charges
 - **Data**: Will create/delete real data in your services
+- **Skips are expected locally**: Integration tests skip automatically if required `CI_*` environment variables are not set
 
 ## Environment Variables
 
@@ -105,6 +112,7 @@ The `tests/assets/` directory should contain:
 After running upload tests, you may want to clean up:
 - Delete uploaded files from Dropbox
 - Remove test records from Airtable
+- Upload tests assert that Airtable record count grows, so repeated runs can accumulate test records
 
 **Quick Cleanup:**
 ```bash
