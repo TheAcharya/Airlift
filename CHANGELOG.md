@@ -12,6 +12,7 @@
 **🐞 Bug Fix:**
 - Improved `test_upload.py` to verify Airtable records are actually created after upload by asserting table count growth (with short retry window for eventual consistency)
 
+---
 
 ### 1.3.2
 
