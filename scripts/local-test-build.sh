@@ -488,8 +488,7 @@ run_comprehensive_tests() {
         print_error "Comprehensive test file not found: tests/test_comprehensive.py"
         exit 1
     fi
-    
-    print_status "Running comprehensive test suite..."
+
     if ! "$poetry_bin" run pytest tests/test_comprehensive.py -v --tb=long; then
         print_error "Comprehensive tests failed"
         exit 1
