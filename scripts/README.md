@@ -7,8 +7,8 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 ## Key Features
 
 - Fully Ephemeral: Everything is contained in project directories
-- No System Installation: Uses system Python with virtual environments
-- GitHub Actions Compatible: Same approach as CI/CD pipeline
+- No System Installation: Downloads standalone CPython into `.build/python/` (python-build-standalone)
+- GitHub Actions compatible: Poetry, setuptools, and plugin-export pins match CI/CD (macOS uses standalone Python bootstrap)
 - Cross-Platform: Works on macOS
 - Clean Output: Professional logging without emojis
 - Flexible Updates: Multiple dependency management options
@@ -16,9 +16,9 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 ## Prerequisites
 
 ### System Requirements
-- macOS
-- System Python 3.9+ installed (matches GitHub Actions workflow)
-- Basic tools: `curl`, `xar`, `cpio` (usually pre-installed on macOS)
+- macOS (Apple Silicon or Intel)
+- Host tools only: `curl` and `tar` (to download/extract Python into `.build/`)
+- No system Python, Homebrew Python, or Poetry install required
 
 ## Quick Start
 
@@ -29,13 +29,14 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 ```
 
 This will:
-1. Create a virtual environment in `.build/python/`
-2. Install setuptools 80.9.0 (matches GitHub Actions)
-3. Install Poetry 2.1.3 in the virtual environment
-4. Install project dependencies via Poetry
-5. Install PyInstaller for building
-6. Build the application
-7. Output the binary to `test-build/airlift`
+1. Download standalone CPython 3.14.5 into `.build/python/` (pinned python-build-standalone release)
+2. Install pip 26.1.2 in `.build/python/`
+3. Install setuptools 82.0.1 in `.build/python/`
+4. Install Poetry 2.4.1 in `.build/python/`
+5. Install project dependencies via Poetry
+6. Install PyInstaller for building
+7. Build the application
+8. Output the binary to `test-build/airlift`
 
 ### Run the Built Application
 ```bash
@@ -52,7 +53,7 @@ This will:
 # Build and run tests
 ./scripts/local-test-build.sh --test
 
-# Clean build directory and exit
+# Clean .build/, test-build/, .pytest_cache/ and exit
 ./scripts/local-test-build.sh --clean
 ```
 
@@ -87,9 +88,13 @@ After running the script, your project will have:
 ```
 Airlift/
 ├── .build/                    # Ephemeral build environment (gitignored)
-│   ├── python/               # Virtual environment
-│   ├── venv/                 # Poetry virtual environment
-│   └── cache/                # Poetry cache
+│   ├── python/               # Standalone CPython + pip + Poetry
+│   ├── downloads/            # Cached Python tarball
+│   ├── venv/                 # Poetry project virtual environment
+│   ├── cache/                # Poetry cache
+│   ├── pip-cache/            # pip download cache
+│   ├── poetry-config/        # Poetry configuration
+│   └── poetry-home/          # Poetry application data
 ├── test-build/               # Build output (gitignored)
 │   ├── airlift              # Final executable binary
 │   └── build/               # PyInstaller build artifacts
@@ -154,24 +159,27 @@ The script is designed to work seamlessly with GitHub Actions and uses identical
     ./scripts/local-test-build.sh
 ```
 
-**Version Alignment with GitHub Actions:**
-- Python: 3.9+ (matches `BUILD_PYTHON_VERSION: 3.9`)
-- Poetry: 2.1.3 (matches `BUILD_POETRY_VERSION: 2.1.3`)
-- Setuptools: 80.9.0 (matches `setuptools==80.9.0`)
-- PyInstaller: Latest version (matches CI workflow)
+**Version alignment with GitHub Actions** (Poetry, setuptools, plugin-export pins):
+- Python: **3.14** in workflows (`BUILD_PYTHON_VERSION`); local script uses standalone **3.14.5** on macOS
+- pip: **26.1.2** (local bootstrap only)
+- Poetry: **2.4.1** (`BUILD_POETRY_VERSION`)
+- Setuptools: **82.0.1** (`BUILD_SETUPTOOLS_VERSION`)
+- poetry-plugin-export: **1.10.0** (`BUILD_POETRY_PLUGIN_EXPORT_VERSION`)
+- PyInstaller: latest (installed in Poetry venv at build time; matches CI workflow)
 
 ## Environment Details
 
-### Virtual Environment
-- Location: `.build/python/`
-- Python: Uses system Python 3.9+ with `python3 -m venv`
-- Setuptools: 80.9.0 (installed before Poetry)
-- Poetry: 2.1.3 (installed via pip in the virtual environment)
+### Build Environment
+- Standalone Python: `.build/python/` (python-build-standalone 3.14.5, not system Python)
+- Project venv: `.build/venv/` (Poetry-managed dependencies)
+- pip: 26.1.2 (pinned bootstrap in `.build/python/`)
+- Setuptools: 82.0.1 (installed before Poetry)
+- Poetry: 2.4.1 (installed via pip in `.build/python/`)
 - Dependencies: Managed by Poetry in `.build/venv/`
 
 ### Build Output
 - Binary: `test-build/airlift`
-- Size: ~8.3MB (typical)
+- Size: ~20MB typical on macOS (Python 3.14 one-file bundle; varies by platform)
 - Architecture: Native to your system
 - Dependencies: Self-contained (no external dependencies)
 
@@ -185,19 +193,17 @@ The script is designed to work seamlessly with GitHub Actions and uses identical
 
 ### Common Issues
 
-1. "System Python 3 is not available"
+1. "Missing required host tools"
    ```bash
-   # Install Python 3
-   brew install python
+   # curl and tar must be available (standard on macOS)
+   which curl tar
    ```
 
-2. "Python 3.9 or higher is required"
+2. "Failed to download standalone Python"
    ```bash
-   # Check current Python version
-   python3 --version
-   
-   # Install Python 3.9+ if needed
-   brew install python@3.9
+   # Retry after network check, or clean and rebuild
+   ./scripts/local-test-build.sh --clean
+   ./scripts/local-test-build.sh
    ```
 
 3. "Missing required tools"
@@ -255,7 +261,7 @@ ls -la .build/
 ### Manual Cleanup
 ```bash
 # Remove build directories
-rm -rf .build/ test-build/
+rm -rf .build/ test-build/ .pytest_cache/
 
 # Or use the script
 ./scripts/local-test-build.sh --clean
@@ -285,14 +291,17 @@ rm -rf .build/ test-build/
 
 ## Script Configuration
 
-### Environment Variables
-The script uses these configuration variables (aligned with GitHub Actions):
+### Script configuration variables
+Pinned at the top of `scripts/local-test-build.sh` (Poetry/setuptools align with GitHub Actions):
 ```bash
-BUILD_DIR=".build"           # Ephemeral build environment
-TEST_BUILD_DIR="test-build"  # Build output directory
-PYTHON_VERSION="3.9"         # Target Python version (matches CI)
-POETRY_VERSION="2.1.3"       # Poetry version (matches CI)
-SETUPTOOLS_VERSION="80.9.0"  # Setuptools version (matches CI)
+BUILD_DIR=".build"
+TEST_BUILD_DIR="test-build"
+PYTHON_STANDALONE_VERSION="3.14.5"   # macOS standalone CPython (python-build-standalone)
+PYTHON_STANDALONE_RELEASE_TAG="20260510"
+PIP_VERSION="26.1.2"
+POETRY_VERSION="2.4.1"               # matches BUILD_POETRY_VERSION in workflows
+SETUPTOOLS_VERSION="82.0.1"          # matches BUILD_SETUPTOOLS_VERSION in workflows
+POETRY_PLUGIN_EXPORT_VERSION="1.10.0"
 ```
 
 ### Customization
@@ -326,14 +335,16 @@ If you encounter issues with the build script:
 
 ## Version Alignment
 
-This build script is designed to produce identical builds to the GitHub Actions workflow:
+This build script aligns dependency tooling with the GitHub Actions workflows:
 
-- **Python**: 3.9+ (matches `BUILD_PYTHON_VERSION: 3.9`)
-- **Poetry**: 2.1.3 (matches `BUILD_POETRY_VERSION: 2.1.3`)
-- **Setuptools**: 80.9.0 (matches `setuptools==80.9.0`)
-- **PyInstaller**: Latest version (matches CI workflow)
+- **Python**: workflows use **3.14**; the local script downloads standalone **3.14.5** on macOS
+- **pip**: **26.1.2** (local bootstrap)
+- **Poetry**: **2.4.1**
+- **Setuptools**: **82.0.1**
+- **poetry-plugin-export**: **1.10.0**
+- **PyInstaller**: latest (installed in the Poetry venv during build)
 
-This ensures that local development builds are identical to production releases, eliminating any potential issues caused by version mismatches.
+Local macOS builds use the same Poetry/setuptools pins as CI; the Python bootstrap differs (standalone tarball vs `actions/setup-python` on Linux/macOS/Windows runners).
 
 ---
 

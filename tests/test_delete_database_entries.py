@@ -1,6 +1,16 @@
 """
-Delete database entries tests for Airlift.
-Tests the delete all database entries workflow for Airtable.
+Integration tests for Airlift --delete-all-database-entries (Airtable).
+
+These tests intentionally call the live Airtable API. They are not unit tests
+and are not meant to be mocked:
+
+- CI runs them via airtable_delete_database_entries_test.yml with GitHub
+  Secrets (CI_AIRTABLE_*). Point those secrets at a disposable sandbox base/table,
+  never production data.
+- Locally, tests skip when CI_* environment variables are unset.
+- Mocked delete behavior is covered in tests/test_comprehensive.py.
+
+See tests/README.md for setup and safety notes.
 """
 
 import contextlib
@@ -81,21 +91,28 @@ def load_clients(dropbox_token_file) -> Generator[Tuple[AirliftArgs, Any, Option
 
 
 def test_delete_database_entries(load_clients) -> None:
-    """Test deleting all entries from Airtable database."""
+    """
+    End-to-end test: delete every record in the CI sandbox Airtable table.
+
+    Real deletion is required here to validate batch delete against Airtable.
+    Do not replace with mocks in this test; use test_comprehensive.py instead.
+    """
     args, airtable_client, _ = load_clients
-    
+
     print(f"Airlift version {__version__}")
     print(f"Target Base: {args.base}")
     print(f"Target Table: {args.table}")
-    
-    print("WARNING: Deleting ALL entries from the specified Airtable table!")
-    
-    # Delete all records from the table
+
+    print(
+        "WARNING: Deleting ALL entries from the CI sandbox table "
+        "(CI_AIRTABLE_BASE / CI_AIRTABLE_TABLE)!"
+    )
+
     deleted_count = airtable_client.delete_all_records()
-    
+
     print(f"Operation complete. Deleted {deleted_count} records.")
 
-    # Verify table is now empty
+    # Integration check: confirm the sandbox table is empty (live API read).
     remaining_records = airtable_client.table.all()
     assert len(remaining_records) == 0, f"Expected 0 records, but found {len(remaining_records)}"
     
@@ -103,13 +120,17 @@ def test_delete_database_entries(load_clients) -> None:
 
 
 def test_delete_database_entries_api_error(load_clients, monkeypatch) -> None:
-    """Test behavior when delete_all_records encounters an API error."""
+    """
+    Unit-style test: delete_all_records propagates API failures.
+
+    Uses monkeypatch only to simulate an error without calling Airtable delete.
+    """
     _, airtable_client, _ = load_clients
 
     def _failing_delete_all_records() -> NoReturn:
         raise RuntimeError("API failure during delete_all_records")
 
-    # Simulate an API failure when attempting to delete all records
+    # No live delete: patch the client method to raise before any API call.
     monkeypatch.setattr(airtable_client, "delete_all_records", _failing_delete_all_records)
     with pytest.raises(RuntimeError, match="API failure during delete_all_records"):
         airtable_client.delete_all_records()

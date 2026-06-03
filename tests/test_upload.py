@@ -1,6 +1,14 @@
 """
-Upload tests for Airlift.
-Tests the complete upload workflow to Airtable with Dropbox attachments.
+Integration tests for the Airlift upload workflow (Airtable + Dropbox).
+
+These tests intentionally call live Airtable and Dropbox APIs:
+
+- CI runs them via airtable_image_upload_test.yml with GitHub Secrets
+  (CI_AIRTABLE_*, CI_DROPBOX_*). Use a dedicated sandbox base/table and folders.
+- Locally, tests skip when required CI_* variables are unset.
+- CLI argument and parsing behavior without APIs is in test_comprehensive.py.
+
+See tests/README.md for setup and safety notes.
 """
 
 import contextlib
@@ -61,9 +69,9 @@ def dropbox_token_file():
 
 
 @pytest.fixture(scope="function")
-def load_client_and_data(dropbox_token_file) -> Generator[Tuple[AirliftArgs, new_client, Optional[dropbox_client]], None, None]:
+def load_clients(dropbox_token_file) -> Generator[Tuple[AirliftArgs, new_client, Optional[dropbox_client]], None, None]:
     """
-    Load Airlift clients and data.
+    Load Airlift clients.
     Yields args, airtable_client, and dropbox_client.
     """
     # Create args with dropbox token file
@@ -87,9 +95,13 @@ def load_client_and_data(dropbox_token_file) -> Generator[Tuple[AirliftArgs, new
         pytest.skip(f"Failed to connect to API: {e}")
 
 
-def test_upload_rows(load_client_and_data) -> None:
-    """Test uploading rows to Airtable with attachments."""
-    args, airtable_client, dbx = load_client_and_data
+def test_upload_rows(load_clients) -> None:
+    """
+    End-to-end test: upload fixture data and verify record count on live Airtable.
+
+    Uses real API clients; table.all() reads confirm rows were created (sandbox only).
+    """
+    args, airtable_client, dbx = load_clients
     
     print(f"Airlift version {__version__}")
     print(f"Payload file: {args.csv_file}")
@@ -113,7 +125,7 @@ def test_upload_rows(load_client_and_data) -> None:
     # Validating data and creating an uploadable data
     data = airtable_client.create_uploadable_data(data=data, args=args)
     
-    # Track record count before upload to verify table growth.
+    # Live API: record count before upload (CI sandbox table only).
     before_records = airtable_client.table.all()
     before_count = len(before_records)
 

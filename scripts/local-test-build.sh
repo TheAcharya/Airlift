@@ -2,7 +2,8 @@
 
 # Airlift - Ephemeral Build Script for macOS
 # This script creates a completely self-contained build environment in .build/
-# No system-level installations required
+# No system-level Python, pip, Poetry, or project dependencies are installed.
+# Only pre-existing macOS tools are used to download/extract (curl, tar).
 
 set -e  # Exit on any error
 
@@ -16,10 +17,16 @@ NC='\033[0m' # No Color
 # Configuration
 BUILD_DIR=".build"
 TEST_BUILD_DIR="test-build"
-PYTHON_VERSION="3.9"
-POETRY_VERSION="2.1.3"
-SETUPTOOLS_VERSION="80.9.0"
+PYTHON_VERSION="3.14"
+# Pinned python-build-standalone release (see https://github.com/astral-sh/python-build-standalone/releases)
+PYTHON_STANDALONE_RELEASE_TAG="20260510"
+PYTHON_STANDALONE_VERSION="3.14.5"
+PIP_VERSION="26.1.2"
+POETRY_VERSION="2.4.1"
+SETUPTOOLS_VERSION="82.0.1"
+POETRY_PLUGIN_EXPORT_VERSION="1.10.0"
 PROJECT_NAME="airlift"
+STANDALONE_MARKER_FILE=".standalone-installed"
 
 # Function to print colored output
 print_status() {
@@ -43,113 +50,162 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# Check if required tools are available
+# Resolve project root (script must be run from repo root; verified below)
+get_project_root() {
+    pwd
+}
+
+# macOS triplet for python-build-standalone artifacts
+detect_standalone_triplet() {
+    local arch
+    arch="$(uname -m)"
+    case "$arch" in
+        arm64|aarch64)
+            echo "aarch64-apple-darwin"
+            ;;
+        x86_64)
+            echo "x86_64-apple-darwin"
+            ;;
+        *)
+            print_error "Unsupported macOS architecture: $arch"
+            exit 1
+            ;;
+    esac
+}
+
+# Download URL for the pinned standalone CPython build
+get_standalone_download_url() {
+    local triplet="$1"
+    local asset="cpython-${PYTHON_STANDALONE_VERSION}+${PYTHON_STANDALONE_RELEASE_TAG}-${triplet}-install_only.tar.gz"
+    printf '%s\n' \
+        "https://github.com/astral-sh/python-build-standalone/releases/download/${PYTHON_STANDALONE_RELEASE_TAG}/${asset//+/%2B}"
+}
+
+# Path to the standalone interpreter inside .build/python/
+get_build_python_bin() {
+    local python_dir
+    python_dir="$(get_project_root)/$BUILD_DIR/python"
+    local candidate
+    for candidate in python3 \
+        "python${PYTHON_STANDALONE_VERSION}" \
+        python3.14 python3.13 python3.12 python3.11 python3.10 python3.9; do
+        if [ -x "$python_dir/bin/$candidate" ]; then
+            echo "$python_dir/bin/$candidate"
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Keep Poetry, pip, and caches entirely under .build/
+setup_build_environment_exports() {
+    local root
+    root="$(get_project_root)"
+    export PATH="$root/$BUILD_DIR/python/bin:$PATH"
+    export POETRY_HOME="$root/$BUILD_DIR/poetry-home"
+    export POETRY_CONFIG_DIR="$root/$BUILD_DIR/poetry-config"
+    export POETRY_CACHE_DIR="$root/$BUILD_DIR/cache"
+    export PIP_CACHE_DIR="$root/$BUILD_DIR/pip-cache"
+    export PYTHONNOUSERSITE=1
+    mkdir -p "$POETRY_HOME" "$POETRY_CONFIG_DIR" "$POETRY_CACHE_DIR" "$PIP_CACHE_DIR"
+}
+
+# Check for host tools used only to download/extract (nothing is installed system-wide)
 check_requirements() {
-    print_status "Checking system requirements..."
+    print_status "Checking host tools (download/extract only)..."
     
-    # Check for required tools
     local missing_tools=()
     
     if ! command_exists curl; then
         missing_tools+=("curl")
     fi
     
-    if ! command_exists xar; then
-        missing_tools+=("xar")
-    fi
-    
-    if ! command_exists cpio; then
-        missing_tools+=("cpio")
+    if ! command_exists tar; then
+        missing_tools+=("tar")
     fi
     
     if [ ${#missing_tools[@]} -ne 0 ]; then
-        print_error "Missing required tools: ${missing_tools[*]}"
-        print_error "Please install these tools first. On macOS, xar and cpio are usually pre-installed."
-        print_error "You can install curl with: brew install curl"
+        print_error "Missing required host tools: ${missing_tools[*]}"
+        print_error "These must exist on macOS to fetch Python into $BUILD_DIR/ only."
+        print_error "They do not install Python or project dependencies system-wide."
         exit 1
     fi
     
-    print_success "All required tools are available"
+    print_success "Host tools available (curl, tar)"
 }
 
-# Function to setup Python (using system Python with virtual environment)
+# Install standalone CPython under .build/python/ (python-build-standalone)
 setup_python() {
-    local python_dir="$BUILD_DIR/python"
-    local python_bin="$python_dir/bin/python3"
-    
-    if [ -f "$python_bin" ]; then
-        print_status "Python virtual environment already exists in $python_dir"
+    local root python_dir marker expected_marker python_bin triplet url tarball
+    root="$(get_project_root)"
+    python_dir="$root/$BUILD_DIR/python"
+    marker="$python_dir/$STANDALONE_MARKER_FILE"
+    expected_marker="${PYTHON_STANDALONE_VERSION}+${PYTHON_STANDALONE_RELEASE_TAG}"
+    python_bin="$(get_build_python_bin || true)"
+
+    if [ -f "$marker" ] && [ "$(cat "$marker")" = "$expected_marker" ] && [ -n "$python_bin" ]; then
+        print_status "Standalone Python already installed in $BUILD_DIR/python"
+        print_status "Python version: $("$python_bin" --version 2>&1)"
         return 0
     fi
-    
-    print_status "Setting up Python virtual environment in $python_dir..."
-    
-    # Check if system Python is available
-    if ! command_exists python3; then
-        print_error "System Python 3 is not available. Please install Python 3 first."
-        print_error "You can install it with: brew install python"
+
+    print_status "Installing standalone Python ${PYTHON_STANDALONE_VERSION} into $BUILD_DIR/python..."
+    triplet="$(detect_standalone_triplet)"
+    url="$(get_standalone_download_url "$triplet")"
+    mkdir -p "$root/$BUILD_DIR/downloads"
+    tarball="$root/$BUILD_DIR/downloads/cpython-${PYTHON_STANDALONE_VERSION}-${triplet}-install_only.tar.gz"
+
+    print_status "Downloading from python-build-standalone (${triplet})..."
+    if ! curl -fsSL "$url" -o "$tarball"; then
+        print_error "Failed to download standalone Python"
+        print_error "URL: $url"
         exit 1
     fi
-    
-    # Get system Python version
-    local system_python_version=$(python3 --version 2>&1 | cut -d' ' -f2)
-    print_status "Using system Python: $system_python_version"
-    
-    # Check if Python version is compatible (3.9 or higher)
-    local major_version=$(echo "$system_python_version" | cut -d'.' -f1)
-    local minor_version=$(echo "$system_python_version" | cut -d'.' -f2)
-    
-    if [ "$major_version" -lt 3 ] || ([ "$major_version" -eq 3 ] && [ "$minor_version" -lt 9 ]); then
-        print_error "Python 3.9 or higher is required. Current version: $system_python_version"
-        print_error "Please upgrade Python to version 3.9 or higher."
+
+    rm -rf "$python_dir"
+    mkdir -p "$root/$BUILD_DIR"
+    if ! tar -xzf "$tarball" -C "$root/$BUILD_DIR"; then
+        print_error "Failed to extract standalone Python into $BUILD_DIR/"
         exit 1
     fi
-    
-    # Create virtual environment using system Python
-    if ! python3 -m venv "$python_dir"; then
-        print_error "Failed to create virtual environment"
+
+    python_bin="$(get_build_python_bin || true)"
+    if [ -z "$python_bin" ]; then
+        print_error "Standalone Python extraction failed: no interpreter in $BUILD_DIR/python/bin"
         exit 1
     fi
-    
-    # Verify installation
-    if [ -f "$python_bin" ]; then
-        print_status "Python version: $($python_bin --version)"
-        print_success "Python virtual environment created successfully"
-    else
-        print_error "Python virtual environment creation failed"
-        exit 1
-    fi
+
+    echo "$expected_marker" > "$marker"
+    print_status "Python version: $("$python_bin" --version 2>&1)"
+    print_success "Standalone Python installed under $BUILD_DIR/python"
 }
 
-# Function to update pip to latest version
+# Function to install pinned pip (matches PIP_VERSION)
 update_pip() {
-    local pip_bin="$BUILD_DIR/python/bin/pip"
-    local python_bin="$BUILD_DIR/python/bin/python3"
+    local python_bin pip_version
+    python_bin="$(get_build_python_bin)"
     
-    print_status "Updating pip to latest version..."
+    print_status "Installing pip $PIP_VERSION in $BUILD_DIR/python..."
     
-    # Update pip using python -m pip to ensure we get the latest version
-    if ! "$python_bin" -m pip install --upgrade pip; then
-        print_error "pip update failed"
+    if ! "$python_bin" -m pip install "pip==$PIP_VERSION"; then
+        print_error "pip installation failed"
         exit 1
     fi
     
-    # Verify the update
-    local pip_version=$("$pip_bin" --version 2>&1 | cut -d' ' -f2)
-    print_success "pip updated to version $pip_version"
+    pip_version=$("$python_bin" -m pip --version 2>&1 | cut -d' ' -f2)
+    print_success "pip installed (version $pip_version)"
 }
 
 # Function to install setuptools
 install_setuptools() {
-    local pip_bin="$BUILD_DIR/python/bin/pip"
+    local python_bin
+    python_bin="$(get_build_python_bin)"
     
-    # First update pip to latest version
     update_pip
     
-    print_status "Installing setuptools $SETUPTOOLS_VERSION..."
+    print_status "Installing setuptools $SETUPTOOLS_VERSION into $BUILD_DIR/python..."
     
-    # Install setuptools using pip in our virtual environment
-    if ! "$pip_bin" install "setuptools==$SETUPTOOLS_VERSION"; then
+    if ! "$python_bin" -m pip install "setuptools==$SETUPTOOLS_VERSION"; then
         print_error "setuptools installation failed"
         exit 1
     fi
@@ -159,27 +215,27 @@ install_setuptools() {
 
 # Function to setup Poetry
 setup_poetry() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
-    local python_bin="$BUILD_DIR/python/bin/python3"
-    local pip_bin="$BUILD_DIR/python/bin/pip"
-    
+    local root poetry_bin python_bin installed_version
+    root="$(get_project_root)"
+    poetry_bin="$root/$BUILD_DIR/python/bin/poetry"
+    python_bin="$(get_build_python_bin)"
+
     if [ -f "$poetry_bin" ]; then
-        print_status "Poetry already installed in virtual environment"
-        return 0
+        installed_version=$("$poetry_bin" --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+        if [ "$installed_version" = "$POETRY_VERSION" ]; then
+            print_status "Poetry $POETRY_VERSION already installed in $BUILD_DIR/python"
+            return 0
+        fi
+        print_status "Poetry $installed_version found; installing $POETRY_VERSION..."
+    else
+        print_status "Installing Poetry $POETRY_VERSION into $BUILD_DIR/python..."
     fi
-    
-    print_status "Installing Poetry $POETRY_VERSION in virtual environment..."
-    
-    # Set PATH to use our virtual environment
-    export PATH="$(pwd)/$BUILD_DIR/python/bin:$PATH"
-    
-    # Install Poetry using pip in our virtual environment
-    if ! "$pip_bin" install "poetry==$POETRY_VERSION"; then
+
+    if ! "$python_bin" -m pip install "poetry==$POETRY_VERSION"; then
         print_error "Poetry installation failed"
         exit 1
     fi
     
-    # Verify installation
     if [ ! -f "$poetry_bin" ]; then
         print_error "Poetry installation failed - binary not found"
         exit 1
@@ -190,29 +246,29 @@ setup_poetry() {
 
 # Function to configure Poetry
 configure_poetry() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
-    local venv_path="$BUILD_DIR/venv"
-    local cache_dir="$BUILD_DIR/cache"
+    local root poetry_bin venv_path
+    root="$(get_project_root)"
+    poetry_bin="$root/$BUILD_DIR/python/bin/poetry"
+    venv_path="$root/$BUILD_DIR/venv"
     
-    print_status "Configuring Poetry..."
+    print_status "Configuring Poetry (all paths under $BUILD_DIR/)..."
     
-    # Create directories
-    mkdir -p "$venv_path" "$cache_dir"
+    mkdir -p "$venv_path"
     
-    # Configure Poetry to use local directories
-    $poetry_bin config virtualenvs.create true
-    $poetry_bin config virtualenvs.in-project false
-    $poetry_bin config virtualenvs.path "$venv_path"
-    $poetry_bin config cache-dir "$cache_dir"
+    "$poetry_bin" config virtualenvs.create true
+    "$poetry_bin" config virtualenvs.in-project false
+    "$poetry_bin" config virtualenvs.path "$venv_path"
+    "$poetry_bin" config cache-dir "$root/$BUILD_DIR/cache"
     
     print_success "Poetry configured for local development"
 }
 
 # Function to install poetry-plugin-export (matches GitHub Actions build.yml)
 install_poetry_plugin_export() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
-    print_status "Installing poetry-plugin-export 1.9.0..."
-    if ! "$poetry_bin" self add poetry-plugin-export==1.9.0; then
+    local poetry_bin
+    poetry_bin="$(get_project_root)/$BUILD_DIR/python/bin/poetry"
+    print_status "Installing poetry-plugin-export $POETRY_PLUGIN_EXPORT_VERSION..."
+    if ! "$poetry_bin" self add "poetry-plugin-export==$POETRY_PLUGIN_EXPORT_VERSION"; then
         print_error "poetry-plugin-export installation failed"
         exit 1
     fi
@@ -221,7 +277,8 @@ install_poetry_plugin_export() {
 
 # Function to install dependencies
 install_dependencies() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
+    local poetry_bin
+    poetry_bin="$(get_project_root)/$BUILD_DIR/python/bin/poetry"
     local update_flag="$1"
     local packages="$2"
     
@@ -236,7 +293,7 @@ install_dependencies() {
     # Check if we should update lock file first
     if [ "$update_flag" = "--update-lock" ]; then
         print_status "Updating Poetry lock file..."
-        if ! $poetry_bin lock; then
+        if ! "$poetry_bin" lock; then
             print_error "Failed to update lock file"
             exit 1
         fi
@@ -244,13 +301,13 @@ install_dependencies() {
     elif [ "$update_flag" = "--update-deps" ]; then
         if [ -n "$packages" ]; then
             print_status "Updating specific dependencies: $packages"
-            if ! $poetry_bin update $packages; then
+            if ! "$poetry_bin" update $packages; then
                 print_error "Failed to update dependencies: $packages"
                 exit 1
             fi
         else
             print_status "Updating all dependencies to latest versions..."
-            if ! $poetry_bin update; then
+            if ! "$poetry_bin" update; then
                 print_error "Failed to update all dependencies"
                 exit 1
             fi
@@ -258,14 +315,14 @@ install_dependencies() {
         print_success "Dependencies updated to latest versions"
     elif [ "$update_flag" = "--update-selective" ]; then
         print_status "Updating specific dependencies: $packages"
-        if ! $poetry_bin update $packages; then
+        if ! "$poetry_bin" update $packages; then
             print_error "Failed to update selected dependencies"
             exit 1
         fi
         print_success "Selected dependencies updated"
     else
         # Standard install from existing lock file
-        if ! $poetry_bin install; then
+        if ! "$poetry_bin" install; then
             print_error "Failed to install dependencies"
             exit 1
         fi
@@ -276,7 +333,8 @@ install_dependencies() {
 
 # Function to build the application
 build_application() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
+    local poetry_bin
+    poetry_bin="$(get_project_root)/$BUILD_DIR/python/bin/poetry"
     
     print_status "Building Airlift application..."
     
@@ -290,7 +348,7 @@ build_application() {
     fi
     
     # Build the binary using PyInstaller
-    if ! $poetry_bin run python -m PyInstaller --distpath "$TEST_BUILD_DIR" --workpath "$TEST_BUILD_DIR/build" airlift.spec; then
+    if ! "$poetry_bin" run python -m PyInstaller --distpath "$TEST_BUILD_DIR" --workpath "$TEST_BUILD_DIR/build" airlift.spec; then
         print_error "Build failed during PyInstaller execution"
         exit 1
     fi
@@ -314,11 +372,12 @@ build_application() {
 
 # Function to run tests (optional)
 run_tests() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
+    local poetry_bin
+    poetry_bin="$(get_project_root)/$BUILD_DIR/python/bin/poetry"
     
     if [ "$1" = "--test" ]; then
         print_status "Running tests..."
-        if ! $poetry_bin run python -m pytest tests/ -v; then
+        if ! "$poetry_bin" run python -m pytest tests/ -v; then
             print_warning "Tests failed, but continuing..."
         fi
     fi
@@ -326,25 +385,27 @@ run_tests() {
 
 # Function to show outdated packages
 show_outdated() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
+    local poetry_bin
+    poetry_bin="$(get_project_root)/$BUILD_DIR/python/bin/poetry"
     
     print_status "Checking for outdated packages..."
     
-    # Setup environment first
     check_requirements
+    mkdir -p "$BUILD_DIR"
+    setup_build_environment_exports
     setup_python
     install_setuptools
     setup_poetry
     configure_poetry
     
     # Install current dependencies first
-    if ! $poetry_bin install; then
+    if ! "$poetry_bin" install; then
         print_error "Failed to install dependencies for outdated check"
         exit 1
     fi
     
     # Show outdated packages
-    $poetry_bin show --outdated
+    "$poetry_bin" show --outdated
     
     exit 0
 }
@@ -352,10 +413,15 @@ show_outdated() {
 # Function to clean build directory
 clean_build() {
     if [ "$1" = "--clean" ]; then
-        print_status "Cleaning build directory..."
-        rm -rf "$BUILD_DIR"
-        rm -rf "$TEST_BUILD_DIR"/ dist/ build/
-        print_success "Build directory cleaned"
+        print_status "Cleaning build directory, test output, and pytest cache..."
+        if [ -d "$BUILD_DIR" ]; then
+            chmod -R u+w "$BUILD_DIR" 2>/dev/null || true
+            find "$BUILD_DIR" -name '.DS_Store' -delete 2>/dev/null || true
+            rm -rf "$BUILD_DIR"
+        fi
+        rm -rf "$TEST_BUILD_DIR" dist/ build/
+        rm -rf ".pytest_cache"
+        print_success "Removed $BUILD_DIR/, $TEST_BUILD_DIR/, and .pytest_cache/"
         exit 0
     fi
 }
@@ -365,7 +431,7 @@ show_usage() {
     echo "Usage: $0 [OPTIONS] [PACKAGES...]"
     echo ""
     echo "Options:"
-    echo "  --clean                Clean build directory and exit"
+    echo "  --clean                Clean .build/, test-build/, .pytest_cache/ and exit"
     echo "  --test                 Run tests after building"
     echo "  --comprehensive-test   Run comprehensive test suite"
     echo "  --update-lock          Update poetry.lock file before building"
@@ -376,7 +442,8 @@ show_usage() {
     echo "  --help                 Show this help message"
     echo ""
     echo "This script creates an ephemeral build environment for Airlift."
-    echo "Everything is installed in the .build/ directory and can be safely deleted."
+    echo "Standalone Python, Poetry, pip, caches, and deps live only under .build/."
+    echo "Nothing is installed system-wide. Delete .build/ to remove the environment."
     echo ""
     echo "Comprehensive Testing:"
     echo "  The comprehensive test suite validates all CLI arguments, flags, and switches"
@@ -396,12 +463,13 @@ show_usage() {
 
 # Function to install PyInstaller if needed
 install_pyinstaller() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
+    local poetry_bin
+    poetry_bin="$(get_project_root)/$BUILD_DIR/python/bin/poetry"
     
     print_status "Installing PyInstaller for building..."
     
     # Install PyInstaller in the Poetry virtual environment
-    if ! $poetry_bin run pip install pyinstaller; then
+    if ! "$poetry_bin" run pip install pyinstaller; then
         print_error "PyInstaller installation failed"
         exit 1
     fi
@@ -411,22 +479,18 @@ install_pyinstaller() {
 
 # Function to run comprehensive tests
 run_comprehensive_tests() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
+    local poetry_bin
+    poetry_bin="$(get_project_root)/$BUILD_DIR/python/bin/poetry"
     
     print_status "Running comprehensive test suite..."
     
-    # Check if test file exists
     if [ ! -f "tests/test_comprehensive.py" ]; then
         print_error "Comprehensive test file not found: tests/test_comprehensive.py"
         exit 1
     fi
     
-    # Set up PATH for our portable Python
-    export PATH="$(pwd)/$BUILD_DIR/python/bin:$PATH"
-    
-    # Run the comprehensive test
     print_status "Running comprehensive test suite..."
-    if ! $poetry_bin run pytest tests/test_comprehensive.py -v --tb=long; then
+    if ! "$poetry_bin" run pytest tests/test_comprehensive.py -v --tb=long; then
         print_error "Comprehensive tests failed"
         exit 1
     fi
@@ -436,19 +500,38 @@ run_comprehensive_tests() {
 
 # Function to check if build environment exists
 check_build_environment() {
-    local poetry_bin="$BUILD_DIR/python/bin/poetry"
-    
+    local root poetry_bin marker expected_marker
+    root="$(get_project_root)"
+    poetry_bin="$root/$BUILD_DIR/python/bin/poetry"
+    marker="$root/$BUILD_DIR/python/$STANDALONE_MARKER_FILE"
+    expected_marker="${PYTHON_STANDALONE_VERSION}+${PYTHON_STANDALONE_RELEASE_TAG}"
+
+    if [ ! -f "$marker" ] || [ "$(cat "$marker")" != "$expected_marker" ]; then
+        print_status "Standalone Python not ready in $BUILD_DIR/. Setting up first..."
+        return 1
+    fi
+
+    if ! get_build_python_bin >/dev/null; then
+        print_status "Python interpreter missing in $BUILD_DIR/python/. Setting up first..."
+        return 1
+    fi
+
     if [ ! -f "$poetry_bin" ]; then
-        print_status "Build environment not found. Setting up build environment first..."
+        print_status "Poetry not found in $BUILD_DIR/. Setting up first..."
         return 1
     fi
-    
-    # Check if Poetry virtual environment exists
-    if [ ! -d "$BUILD_DIR/venv" ]; then
-        print_status "Poetry virtual environment not found. Setting up build environment first..."
+
+    if [ ! -d "$root/$BUILD_DIR/venv" ]; then
+        print_status "Poetry virtualenv not found in $BUILD_DIR/venv. Setting up first..."
         return 1
     fi
-    
+
+    # venv may exist after --lock-only without project packages installed
+    if ! "$poetry_bin" run python -c "import pytest" >/dev/null 2>&1; then
+        print_status "Project dependencies not installed in $BUILD_DIR/venv. Setting up first..."
+        return 1
+    fi
+
     return 0
 }
 
@@ -522,27 +605,25 @@ main() {
         if ! check_build_environment; then
             print_status "Setting up build environment first..."
             
-            # Check system requirements
             check_requirements
-            
-            # Create build directory
             mkdir -p "$BUILD_DIR"
-            
-            # Setup build environment
+            setup_build_environment_exports
             setup_python
             install_setuptools
             setup_poetry
             configure_poetry
             install_poetry_plugin_export
             
-            # Install dependencies
-            export PATH="$(pwd)/$BUILD_DIR/python/bin:$PATH"
             install_dependencies "$UPDATE_FLAG" "$PACKAGES"
         else
             print_status "Using existing build environment"
+            setup_build_environment_exports
+            install_poetry_plugin_export
         fi
+
+        # Ensure project deps are installed (e.g. after --lock-only)
+        install_dependencies "$UPDATE_FLAG" "$PACKAGES"
         
-        # Run comprehensive tests
         run_comprehensive_tests
         exit 0
     fi
@@ -557,13 +638,9 @@ main() {
     print_status "Starting Airlift build process..."
     print_status "Build directory: $BUILD_DIR"
     
-    # Check system requirements
     check_requirements
-    
-    # Create build directory
     mkdir -p "$BUILD_DIR"
-    
-    # Setup build environment
+    setup_build_environment_exports
     setup_python
     install_setuptools
     setup_poetry
@@ -573,26 +650,24 @@ main() {
     # Handle lock-only mode
     if [ "$LOCK_ONLY" = true ]; then
         print_status "Lock-only mode: updating lock file..."
-        local poetry_bin="$BUILD_DIR/python/bin/poetry"
-        
-        # Set up PATH for our portable Python
-        export PATH="$(pwd)/$BUILD_DIR/python/bin:$PATH"
+        local poetry_bin
+        poetry_bin="$(get_project_root)/$BUILD_DIR/python/bin/poetry"
         
         if [ "$UPDATE_FLAG" = "--update-deps" ]; then
             print_status "Updating all dependencies to latest versions..."
-            if ! $poetry_bin update; then
+            if ! "$poetry_bin" update; then
                 print_error "Failed to update all dependencies"
                 exit 1
             fi
         elif [ "$UPDATE_FLAG" = "--update-selective" ]; then
             print_status "Updating specific dependencies: $PACKAGES"
-            if ! $poetry_bin update $PACKAGES; then
+            if ! "$poetry_bin" update $PACKAGES; then
                 print_error "Failed to update selected dependencies"
                 exit 1
             fi
         else
             print_status "Updating lock file..."
-            if ! $poetry_bin lock; then
+            if ! "$poetry_bin" lock; then
                 print_error "Failed to update lock file"
                 exit 1
             fi
@@ -602,8 +677,6 @@ main() {
         exit 0
     fi
     
-    # Build the application
-    export PATH="$(pwd)/$BUILD_DIR/python/bin:$PATH"
     install_dependencies "$UPDATE_FLAG" "$PACKAGES"
     install_pyinstaller
     build_application
