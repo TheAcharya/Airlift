@@ -113,7 +113,7 @@ def test_delete_database_entries(load_clients) -> None:
     print(f"Operation complete. Deleted {deleted_count} records.")
 
     # Integration check: confirm the sandbox table is empty (live API read).
-    remaining_records = airtable_client._list_all_records()
+    remaining_records = airtable_client.table.all()
     assert len(remaining_records) == 0, f"Expected 0 records, but found {len(remaining_records)}"
     
     print("All entries successfully deleted from the database.")
