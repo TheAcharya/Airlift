@@ -1,6 +1,13 @@
 """
-Empty Dropbox folder tests for Airlift.
-Tests the empty Dropbox folder workflow.
+Integration tests for Airlift --empty-dropbox-folder (Dropbox).
+
+These tests intentionally call the live Dropbox API and remove folder contents:
+
+- CI runs them via airtable_delete_database_entries_test.yml (same workflow job)
+  with CI_DROPBOX_* GitHub Secrets. Use sandbox Dropbox folders (/Airlift, etc.).
+- Locally, tests skip when CI_DROPBOX_* variables are unset.
+
+See tests/README.md for setup and safety notes.
 """
 
 import contextlib
@@ -52,11 +59,15 @@ def dropbox_token_file() -> Generator[str, None, None]:
 
 
 def test_empty_dropbox_folder_airlift(dropbox_token_file) -> None:
-    """Test emptying the Airlift folder in Dropbox."""
+    """
+    End-to-end test: empty the CI sandbox /Airlift Dropbox folder (live API).
+
+    Real deletion is intentional; do not mock in this integration test.
+    """
     print(f"Airlift version {__version__}")
     print(f"Target folder: /Airlift")
-    
-    print("WARNING: Emptying ALL contents from the Dropbox folder '/Airlift'!")
+
+    print("WARNING: Emptying ALL contents from the CI sandbox folder '/Airlift'!")
     
     # Empty the Airlift folder (md=False)
     deleted_count = empty_dropbox_folder(dropbox_token_file, md=False)
@@ -70,11 +81,18 @@ def test_empty_dropbox_folder_airlift(dropbox_token_file) -> None:
 
 
 def test_empty_dropbox_folder_marker_data(dropbox_token_file) -> None:
-    """Test emptying the Marker Data folder in Dropbox."""
+    """
+    End-to-end test: empty the CI sandbox /Marker Data folder (live API).
+
+    Real deletion is intentional; do not mock in this integration test.
+    """
     print(f"Airlift version {__version__}")
     print(f"Target folder: /Marker Data")
-    
-    print("WARNING: Emptying ALL contents from the Dropbox folder '/Marker Data'!")
+
+    print(
+        "WARNING: Emptying ALL contents from the CI sandbox folder "
+        "'/Marker Data'!"
+    )
     
     # Empty the Marker Data folder (md=True)
     deleted_count = empty_dropbox_folder(dropbox_token_file, md=True)
