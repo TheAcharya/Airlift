@@ -7,7 +7,8 @@ creation, record upload, and bulk delete operations.
 
 import logging
 import json
-from typing import Dict
+from types import SimpleNamespace
+from typing import Any, Dict, List
 from pyairtable import Api
 from airlift.utils_exceptions import CriticalError, AirtableError
 from tqdm import tqdm
@@ -125,14 +126,67 @@ class new_client:
             logger.info("All the columns are verified and present in both the file and Airtable!")
         return data
 
+    def _tables_from_meta_response(self, payload: Dict[str, Any]) -> List[Any]:
+        """Build table schema objects from Airtable meta API JSON."""
+        tables: List[Any] = []
+        for table in payload.get("tables", []):
+            fields = [
+                SimpleNamespace(name=field["name"], id=field.get("id"))
+                for field in table.get("fields", [])
+            ]
+            tables.append(
+                SimpleNamespace(
+                    id=table.get("id"),
+                    name=table.get("name"),
+                    fields=fields,
+                )
+            )
+        return tables
+
+    def _fetch_base_tables_meta(self, *, include_visible_field_ids: bool) -> List[Any]:
+        """Fetch base table metadata from the Airtable meta API."""
+        url = f"https://api.airtable.com/v0/meta/bases/{self.base_id}/tables"
+        params = None
+        if include_visible_field_ids:
+            params = {"include": ["visibleFieldIds"]}
+        response = self.api_client.session.get(
+            url, headers=self.headers, params=params
+        )
+        response.raise_for_status()
+        try:
+            from pyairtable.models.schema import BaseSchema
+
+            schema = BaseSchema.from_api(
+                response.json(), self.api_client, context=self.base
+            )
+            return schema.tables
+        except Exception:
+            return self._tables_from_meta_response(response.json())
+
     def _retreive_table(self):
         try:
-            # Get the base schema which contains all tables
             schema = self.base.schema()
             return schema.tables
         except Exception as e:
-            logger.warning(f"Error retrieving tables: {str(e)}")
-            raise AirtableError(f"Error retrieving tables: {str(e)}") from e
+            err = str(e)
+            if "406" in err or "Not Acceptable" in err:
+                logger.warning(
+                    "base.schema() blocked (406); fetching meta tables without "
+                    "include=visibleFieldIds"
+                )
+                try:
+                    return self._fetch_base_tables_meta(
+                        include_visible_field_ids=False
+                    )
+                except Exception as fallback_error:
+                    logger.warning(
+                        "Error retrieving tables (fallback): %s", fallback_error
+                    )
+                    raise AirtableError(
+                        f"Error retrieving tables: {fallback_error}"
+                    ) from fallback_error
+            logger.warning(f"Error retrieving tables: {err}")
+            raise AirtableError(f"Error retrieving tables: {err}") from e
 
     def _create_new_field(self, field_name: str) -> None:
         # Use pyairtable's underlying HTTP client to make the same API call as original
