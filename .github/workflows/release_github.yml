@@ -51,13 +51,13 @@ jobs:
         run: poetry build
 
       - name: Save release python requirements
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release_dist_reqs
           path: requirements.txt
 
       - name: Save release python packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release_dist_python
           path: dist
@@ -245,13 +245,13 @@ jobs:
       
       - name: Save release binaries for macos
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release_airlift_pkg
           path: ${{ env.SPKG }}
 
       - name: Save release binaries for ${{ matrix.OS_CODE }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release_dist_bin_${{ matrix.OS_CODE }}
           path: dist_bin
