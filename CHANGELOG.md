@@ -13,9 +13,6 @@
 - Enhanced ephemeral build `local-test-build.sh` reliability (fully self-contained local toolchain)
 - Updated GitHub Actions workflows for build, release, and integration tests
 
-**🐞 Bug Fix:**
-- Fixed an issue where upload could fail when checking Airtable table columns after a library update
-
 ---
 
 ### 1.3.3
