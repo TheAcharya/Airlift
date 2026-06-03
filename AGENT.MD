@@ -229,7 +229,7 @@ The project includes a comprehensive ephemeral build system (`scripts/local-test
 
 #### Build Process
 1. Downloads/extracts standalone **CPython 3.14.5** into `.build/python/`
-2. Installs **setuptools 82.0.1** and **Poetry 2.4.1** into `.build/python/`
+2. Installs **pip 26.1.2**, **setuptools 82.0.1**, and **Poetry 2.4.1** into `.build/python/`
 3. Configures Poetry paths under `.build/` (`venv/`, `cache/`, `poetry-config/`, etc.)
 4. Installs **poetry-plugin-export 1.10.0**
 5. Runs `poetry install` into `.build/venv/`
@@ -313,8 +313,9 @@ Use `poetry.lock` for exact resolved versions. Regenerate via
 
 ### Local build toolchain (`local-test-build.sh`)
 - Python **3.14.5** (python-build-standalone tag `20260510`)
-- Poetry **2.4.1**
+- pip **26.1.2**
 - Setuptools **82.0.1** (bootstrap only)
+- Poetry **2.4.1**
 - PyInstaller **latest** (installed in Poetry venv at build time)
 
 ## Python 3.14 Migration Workflow

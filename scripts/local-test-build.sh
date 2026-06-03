@@ -21,6 +21,7 @@ PYTHON_VERSION="3.14"
 # Pinned python-build-standalone release (see https://github.com/astral-sh/python-build-standalone/releases)
 PYTHON_STANDALONE_RELEASE_TAG="20260510"
 PYTHON_STANDALONE_VERSION="3.14.5"
+PIP_VERSION="26.1.2"
 POETRY_VERSION="2.4.1"
 SETUPTOOLS_VERSION="82.0.1"
 POETRY_PLUGIN_EXPORT_VERSION="1.10.0"
@@ -179,21 +180,20 @@ setup_python() {
     print_success "Standalone Python installed under $BUILD_DIR/python"
 }
 
-# Function to update pip to latest version
+# Function to install pinned pip (matches PIP_VERSION)
 update_pip() {
-    local python_bin
+    local python_bin pip_version
     python_bin="$(get_build_python_bin)"
     
-    print_status "Updating pip in $BUILD_DIR/python..."
+    print_status "Installing pip $PIP_VERSION in $BUILD_DIR/python..."
     
-    if ! "$python_bin" -m pip install --upgrade pip; then
-        print_error "pip update failed"
+    if ! "$python_bin" -m pip install "pip==$PIP_VERSION"; then
+        print_error "pip installation failed"
         exit 1
     fi
     
-    local pip_version
     pip_version=$("$python_bin" -m pip --version 2>&1 | cut -d' ' -f2)
-    print_success "pip updated to version $pip_version"
+    print_success "pip installed (version $pip_version)"
 }
 
 # Function to install setuptools
@@ -215,18 +215,22 @@ install_setuptools() {
 
 # Function to setup Poetry
 setup_poetry() {
-    local root poetry_bin python_bin
+    local root poetry_bin python_bin installed_version
     root="$(get_project_root)"
     poetry_bin="$root/$BUILD_DIR/python/bin/poetry"
     python_bin="$(get_build_python_bin)"
-    
+
     if [ -f "$poetry_bin" ]; then
-        print_status "Poetry already installed in $BUILD_DIR/python"
-        return 0
+        installed_version=$("$poetry_bin" --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+        if [ "$installed_version" = "$POETRY_VERSION" ]; then
+            print_status "Poetry $POETRY_VERSION already installed in $BUILD_DIR/python"
+            return 0
+        fi
+        print_status "Poetry $installed_version found; installing $POETRY_VERSION..."
+    else
+        print_status "Installing Poetry $POETRY_VERSION into $BUILD_DIR/python..."
     fi
-    
-    print_status "Installing Poetry $POETRY_VERSION into $BUILD_DIR/python..."
-    
+
     if ! "$python_bin" -m pip install "poetry==$POETRY_VERSION"; then
         print_error "Poetry installation failed"
         exit 1
@@ -251,10 +255,10 @@ configure_poetry() {
     
     mkdir -p "$venv_path"
     
-    $poetry_bin config virtualenvs.create true
-    $poetry_bin config virtualenvs.in-project false
-    $poetry_bin config virtualenvs.path "$venv_path"
-    $poetry_bin config cache-dir "$root/$BUILD_DIR/cache"
+    "$poetry_bin" config virtualenvs.create true
+    "$poetry_bin" config virtualenvs.in-project false
+    "$poetry_bin" config virtualenvs.path "$venv_path"
+    "$poetry_bin" config cache-dir "$root/$BUILD_DIR/cache"
     
     print_success "Poetry configured for local development"
 }
@@ -289,7 +293,7 @@ install_dependencies() {
     # Check if we should update lock file first
     if [ "$update_flag" = "--update-lock" ]; then
         print_status "Updating Poetry lock file..."
-        if ! $poetry_bin lock; then
+        if ! "$poetry_bin" lock; then
             print_error "Failed to update lock file"
             exit 1
         fi
@@ -297,13 +301,13 @@ install_dependencies() {
     elif [ "$update_flag" = "--update-deps" ]; then
         if [ -n "$packages" ]; then
             print_status "Updating specific dependencies: $packages"
-            if ! $poetry_bin update $packages; then
+            if ! "$poetry_bin" update $packages; then
                 print_error "Failed to update dependencies: $packages"
                 exit 1
             fi
         else
             print_status "Updating all dependencies to latest versions..."
-            if ! $poetry_bin update; then
+            if ! "$poetry_bin" update; then
                 print_error "Failed to update all dependencies"
                 exit 1
             fi
@@ -311,14 +315,14 @@ install_dependencies() {
         print_success "Dependencies updated to latest versions"
     elif [ "$update_flag" = "--update-selective" ]; then
         print_status "Updating specific dependencies: $packages"
-        if ! $poetry_bin update $packages; then
+        if ! "$poetry_bin" update $packages; then
             print_error "Failed to update selected dependencies"
             exit 1
         fi
         print_success "Selected dependencies updated"
     else
         # Standard install from existing lock file
-        if ! $poetry_bin install; then
+        if ! "$poetry_bin" install; then
             print_error "Failed to install dependencies"
             exit 1
         fi
@@ -344,7 +348,7 @@ build_application() {
     fi
     
     # Build the binary using PyInstaller
-    if ! $poetry_bin run python -m PyInstaller --distpath "$TEST_BUILD_DIR" --workpath "$TEST_BUILD_DIR/build" airlift.spec; then
+    if ! "$poetry_bin" run python -m PyInstaller --distpath "$TEST_BUILD_DIR" --workpath "$TEST_BUILD_DIR/build" airlift.spec; then
         print_error "Build failed during PyInstaller execution"
         exit 1
     fi
@@ -373,7 +377,7 @@ run_tests() {
     
     if [ "$1" = "--test" ]; then
         print_status "Running tests..."
-        if ! $poetry_bin run python -m pytest tests/ -v; then
+        if ! "$poetry_bin" run python -m pytest tests/ -v; then
             print_warning "Tests failed, but continuing..."
         fi
     fi
@@ -395,13 +399,13 @@ show_outdated() {
     configure_poetry
     
     # Install current dependencies first
-    if ! $poetry_bin install; then
+    if ! "$poetry_bin" install; then
         print_error "Failed to install dependencies for outdated check"
         exit 1
     fi
     
     # Show outdated packages
-    $poetry_bin show --outdated
+    "$poetry_bin" show --outdated
     
     exit 0
 }
@@ -465,7 +469,7 @@ install_pyinstaller() {
     print_status "Installing PyInstaller for building..."
     
     # Install PyInstaller in the Poetry virtual environment
-    if ! $poetry_bin run pip install pyinstaller; then
+    if ! "$poetry_bin" run pip install pyinstaller; then
         print_error "PyInstaller installation failed"
         exit 1
     fi
@@ -486,7 +490,7 @@ run_comprehensive_tests() {
     fi
     
     print_status "Running comprehensive test suite..."
-    if ! $poetry_bin run pytest tests/test_comprehensive.py -v --tb=long; then
+    if ! "$poetry_bin" run pytest tests/test_comprehensive.py -v --tb=long; then
         print_error "Comprehensive tests failed"
         exit 1
     fi
@@ -651,19 +655,19 @@ main() {
         
         if [ "$UPDATE_FLAG" = "--update-deps" ]; then
             print_status "Updating all dependencies to latest versions..."
-            if ! $poetry_bin update; then
+            if ! "$poetry_bin" update; then
                 print_error "Failed to update all dependencies"
                 exit 1
             fi
         elif [ "$UPDATE_FLAG" = "--update-selective" ]; then
             print_status "Updating specific dependencies: $PACKAGES"
-            if ! $poetry_bin update $PACKAGES; then
+            if ! "$poetry_bin" update $PACKAGES; then
                 print_error "Failed to update selected dependencies"
                 exit 1
             fi
         else
             print_status "Updating lock file..."
-            if ! $poetry_bin lock; then
+            if ! "$poetry_bin" lock; then
                 print_error "Failed to update lock file"
                 exit 1
             fi
