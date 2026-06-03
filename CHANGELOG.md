@@ -1,5 +1,23 @@
 # Changelog
 
+### 1.4.0
+
+**🎉 Released:**
+- 3rd June 2026
+
+**🔨 Improvements:**
+- Upgraded from Python 3.9 to Python 3.14
+- Updated to the latest `pyairtable` library and project dependencies
+- Updated to latest security patches across all dependencies
+- Improved build reproducibility across environments
+- Enhanced ephemeral build `local-test-build.sh` reliability (fully self-contained local toolchain)
+- Updated GitHub Actions workflows for build, release, and integration tests
+
+**🐞 Bug Fix:**
+- Fixed an issue where upload could fail when checking Airtable table columns after a library update
+
+---
+
 ### 1.3.3
 
 **🎉 Released:**
