@@ -82,13 +82,28 @@ $ brew uninstall --cask airlift
 
 ### From source
 
-This project uses [poetry](https://python-poetry.org/) for dependency management and packaging. You will have to install it first. See [poetry official documentation](https://python-poetry.org/docs/) for instructions.
+Requires **Python 3.10+** (local builds use **3.14**). Recommended: use the project build script — it sets up an isolated toolchain under `.build/` (no system Python or Poetry install). You only need `curl` and `tar` on your machine.
 
 ```shell
 $ git clone https://github.com/TheAcharya/airlift.git
 $ cd airlift/
-$ poetry install --no-dev
-$ poetry run airlift
+$ ./scripts/local-test-build.sh
+$ ./test-build/airlift --help
+```
+
+To run from source without building the binary (after the script has installed dependencies):
+
+```shell
+$ .build/venv/bin/airlift --help
+```
+
+For development and testing, see `scripts/README.md` and `tests/README.md`.
+
+**Alternative:** If you already have [Poetry](https://python-poetry.org/) and Python 3.10+ installed:
+
+```shell
+$ poetry install
+$ poetry run airlift --help
 ```
 
 ## Guide
