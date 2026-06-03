@@ -126,7 +126,7 @@ def test_upload_rows(load_clients) -> None:
     data = airtable_client.create_uploadable_data(data=data, args=args)
     
     # Live API: record count before upload (CI sandbox table only).
-    before_records = airtable_client.table.all()
+    before_records = airtable_client._list_all_records()
     before_count = len(before_records)
 
     # Uploading the data
@@ -138,7 +138,7 @@ def test_upload_rows(load_clients) -> None:
     expected_min_after = before_count + len(data)
     after_count = before_count
     for _ in range(5):
-        after_count = len(airtable_client.table.all())
+        after_count = len(airtable_client._list_all_records())
         if after_count >= expected_min_after:
             break
         time.sleep(1)

@@ -11,6 +11,7 @@ from types import SimpleNamespace
 from typing import Any, Dict, List
 from pyairtable import Api
 from airlift.utils_exceptions import CriticalError, AirtableError
+from airlift.version import __version__
 from tqdm import tqdm
 
 ATDATATYPE = Dict[str, Dict[str, str]]
@@ -23,14 +24,58 @@ class new_client:
         self.base_id = base
         self.table_id = table
         self.api_client = Api(self.api)
+        self.api_client.session.headers.setdefault(
+            "User-Agent", f"Airlift/{__version__}"
+        )
         self.table = self.api_client.table(self.base_id, self.table_id)
         self.base = self.api_client.base(self.base_id)
         # Store headers for direct API calls (same as original)
         self.headers = {
             "Authorization": "Bearer " + self.api,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "User-Agent": f"Airlift/{__version__}",
         }
         logger.debug("Airtable Client Created")
+
+    @staticmethod
+    def _is_406_error(exc: Exception) -> bool:
+        err = str(exc)
+        return "406" in err or "Not Acceptable" in err
+
+    def _fetch_all_records_direct(self) -> List[Dict[str, Any]]:
+        """List records with minimal GET pagination (bypasses pyairtable iterate)."""
+        url = f"https://api.airtable.com/v0/{self.base_id}/{self.table_id}"
+        records: List[Dict[str, Any]] = []
+        params: Dict[str, Any] = {"pageSize": 100}
+        while True:
+            response = self.api_client.session.get(
+                url, headers=self.headers, params=params
+            )
+            response.raise_for_status()
+            payload = response.json()
+            records.extend(payload.get("records", []))
+            offset = payload.get("offset")
+            if not offset:
+                break
+            params = {"pageSize": 100, "offset": offset}
+        return records
+
+    def _list_all_records(self) -> List[Dict[str, Any]]:
+        """Fetch all records, falling back if pyairtable listing returns 406."""
+        try:
+            return self.table.all()
+        except Exception as e:
+            if not self._is_406_error(e):
+                raise
+            logger.warning(
+                "table.all() blocked (406); listing records via direct API pagination"
+            )
+            try:
+                return self._fetch_all_records_direct()
+            except Exception as fallback_error:
+                raise AirtableError(
+                    f"Failed to list records: {fallback_error}"
+                ) from fallback_error
 
     def single_upload(self, data: ATDATATYPE) -> None:
         # pyairtable expects just the fields dict
@@ -50,7 +95,7 @@ class new_client:
         try:
             # Get all record IDs from the table
             logger.info("Fetching all records from the table...")
-            all_records = self.table.all()
+            all_records = self._list_all_records()
             
             if not all_records:
                 logger.info("No records found in the table.")
@@ -169,7 +214,7 @@ class new_client:
             return schema.tables
         except Exception as e:
             err = str(e)
-            if "406" in err or "Not Acceptable" in err:
+            if self._is_406_error(e):
                 logger.warning(
                     "base.schema() blocked (406); fetching meta tables without "
                     "include=visibleFieldIds"
