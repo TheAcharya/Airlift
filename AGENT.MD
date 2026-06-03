@@ -25,30 +25,34 @@ Airlift is a Python-based command-line tool for uploading and merging CSV or JSO
 # Run comprehensive tests (no API tokens required)
 ./scripts/local-test-build.sh --comprehensive-test
 
-# Install dependencies for development
-poetry install
+# Dev CLI (after --comprehensive-test or full build; uses .build/venv/)
+.build/venv/bin/airlift --help
 
-# Run the application in development
-poetry run airlift --help
+# Prefer the binary for release parity
+./test-build/airlift --help
 ```
 
 ### Dependency Management
 ```bash
-# Update poetry.lock file
-poetry lock
+# Regenerate poetry.lock (after pyproject.toml changes)
+./scripts/local-test-build.sh --lock-only
 
-# Update specific packages
-./scripts/local-test-build.sh --update requests dropbox
+# Update one package at a time (recommended; updates lock file)
+./scripts/local-test-build.sh --lock-only --update requests
+./scripts/local-test-build.sh --comprehensive-test
 
-# Show outdated packages
+# Update lock then full build
+./scripts/local-test-build.sh --update requests
+
+# Update all deps within ^ ranges (use sparingly)
+./scripts/local-test-build.sh --update-deps
+
+# Show outdated packages (uses .build/ Poetry)
 ./scripts/local-test-build.sh --show-outdated
-
-# Install new dependency
-poetry add <package-name>
-
-# Install development dependency
-poetry add --group dev <package-name>
 ```
+
+Prefer `./scripts/local-test-build.sh` over bare `poetry lock` so resolution uses the
+ephemeral Python 3.14.5 environment in `.build/`.
 
 ## Architecture Overview
 
@@ -128,15 +132,24 @@ The project follows a modular architecture with clear separation of concerns:
 ## Important Development Guidelines
 
 ### Build System Requirements
-- **ALWAYS** use `./scripts/local-test-build.sh` for building instead of manual Poetry/PyInstaller commands
-- The build script creates an ephemeral environment in `.build/` that matches GitHub Actions exactly
+- **ALWAYS** use `./scripts/local-test-build.sh` for building and dependency lock updates
+- The build script is **fully self-contained** under `.build/` (no system Python/Poetry install)
+- Downloads **CPython 3.14.5** via [python-build-standalone](https://github.com/astral-sh/python-build-standalone/releases)
 - PyInstaller is installed separately during build (not in pyproject.toml)
-- Build outputs go to `test-build/` directory and should be tested with `./test-build/airlift --help`
+- Build outputs go to `test-build/`; verify with `./test-build/airlift --help`
 
-### Development Environment
-- **Python Version**: 3.9+ (matches GitHub Actions BUILD_PYTHON_VERSION: 3.9)
-- **Poetry Version**: 2.1.3 (matches GitHub Actions BUILD_POETRY_VERSION: 2.1.3)
-- **Build System**: Use `./scripts/local-test-build.sh` for all builds to ensure consistency with CI/CD
+### Development Environment (local, via `local-test-build.sh`)
+- **Python**: 3.14.5 standalone (`PYTHON_STANDALONE_VERSION` in build script)
+- **Python constraint** (`pyproject.toml`): `>=3.10,<3.15`
+- **Poetry**: 2.4.1 (bootstrap in `.build/python/`)
+- **Setuptools** (bootstrap): 82.0.1
+- **poetry-plugin-export**: 1.10.0
+
+### CI vs local (important)
+- **Local** builds use standalone **Python 3.14.5** via `local-test-build.sh`
+- **GitHub Actions** (`build.yml`, `release_github.yml`): **Python 3.14**, Poetry **2.4.1**, setuptools **82.0.1**
+- All Poetry-based workflows use the same toolchain pins as `build.yml`
+- **Commit `poetry.lock`** (or stop gitignoring it) so CI resolution matches local locks
 
 ### Code Quality Standards
 - Follow PEP 8 style guidelines with 88-character line limit (Black formatter)
@@ -188,13 +201,11 @@ tests/
 # Comprehensive tests (no API tokens required)
 ./scripts/local-test-build.sh --comprehensive-test
 
-# Or directly with pytest
-pytest tests/test_comprehensive.py -v
+# Or via ephemeral venv (after build script has installed deps)
+.build/venv/bin/pytest tests/test_comprehensive.py -v
 
-# Integration tests (requires API tokens)
-pytest tests/test_upload.py -v -s
-pytest tests/test_delete_database_entries.py -v -s
-pytest tests/test_empty_dropbox_folder.py -v -s
+# Integration tests (requires API tokens; same venv)
+.build/venv/bin/pytest tests/test_upload.py -v -s
 ```
 
 ### Security Considerations
@@ -211,29 +222,31 @@ The project includes a comprehensive ephemeral build system (`scripts/local-test
 
 #### Key Features
 - Fully ephemeral build environment in `.build/` directory
-- No system-level installations or modifications
-- Uses system Python with virtual environments
-- GitHub Actions compatible approach
-- Cross-platform support
+- **No system-level Python, Poetry, pip, or project deps** (only host `curl` + `tar`)
+- Standalone CPython from python-build-standalone (macOS arm64/x86_64)
 - Professional logging without emojis
-- Flexible dependency management options
+- Flexible dependency management (`--lock-only`, `--update`, `--update-deps`)
 
 #### Build Process
-1. Creates virtual environment using system Python 3.9+
-2. Installs setuptools 80.9.0 (matches GitHub Actions)
-3. Installs Poetry 2.1.3 in the virtual environment
-4. Installs project dependencies via Poetry
-5. Installs PyInstaller separately (not in pyproject.toml)
-6. Builds application using PyInstaller
-7. Outputs binary to `test-build/` directory
+1. Downloads/extracts standalone **CPython 3.14.5** into `.build/python/`
+2. Installs **setuptools 82.0.1** and **Poetry 2.4.1** into `.build/python/`
+3. Configures Poetry paths under `.build/` (`venv/`, `cache/`, `poetry-config/`, etc.)
+4. Installs **poetry-plugin-export 1.10.0**
+5. Runs `poetry install` into `.build/venv/`
+6. Installs PyInstaller in the Poetry venv (not in `pyproject.toml`)
+7. Builds with PyInstaller → `test-build/airlift`
 
 #### Directory Structure
 ```
 Airlift/
 ├── .build/                    # Ephemeral build environment (gitignored)
-│   ├── python/               # Virtual environment
-│   ├── venv/                 # Poetry virtual environment
-│   └── cache/                # Poetry cache
+│   ├── python/               # Standalone CPython + pip + Poetry
+│   ├── downloads/            # Cached Python tarball
+│   ├── venv/                 # Poetry project virtualenv
+│   ├── cache/                # Poetry cache
+│   ├── pip-cache/            # pip cache
+│   ├── poetry-config/        # Poetry configuration
+│   └── poetry-home/          # Poetry application data
 ├── test-build/               # Build output (gitignored)
 │   ├── airlift              # Final executable binary
 │   └── build/               # PyInstaller build artifacts
@@ -252,51 +265,71 @@ Airlift/
 # Basic build
 ./scripts/local-test-build.sh
 
-# Build with dependency updates
-./scripts/local-test-build.sh --update-deps
-
-# Update specific packages
-./scripts/local-test-build.sh --update requests pytest
-
-# Clean build environment
+# Clean (.build/, test-build/, .pytest_cache/)
 ./scripts/local-test-build.sh --clean
+
+# Lock file only
+./scripts/local-test-build.sh --lock-only
+
+# Update one dependency + lock
+./scripts/local-test-build.sh --lock-only --update urllib3
+
+# Comprehensive tests (installs deps if needed)
+./scripts/local-test-build.sh --comprehensive-test
 
 # Show outdated packages
 ./scripts/local-test-build.sh --show-outdated
-
-# Run comprehensive tests
-./scripts/local-test-build.sh --comprehensive-test
 ```
 
 #### CI/CD Integration
-The build script is designed to work seamlessly with GitHub Actions and uses identical versions:
-- Python 3.9+ (matches BUILD_PYTHON_VERSION: 3.9)
-- Poetry 2.1.3 (matches BUILD_POETRY_VERSION: 2.1.3)
-- Setuptools 80.9.0 (matches setuptools==80.9.0)
-- PyInstaller latest version (matches CI workflow)
-- poetry-plugin-export for requirements.txt generation
-- No PyInstaller in pyproject.toml (installed separately)
-- Same approach as CI/CD pipeline
-- Completely ephemeral and safe
-- Consistent with production build process
+| Context | Python | Poetry | setuptools | poetry-plugin-export |
+|---------|--------|--------|------------|----------------------|
+| Local (`local-test-build.sh`) | 3.14.5 standalone | 2.4.1 | 82.0.1 | 1.10.0 |
+| `build.yml` / `release_github.yml` | 3.14 (setup-python) | 2.4.1 | 82.0.1 | 1.10.0 |
+| `unit_tests.yml`, integration test workflows | 3.14 | 2.4.1 | 82.0.1 | 1.10.0 |
 
 ## Dependencies and Versions
 
-### Core Dependencies (from pyproject.toml)
-| Package | Version | Description |
-|---------|---------|-------------|
-| `pyairtable` | ^3.3.0 | Airtable API client with latest 3.x APIs |
-| `dropbox` | ^12.0.2 | Dropbox API client with OAuth2 scopes |
-| `requests` | ^2.32.4 | HTTP client for API calls |
-| `tqdm` | ^4.66.4 | Progress bar implementation |
-| `pydantic` | ^2.11.7 | Data validation and serialization |
-| `icecream` | ^2.1.3 | Debug logging utility |
+### Core Dependencies (from `pyproject.toml`)
+| Package | Constraint | Notes |
+|---------|------------|-------|
+| `python` | `>=3.10,<3.15` | Local builds use **3.14.5** |
+| `pyairtable` | ^3.3.0 | Resolved to 3.4.x locally |
+| `dropbox` | ^12.0.2 | Caps `stone` to &lt;3.3.3 |
+| `requests` | ^2.32.4 | |
+| `tqdm` | ^4.66.4 | |
+| `pydantic` | ^2.13.0 | **Required for Python 3.14** (2.11.x core fails to build) |
+| `icecream` | ^2.1.3 | |
+| `pytest` | ^9.0.0 | In main deps for PyInstaller bundle |
 
-### Build Environment (matches GitHub Actions)
-- Python 3.9+ (BUILD_PYTHON_VERSION: 3.9)
-- Poetry 2.1.3 (BUILD_POETRY_VERSION: 2.1.3)
-- Setuptools 80.9.0 (setuptools==80.9.0)
-- PyInstaller (latest, installed separately during build)
+Use `poetry.lock` for exact resolved versions. Regenerate via
+`./scripts/local-test-build.sh --lock-only` after `pyproject.toml` edits.
+
+### Dependency update constraints (do not force)
+| Package | Why |
+|---------|-----|
+| `pydantic-core` | Pinned by `pydantic` (e.g. 2.13.4 → `==2.46.4`); do not bump core alone |
+| `stone` | Dropbox requires `stone >=2,<3.3.3`; cannot use latest 3.3.9 |
+
+### Local build toolchain (`local-test-build.sh`)
+- Python **3.14.5** (python-build-standalone tag `20260510`)
+- Poetry **2.4.1**
+- Setuptools **82.0.1** (bootstrap only)
+- PyInstaller **latest** (installed in Poetry venv at build time)
+
+## Python 3.14 Migration Workflow
+
+When changing Python or toolchain versions:
+
+1. Update `python` in `pyproject.toml` if needed
+2. Update pins in `scripts/local-test-build.sh` (`PYTHON_STANDALONE_*`, `POETRY_VERSION`, etc.)
+3. `./scripts/local-test-build.sh --clean`
+4. `./scripts/local-test-build.sh --lock-only`
+5. `./scripts/local-test-build.sh --comprehensive-test`
+6. `./scripts/local-test-build.sh` and test `./test-build/airlift`
+7. Update GitHub Actions workflows **last** (after local is green)
+
+If `poetry install` fails on 3.14, bump **pydantic** to `^2.13.0` or newer before other packages.
 
 ## Common Development Tasks
 
@@ -325,7 +358,7 @@ When adding new CLI features:
 3. Add validation in `_validate_required_args()` if required
 4. Implement the feature in appropriate module
 5. Add tests in `test_comprehensive.py`
-6. Update `AGENT.MD` documentation
+6. Update `AGENT.MD` and `.cursorrules` (keep in sync)
 7. Update `README.md` if user-facing
 8. Run comprehensive tests: `./scripts/local-test-build.sh --comprehensive-test`
 9. Build and test binary: `./scripts/local-test-build.sh`
@@ -423,7 +456,7 @@ When adding new CLI features:
 - Follow established naming conventions
 - Implement proper type hints throughout
 - Test builds using the ephemeral build system
-- Ensure version consistency between local and CI environments
+- Keep workflow env pins in sync with `scripts/local-test-build.sh` when toolchain changes
 
 ## Maintenance and Support
 

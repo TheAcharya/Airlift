@@ -7,8 +7,8 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 ## Key Features
 
 - Fully Ephemeral: Everything is contained in project directories
-- No System Installation: Uses system Python with virtual environments
-- GitHub Actions Compatible: Same approach as CI/CD pipeline
+- No System Installation: Downloads standalone CPython into `.build/python/` (python-build-standalone)
+- GitHub Actions Compatible: Same dependency versions as CI/CD pipeline (Python bootstrap differs)
 - Cross-Platform: Works on macOS
 - Clean Output: Professional logging without emojis
 - Flexible Updates: Multiple dependency management options
@@ -16,9 +16,9 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 ## Prerequisites
 
 ### System Requirements
-- macOS
-- System Python 3.9+ installed (matches GitHub Actions workflow)
-- Basic tools: `curl`, `xar`, `cpio` (usually pre-installed on macOS)
+- macOS (Apple Silicon or Intel)
+- Host tools only: `curl` and `tar` (to download/extract Python into `.build/`)
+- No system Python, Homebrew Python, or Poetry install required
 
 ## Quick Start
 
@@ -29,9 +29,9 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 ```
 
 This will:
-1. Create a virtual environment in `.build/python/`
-2. Install setuptools 80.9.0 (matches GitHub Actions)
-3. Install Poetry 2.1.3 in the virtual environment
+1. Download standalone CPython 3.14.5 into `.build/python/` (pinned python-build-standalone release)
+2. Install setuptools 82.0.1 in `.build/python/`
+3. Install Poetry 2.4.1 in `.build/python/`
 4. Install project dependencies via Poetry
 5. Install PyInstaller for building
 6. Build the application
@@ -52,7 +52,7 @@ This will:
 # Build and run tests
 ./scripts/local-test-build.sh --test
 
-# Clean build directory and exit
+# Clean .build/, test-build/, .pytest_cache/ and exit
 ./scripts/local-test-build.sh --clean
 ```
 
@@ -87,9 +87,13 @@ After running the script, your project will have:
 ```
 Airlift/
 ├── .build/                    # Ephemeral build environment (gitignored)
-│   ├── python/               # Virtual environment
-│   ├── venv/                 # Poetry virtual environment
-│   └── cache/                # Poetry cache
+│   ├── python/               # Standalone CPython + pip + Poetry
+│   ├── downloads/            # Cached Python tarball
+│   ├── venv/                 # Poetry project virtual environment
+│   ├── cache/                # Poetry cache
+│   ├── pip-cache/            # pip download cache
+│   ├── poetry-config/        # Poetry configuration
+│   └── poetry-home/          # Poetry application data
 ├── test-build/               # Build output (gitignored)
 │   ├── airlift              # Final executable binary
 │   └── build/               # PyInstaller build artifacts
@@ -162,9 +166,9 @@ The script is designed to work seamlessly with GitHub Actions and uses identical
 
 ## Environment Details
 
-### Virtual Environment
-- Location: `.build/python/`
-- Python: Uses system Python 3.9+ with `python3 -m venv`
+### Build Environment
+- Standalone Python: `.build/python/` (python-build-standalone, not system Python)
+- Project venv: `.build/venv/` (Poetry-managed dependencies)
 - Setuptools: 80.9.0 (installed before Poetry)
 - Poetry: 2.1.3 (installed via pip in the virtual environment)
 - Dependencies: Managed by Poetry in `.build/venv/`
@@ -185,19 +189,17 @@ The script is designed to work seamlessly with GitHub Actions and uses identical
 
 ### Common Issues
 
-1. "System Python 3 is not available"
+1. "Missing required host tools"
    ```bash
-   # Install Python 3
-   brew install python
+   # curl and tar must be available (standard on macOS)
+   which curl tar
    ```
 
-2. "Python 3.9 or higher is required"
+2. "Failed to download standalone Python"
    ```bash
-   # Check current Python version
-   python3 --version
-   
-   # Install Python 3.9+ if needed
-   brew install python@3.9
+   # Retry after network check, or clean and rebuild
+   ./scripts/local-test-build.sh --clean
+   ./scripts/local-test-build.sh
    ```
 
 3. "Missing required tools"
@@ -255,7 +257,7 @@ ls -la .build/
 ### Manual Cleanup
 ```bash
 # Remove build directories
-rm -rf .build/ test-build/
+rm -rf .build/ test-build/ .pytest_cache/
 
 # Or use the script
 ./scripts/local-test-build.sh --clean
