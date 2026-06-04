@@ -6,7 +6,7 @@
 - 4th June 2026
 
 **🔨 Improvements:**
-- Scheduled Airtable integration workflows retry intermittent HTTP 406 responses (Airtable security block on some GitHub Actions datacenters; see [API troubleshooting](https://support.airtable.com/docs/airtable-api-common-troubleshooting)) via `pytest-rerunfailures` in CI
+- Airtable upload/delete integration workflows use `pytest-rerunfailures` (10 reruns, 60s delay) for intermittent HTTP 406 responses (Airtable API security block on some GitHub Actions runners; see [API troubleshooting](https://support.airtable.com/docs/airtable-api-common-troubleshooting))
 
 ---
 
