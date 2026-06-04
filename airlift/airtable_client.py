@@ -7,6 +7,7 @@ creation, record upload, and bulk delete operations.
 
 import logging
 import json
+import threading
 from typing import Dict
 from pyairtable import Api
 from airlift.utils_exceptions import CriticalError, AirtableError
@@ -30,12 +31,14 @@ class new_client:
             "Content-Type": "application/json"
         }
         logger.debug("Airtable Client Created")
+        self._upload_lock = threading.Lock()
 
     def single_upload(self, data: ATDATATYPE) -> None:
         # pyairtable expects just the fields dict
         record_data = data["fields"] if "fields" in data else data
         try:
-            self.table.create(record_data, typecast=True)
+            with self._upload_lock:
+                self.table.create(record_data, typecast=True)
         except Exception as e:
             logger.warning(f"Error creating records: {str(e)}")
             raise AirtableError("Unable to upload data!") from e
@@ -166,7 +169,7 @@ class new_client:
                 self._rename_key_column_check(args=args)
             if args.attachment_columns_map:
                 for attachment in args.attachment_columns_map:
-                    data["fields"][attachment[1]] = ""
+                    data["fields"][attachment[1]] = []
             if args.columns_copy:
                 for column in args.columns_copy[1::]:
                     if self.missing_field_single(column):

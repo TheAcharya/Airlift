@@ -232,7 +232,7 @@ Airtable's API does not allow direct uploading of attachments. In order to uploa
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_01.png?raw=true"> </p>
 
 7. Go to the Permissions tab.
-8. Set the permissions as shown on the screenshot.
+8. Set the permissions as shown on the screenshot (include **files.content.read**, **files.content.write**, and **sharing.write**).
 9. Click on 'Submit' at the bottom.
 
 <p align="center"> <img src="https://github.com/TheAcharya/Airlift/blob/main/assets/dropbox_02.png?raw=true"> </p>

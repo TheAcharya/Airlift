@@ -1,12 +1,30 @@
 # Changelog
 
+### 1.4.2
+
+**🎉 Released:**
+- 4th June 2026
+
+**🔨 Improvements:**
+- More reliable Dropbox links for Airtable attachments, including large files
+- Dropbox sign-in now asks for the permissions needed for uploads and sharing; the refresh-token step shows what was granted and warns if something is missing
+- Uploads with multiple workers are safer when talking to Dropbox and Airtable at the same time
+
+**🐞 Bug Fix:**
+- Fixed rows that sometimes appeared in Airtable without attachments even though the files had uploaded to Dropbox
+- Fixed attachment columns sometimes staying empty after a failed upload when using `--attachment-columns-map`
+
+**Note:** If you connected Dropbox before this release, disconnect the app in your [Dropbox connected apps](https://www.dropbox.com/account/connected_apps) settings and run `airlift --dropbox-token <file> --dropbox-refresh-token` again so the new permissions apply.
+
+---
+
 ### 1.4.1
 
 **🎉 Released:**
 - 4th June 2026
 
 **🔨 Improvements:**
-- Airtable upload/delete integration workflows use `pytest-rerunfailures` (10 reruns, 60s delay) for intermittent HTTP 406 responses (Airtable API security block on some GitHub Actions runners; see [API troubleshooting](https://support.airtable.com/docs/airtable-api-common-troubleshooting))
+- Scheduled Airtable integration workflows retry intermittent HTTP 406 responses (Airtable security block on some GitHub Actions datacenters; see [API troubleshooting](https://support.airtable.com/docs/airtable-api-common-troubleshooting)) via `pytest-rerunfailures` in CI
 
 ---
 
