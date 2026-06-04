@@ -35,9 +35,43 @@ class Upload:
         self.log = args.log
         self.stop_event = threading.Event()
 
-    def write_log(self,file_path, line):
-        with open(file_path, 'a') as file:
-            file.write(line + '\n')
+    def write_log(self, file_path, line: str) -> None:
+        if not file_path:
+            return
+        with open(file_path, "a", encoding="utf-8") as file:
+            file.write(line + "\n")
+
+    def _attachment_local_path(self, value: str) -> str:
+        if isinstance(value, str):
+            value = value.strip()
+        if self.dirname:
+            return os.path.normpath(os.path.join(self.dirname, value))
+        return os.path.normpath(value)
+
+    def _attachment_payload(
+        self, file_path: str, download_url: str
+    ) -> List[Dict[str, str]]:
+        return [
+            {
+                "url": download_url,
+                "filename": os.path.basename(file_path),
+            }
+        ]
+
+    def _upload_attachment_for_field(
+        self, data: Dict, field_name: str, value: str
+    ) -> None:
+        if value is None or (isinstance(value, str) and not value.strip()):
+            raise FileNotFoundError("Attachment filename is empty")
+        file_path = self._attachment_local_path(value)
+        if not os.path.isfile(file_path):
+            raise FileNotFoundError(
+                f"Attachment file not found: {file_path}"
+            )
+        download_url = self.dbx.upload_to_dropbox(file_path)
+        data["fields"][field_name] = self._attachment_payload(
+            file_path, download_url
+        )
 
     def upload_data(self) -> None:
         logger.info("Uploding data now!")
@@ -78,42 +112,67 @@ class Upload:
                         if self.dbx:
                             if key in self.attachment_columns:
                                 try:
-                                    if self.dirname:
-                                        file_path = f"{self.dirname}/{value}"
-                                        data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(file_path)}]
-                                    else:
-                                        file_path = f"{value}"
-                                        data['fields'][key] = [{"url": self.dbx.upload_to_dropbox(file_path)}]
-                                    
+                                    self._upload_attachment_for_field(
+                                        data, key, value
+                                    )
                                 except Exception as e:
-                                    logger.error(f"Error uploading {value}: {type(e).__name__}: {str(e)}")
-                                    self.write_log(self.log,f"{value} Could not be found!")
-                                    tqdm.write(f"{value} Could not be found!")
-                                    data['fields'][key] = ""
+                                    logger.error(
+                                        "Attachment upload failed [%s] %s: "
+                                        "%s: %s",
+                                        key,
+                                        value,
+                                        type(e).__name__,
+                                        e,
+                                    )
+                                    self.write_log(
+                                        self.log,
+                                        f"{value} attachment failed: {e}",
+                                    )
+                                    tqdm.write(
+                                        f"{value} attachment failed: {e}"
+                                    )
+                                    data["fields"][key] = []
 
                     if self.attachment_columns_map:
                         if self.dbx:
                             for attachments in self.attachment_columns_map:
                                 if key == attachments[0]:
                                     try:
-                                        if self.dirname:
-                                            file_path = f"{self.dirname}/{value}"
-                                            data['fields'][attachments[1]] = [
-                                                {"url": self.dbx.upload_to_dropbox(file_path)}]
-                                        else: 
-                                            file_path = f"{value}"
-                                            data['fields'][attachments[1]] = [
-                                                {"url": self.dbx.upload_to_dropbox(file_path)}]
+                                        self._upload_attachment_for_field(
+                                            data, attachments[1], value
+                                        )
                                     except Exception as e:
-                                        logger.error(f"Error uploading {value}: {type(e).__name__}: {str(e)}")
-                                        self.write_log(self.log,f"{value} Could not be found!")
-                                        tqdm.write(f"{value} Could not be found!")
-                                        data['fields'][attachments[1]] = ""
+                                        logger.error(
+                                            "Attachment upload failed "
+                                            "[%s -> %s] %s: %s: %s",
+                                            attachments[0],
+                                            attachments[1],
+                                            value,
+                                            type(e).__name__,
+                                            e,
+                                        )
+                                        self.write_log(
+                                            self.log,
+                                            f"{value} attachment failed: {e}",
+                                        )
+                                        tqdm.write(
+                                            f"{value} attachment failed: {e}"
+                                        )
+                                        data["fields"][attachments[1]] = []
                                 #ic(data['fields'])
 
                         else:
                             logger.error("Dropbox token not provided! Aborting the upload!")
 
+                if self.attachment_columns_map:
+                    for _source, target in self.attachment_columns_map:
+                        attachment_value = data["fields"].get(target)
+                        if attachment_value == []:
+                            logger.warning(
+                                "%s has no attachment (upload failed or "
+                                "file missing)",
+                                target,
+                            )
                 self.client.single_upload(data)
                 progress_bar.update(1)
             except Exception as e:

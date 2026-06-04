@@ -99,6 +99,15 @@ from airlift.json_data import json_read
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 
+# tests/assets/ — same fixtures as tests/input_command.py and tests/test_upload.py
+TESTS_ASSETS_DIR = Path(__file__).resolve().parent / "assets"
+ASSETS_JSON = TESTS_ASSETS_DIR / "airtable-upload-test.json"
+# Image Filename from first row of tests/assets/airtable-upload-test.json
+ASSETS_IMAGE = "airtable-upload-test_00-00-08-06.gif"
+ASSETS_LOCAL_IMAGE = TESTS_ASSETS_DIR / ASSETS_IMAGE
+# Dropbox API path (immediate parent folder name + file; see dropbox_client)
+ASSETS_DROPBOX_FILE_PATH = f"/Airlift/session/assets/{ASSETS_IMAGE}"
+
 
 # ============================================================================
 # 1. TestCLIArgumentParsing - CLI Argument Parsing and Validation
@@ -713,6 +722,98 @@ class TestDropboxClient:
         
         # Verify environment variables may be set
         # (actual values depend on certifi installation)
+
+    def test_dropbox_relative_path(self):
+        """Map tests/assets/ file path to Dropbox subpath (parent folder + file)."""
+        from airlift.dropbox_client import dropbox_client
+
+        local_file = str(ASSETS_LOCAL_IMAGE.resolve())
+        path = dropbox_client._dropbox_relative_path(local_file)
+        assert path == f"assets/{ASSETS_IMAGE}"
+
+    def test_to_direct_download_url(self):
+        """Test Dropbox share URL conversion for Airtable attachments."""
+        from airlift.dropbox_client import dropbox_client
+
+        url = "https://www.dropbox.com/s/x/test.gif?dl=0"
+        direct = dropbox_client._to_direct_download_url(url)
+        assert "dl.dropboxusercontent.com" in direct
+        assert "dl=1" in direct
+
+    def test_to_direct_download_url_scl_format(self):
+        """Test modern Dropbox /scl/fi/ share links convert for Airtable."""
+        from airlift.dropbox_client import dropbox_client
+
+        url = (
+            "https://www.dropbox.com/scl/fi/abc123/test.gif"
+            "?rlkey=xyz&dl=0"
+        )
+        direct = dropbox_client._to_direct_download_url(url)
+        assert "dl.dropboxusercontent.com" in direct
+        assert "dl=1" in direct
+        assert "raw=1" in direct
+
+    def test_airtable_download_url_prefers_temporary_link(self):
+        """Test Airtable uses Dropbox temporary direct links when available."""
+        from airlift.dropbox_client import dropbox_client
+
+        client = dropbox_client.__new__(dropbox_client)
+        client._use_temporary_links = True
+        client._temporary_link_scope_logged = False
+        client.dbx = MagicMock()
+        client.dbx.files_get_temporary_link.return_value = MagicMock(
+            link="https://content.dropboxapi.com/apit/1/direct"
+        )
+
+        url = client._airtable_download_url(ASSETS_DROPBOX_FILE_PATH)
+        assert url == "https://content.dropboxapi.com/apit/1/direct"
+        client.dbx.sharing_create_shared_link_with_settings.assert_not_called()
+
+    def test_dropbox_oauth_scopes_include_content_read(self):
+        """Test OAuth scopes include files.content.read for temporary links."""
+        from airlift.dropbox_client import DROPBOX_OAUTH_SCOPES
+
+        assert "files.content.read" in DROPBOX_OAUTH_SCOPES
+        assert "files.content.write" in DROPBOX_OAUTH_SCOPES
+        assert "sharing.write" in DROPBOX_OAUTH_SCOPES
+
+    def test_shared_link_url_create(self):
+        """Test shared link creation returns a direct download URL."""
+        from airlift.dropbox_client import dropbox_client
+
+        client = dropbox_client.__new__(dropbox_client)
+        client.dbx = MagicMock()
+        metadata = MagicMock()
+        metadata.url = "https://www.dropbox.com/s/abc/test.gif?dl=0"
+        client.dbx.sharing_create_shared_link_with_settings.return_value = (
+            metadata
+        )
+
+        direct = client._shared_link_url(ASSETS_DROPBOX_FILE_PATH)
+        assert "dl.dropboxusercontent.com" in direct
+        client.dbx.sharing_list_shared_links.assert_not_called()
+
+    def test_attachment_local_path_joins_assets_directory(self):
+        """Attachment path resolves next to tests/assets/airtable-upload-test.json."""
+        from airlift.airtable_upload import Upload
+
+        mock_args = MagicMock()
+        mock_args.csv_file = ASSETS_JSON.resolve()
+        mock_args.attachment_columns = None
+        mock_args.attachment_columns_map = None
+        mock_args.columns_copy = None
+        mock_args.rename_key_column = None
+        mock_args.workers = 5
+        mock_args.log = None
+
+        upload = Upload(
+            client=MagicMock(),
+            new_data=[],
+            dbx=None,
+            args=mock_args,
+        )
+        resolved = upload._attachment_local_path(ASSETS_IMAGE)
+        assert resolved == str(ASSETS_LOCAL_IMAGE.resolve())
     
     def test_empty_dropbox_folder_missing_token_file(self):
         """Test empty_dropbox_folder with missing token file."""
@@ -900,7 +1001,7 @@ class TestComprehensiveScenarios:
             "--dropbox-token", "dropbox-token.json",
             "--attachment-columns-map", "Image Filename", "Attachments",
             "--md",
-            "markers.json"
+            str(ASSETS_JSON),
         ])
         
         assert args.md is True
