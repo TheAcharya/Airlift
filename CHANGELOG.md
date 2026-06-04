@@ -1,5 +1,15 @@
 # Changelog
 
+### 1.4.1
+
+**🎉 Released:**
+- 4th June 2026
+
+**🔨 Improvements:**
+- Scheduled Airtable integration workflows retry intermittent HTTP 406 responses (Airtable security block on some GitHub Actions datacenters; see [API troubleshooting](https://support.airtable.com/docs/airtable-api-common-troubleshooting)) via `pytest-rerunfailures` in CI
+
+---
+
 ### 1.4.0
 
 **🎉 Released:**
