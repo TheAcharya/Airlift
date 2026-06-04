@@ -12,7 +12,6 @@
 
 **🐞 Bug Fix:**
 - Fixed rows that sometimes appeared in Airtable without attachments even though the files had uploaded to Dropbox
-- Fixed attachment columns sometimes staying empty after a failed upload when using `--attachment-columns-map`
 
 **Note:** If you connected Dropbox before this release, disconnect the app in your [Dropbox connected apps](https://www.dropbox.com/account/connected_apps) settings and run `airlift --dropbox-token <file> --dropbox-refresh-token` again so the new permissions apply.
 
