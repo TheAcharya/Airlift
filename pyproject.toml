@@ -42,6 +42,7 @@ pytest = "^9.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.0"
+pytest-rerunfailures = "^15.0"
 python-dotenv = "^1.0.0"
 
 [build-system]
