@@ -19,8 +19,6 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      POETRY_VIRTUALENVS_CREATE: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -61,7 +59,7 @@ jobs:
           CI_DROPBOX_REFRESH_TOKEN: ${{secrets.CI_DROPBOX_REFRESH_TOKEN}}
         # Reruns: intermittent Airtable HTTP 406 (security block) on GHA runners
         run: >
-          pytest tests/test_delete_database_entries.py -v -s --disable-warnings
+          poetry run pytest tests/test_delete_database_entries.py -v -s --disable-warnings
           --reruns 10 --reruns-delay 60
 
       - name: Run empty Dropbox folder test
@@ -69,4 +67,4 @@ jobs:
           CI_DROPBOX_APP_KEY: ${{secrets.CI_DROPBOX_APP_KEY}}
           CI_DROPBOX_REFRESH_TOKEN: ${{secrets.CI_DROPBOX_REFRESH_TOKEN}}
           
-        run: pytest tests/test_empty_dropbox_folder.py -v -s --disable-warnings
+        run: poetry run pytest tests/test_empty_dropbox_folder.py -v -s --disable-warnings
