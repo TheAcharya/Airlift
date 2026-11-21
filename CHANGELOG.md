@@ -1,5 +1,16 @@
 # Changelog
 
+### 1.4.3
+
+**🎉 Released:**
+- 21st November 2026
+
+**🔨 Improvements:**
+- Updated to latest security patches across all dependencies
+- Bumped local/CI toolchain pins: pip 26.3, Poetry 2.4.3
+
+---
+
 ### 1.4.2
 
 **🎉 Released:**
