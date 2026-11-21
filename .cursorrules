@@ -221,10 +221,10 @@ pytest tests/test_empty_dropbox_folder.py -v -s
 ## Dependencies and Packaging
 
 ### Dependency Management
-- Use Poetry **2.4.1** via `./scripts/local-test-build.sh` (installed in `.build/python/`)
+- Use Poetry **2.4.3** via `./scripts/local-test-build.sh` (installed in `.build/python/`)
 - Prefer **one package at a time**: `--lock-only --update <package>` then `--comprehensive-test`
 - Keep `poetry.lock` in sync via the build script after `pyproject.toml` changes
-- Do **not** force `pydantic-core` ahead of `pydantic`; do **not** upgrade `stone` past dropbox's cap
+- Do **not** force `pydantic-core` ahead of `pydantic`; do **not** force `stone` outside Dropbox’s pin
 - Maintain Dropbox SDK 12.x for API compatibility and security
 
 ### Core Dependencies (`pyproject.toml`)
@@ -232,7 +232,7 @@ pytest tests/test_empty_dropbox_folder.py -v -s
 |---------|------------|-------------|
 | `python` | `>=3.10,<3.15` | Local builds: **3.14.5** |
 | `pyairtable` | ^3.3.0 | Airtable API client (3.x) |
-| `dropbox` | ^12.0.2 | Dropbox API; limits `stone` version |
+| `dropbox` | ^12.0.2 | Dropbox API; 12.2.x needs `stone >=3.5.3,<4` (Python >=3.11) |
 | `requests` | ^2.32.4 | HTTP client |
 | `tqdm` | ^4.66.4 | Progress bars |
 | `pydantic` | ^2.13.0 | Required for Python 3.14 builds |
@@ -243,7 +243,7 @@ pytest tests/test_empty_dropbox_folder.py -v -s
 | Package | Why |
 |---------|-----|
 | `pydantic-core` | Pinned by `pydantic`; do not bump core alone |
-| `stone` | Dropbox requires `stone >=2,<3.3.3` |
+| `stone` | Follow Dropbox’s pin (12.2.x → `>=3.5.3,<4`); do not force alone |
 
 ### Build and Distribution
 - Maintain cross-platform compatibility
@@ -267,7 +267,7 @@ The project includes a comprehensive ephemeral build system (`scripts/local-test
 
 #### Build Process Standards
 - Download/extract standalone Python 3.14.5 to `.build/python/`
-- Bootstrap setuptools **82.0.1** and Poetry **2.4.1** in `.build/python/`
+- Bootstrap setuptools **82.0.1** and Poetry **2.4.3** in `.build/python/`
 - Install poetry-plugin-export **1.10.0**
 - `poetry install` into `.build/venv/`
 - PyInstaller build → `test-build/airlift`
@@ -300,7 +300,7 @@ Airlift/
 
 #### CI/CD Integration Standards
 - **Local first**: prove green on 3.14.5 via `local-test-build.sh` before changing workflows
-- **`build.yml` / `release_github.yml`**: Python 3.14, Poetry 2.4.1, setuptools 82.0.1, plugin-export 1.10.0
+- **`build.yml` / `release_github.yml`**: Python 3.14, Poetry 2.4.3, setuptools 82.0.1, plugin-export 1.10.0
 - All Poetry-based workflows match `build.yml` / `release_github.yml` pins
 - Commit `poetry.lock` for reproducible CI (currently gitignored)
 - PyInstaller installed separately (not in `pyproject.toml`)
