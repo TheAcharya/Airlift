@@ -30,9 +30,9 @@ The `local-test-build.sh` script provides a completely ephemeral build environme
 
 This will:
 1. Download standalone CPython 3.14.5 into `.build/python/` (pinned python-build-standalone release)
-2. Install pip 26.1.2 in `.build/python/`
+2. Install pip 26.3 in `.build/python/`
 3. Install setuptools 82.0.1 in `.build/python/`
-4. Install Poetry 2.4.1 in `.build/python/`
+4. Install Poetry 2.4.3 in `.build/python/`
 5. Install project dependencies via Poetry
 6. Install PyInstaller for building
 7. Build the application
@@ -161,8 +161,8 @@ The script is designed to work seamlessly with GitHub Actions and uses identical
 
 **Version alignment with GitHub Actions** (Poetry, setuptools, plugin-export pins):
 - Python: **3.14** in workflows (`BUILD_PYTHON_VERSION`); local script uses standalone **3.14.5** on macOS
-- pip: **26.1.2** (local bootstrap only)
-- Poetry: **2.4.1** (`BUILD_POETRY_VERSION`)
+- pip: **26.3** (local bootstrap only)
+- Poetry: **2.4.3** (`BUILD_POETRY_VERSION`)
 - Setuptools: **82.0.1** (`BUILD_SETUPTOOLS_VERSION`)
 - poetry-plugin-export: **1.10.0** (`BUILD_POETRY_PLUGIN_EXPORT_VERSION`)
 - PyInstaller: latest (installed in Poetry venv at build time; matches CI workflow)
@@ -172,9 +172,9 @@ The script is designed to work seamlessly with GitHub Actions and uses identical
 ### Build Environment
 - Standalone Python: `.build/python/` (python-build-standalone 3.14.5, not system Python)
 - Project venv: `.build/venv/` (Poetry-managed dependencies)
-- pip: 26.1.2 (pinned bootstrap in `.build/python/`)
+- pip: 26.3 (pinned bootstrap in `.build/python/`)
 - Setuptools: 82.0.1 (installed before Poetry)
-- Poetry: 2.4.1 (installed via pip in `.build/python/`)
+- Poetry: 2.4.3 (installed via pip in `.build/python/`)
 - Dependencies: Managed by Poetry in `.build/venv/`
 
 ### Build Output
@@ -298,8 +298,8 @@ BUILD_DIR=".build"
 TEST_BUILD_DIR="test-build"
 PYTHON_STANDALONE_VERSION="3.14.5"   # macOS standalone CPython (python-build-standalone)
 PYTHON_STANDALONE_RELEASE_TAG="20260510"
-PIP_VERSION="26.1.2"
-POETRY_VERSION="2.4.1"               # matches BUILD_POETRY_VERSION in workflows
+PIP_VERSION="26.3"
+POETRY_VERSION="2.4.3"               # matches BUILD_POETRY_VERSION in workflows
 SETUPTOOLS_VERSION="82.0.1"          # matches BUILD_SETUPTOOLS_VERSION in workflows
 POETRY_PLUGIN_EXPORT_VERSION="1.10.0"
 ```
@@ -338,8 +338,8 @@ If you encounter issues with the build script:
 This build script aligns dependency tooling with the GitHub Actions workflows:
 
 - **Python**: workflows use **3.14**; the local script downloads standalone **3.14.5** on macOS
-- **pip**: **26.1.2** (local bootstrap)
-- **Poetry**: **2.4.1**
+- **pip**: **26.3** (local bootstrap)
+- **Poetry**: **2.4.3**
 - **Setuptools**: **82.0.1**
 - **poetry-plugin-export**: **1.10.0**
 - **PyInstaller**: latest (installed in the Poetry venv during build)

@@ -141,13 +141,13 @@ The project follows a modular architecture with clear separation of concerns:
 ### Development Environment (local, via `local-test-build.sh`)
 - **Python**: 3.14.5 standalone (`PYTHON_STANDALONE_VERSION` in build script)
 - **Python constraint** (`pyproject.toml`): `>=3.10,<3.15`
-- **Poetry**: 2.4.1 (bootstrap in `.build/python/`)
+- **Poetry**: 2.4.3 (bootstrap in `.build/python/`)
 - **Setuptools** (bootstrap): 82.0.1
 - **poetry-plugin-export**: 1.10.0
 
 ### CI vs local (important)
 - **Local** builds use standalone **Python 3.14.5** via `local-test-build.sh`
-- **GitHub Actions** (`build.yml`, `release_github.yml`): **Python 3.14**, Poetry **2.4.1**, setuptools **82.0.1**
+- **GitHub Actions** (`build.yml`, `release_github.yml`): **Python 3.14**, Poetry **2.4.3**, setuptools **82.0.1**
 - All Poetry-based workflows use the same toolchain pins as `build.yml`
 - **Commit `poetry.lock`** (or stop gitignoring it) so CI resolution matches local locks
 
@@ -229,7 +229,7 @@ The project includes a comprehensive ephemeral build system (`scripts/local-test
 
 #### Build Process
 1. Downloads/extracts standalone **CPython 3.14.5** into `.build/python/`
-2. Installs **pip 26.1.2**, **setuptools 82.0.1**, and **Poetry 2.4.1** into `.build/python/`
+2. Installs **pip 26.3**, **setuptools 82.0.1**, and **Poetry 2.4.3** into `.build/python/`
 3. Configures Poetry paths under `.build/` (`venv/`, `cache/`, `poetry-config/`, etc.)
 4. Installs **poetry-plugin-export 1.10.0**
 5. Runs `poetry install` into `.build/venv/`
@@ -284,9 +284,9 @@ Airlift/
 #### CI/CD Integration
 | Context | Python | Poetry | setuptools | poetry-plugin-export |
 |---------|--------|--------|------------|----------------------|
-| Local (`local-test-build.sh`) | 3.14.5 standalone | 2.4.1 | 82.0.1 | 1.10.0 |
-| `build.yml` / `release_github.yml` | 3.14 (setup-python) | 2.4.1 | 82.0.1 | 1.10.0 |
-| `unit_tests.yml`, integration test workflows | 3.14 | 2.4.1 | 82.0.1 | 1.10.0 |
+| Local (`local-test-build.sh`) | 3.14.5 standalone | 2.4.3 | 82.0.1 | 1.10.0 |
+| `build.yml` / `release_github.yml` | 3.14 (setup-python) | 2.4.3 | 82.0.1 | 1.10.0 |
+| `unit_tests.yml`, integration test workflows | 3.14 | 2.4.3 | 82.0.1 | 1.10.0 |
 
 ## Dependencies and Versions
 
@@ -295,7 +295,7 @@ Airlift/
 |---------|------------|-------|
 | `python` | `>=3.10,<3.15` | Local builds use **3.14.5** |
 | `pyairtable` | ^3.3.0 | Resolved to 3.4.x locally |
-| `dropbox` | ^12.0.2 | Caps `stone` to &lt;3.3.3 |
+| `dropbox` | ^12.0.2 | 12.2.x needs `stone >=3.5.3,<4` (and Python &gt;=3.11) |
 | `requests` | ^2.32.4 | |
 | `tqdm` | ^4.66.4 | |
 | `pydantic` | ^2.13.0 | **Required for Python 3.14** (2.11.x core fails to build) |
@@ -308,14 +308,14 @@ Use `poetry.lock` for exact resolved versions. Regenerate via
 ### Dependency update constraints (do not force)
 | Package | Why |
 |---------|-----|
-| `pydantic-core` | Pinned by `pydantic` (e.g. 2.13.4 → `==2.46.4`); do not bump core alone |
-| `stone` | Dropbox requires `stone >=2,<3.3.3`; cannot use latest 3.3.9 |
+| `pydantic-core` | Pinned by `pydantic`; do not bump core alone |
+| `stone` | Follow Dropbox’s pin (12.2.x → `stone >=3.5.3,<4`); do not force stone alone |
 
 ### Local build toolchain (`local-test-build.sh`)
 - Python **3.14.5** (python-build-standalone tag `20260510`)
-- pip **26.1.2**
+- pip **26.3**
 - Setuptools **82.0.1** (bootstrap only)
-- Poetry **2.4.1**
+- Poetry **2.4.3**
 - PyInstaller **latest** (installed in Poetry venv at build time)
 
 ## Python 3.14 Migration Workflow
